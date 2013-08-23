@@ -66,6 +66,12 @@ public class PlayerCharacter : MonoBehaviour
 		gameObject.renderer.material.color = GetRealColor();
 		NotificationCenter<ColourCollisionNotification>.DefaultCenter.PostNotification(ColourCollisionNotification.PlayerChangedColour, currentColor);
 	}
+
+	public void SilentlyChangeColour(Colour colourToChangeTo)
+	{
+		currentColor = colourToChangeTo;
+		gameObject.renderer.material.color = GetRealColor();
+	}
 	
 	public void RotateColour(bool forward)
 	{

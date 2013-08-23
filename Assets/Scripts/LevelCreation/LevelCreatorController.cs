@@ -23,14 +23,26 @@ public class LevelCreatorController : MonoBehaviour
 	public static string mapFilesFilePath = "/MapFiles/";
 	GameObject mainCam;
 	List<DraggableMapObject> mapObjects = new List<DraggableMapObject>();
+	LevelCreator levelCreator;
+	LevelCreatorUIController uiController;
 
 	void Awake()
 	{
 		EnsureMapDirectoryExists();
 		RegisterStates();
 		mainCam = Camera.main.gameObject;
+		levelCreator = GameObject.Find("LevelCreator").GetComponent<LevelCreator>();
+		uiController = GameObject.Find("UIController").GetComponent<LevelCreatorUIController>();
 	}
-	
+
+	void Start()
+	{
+		if (LevelCreatorUIController.cameFromPreview)
+			StateMachine.SetInitialState (LevelCreatorStates.LevelCreation);
+		else
+			StateMachine.SetInitialState(LevelCreatorStates.FrontMenu);
+	}
+
 	void EnsureMapDirectoryExists()
 	{
 		if(!System.IO.Directory.Exists(mapFilesFilePath))
@@ -44,7 +56,6 @@ public class LevelCreatorController : MonoBehaviour
 		StateMachine.RegisterState(LevelCreatorStates.SavingMap, LevelCreatorStateNotification.SavingMapEnter, LevelCreatorStateNotification.SavingMapExit);
 		StateMachine.RegisterState(LevelCreatorStates.LoadingMap, LevelCreatorStateNotification.LoadingMapEnter, LevelCreatorStateNotification.LoadingMapExit);
 		StateMachine.RegisterState(LevelCreatorStates.TestingMap, LevelCreatorStateNotification.TestingMapEnter, LevelCreatorStateNotification.TestingMapExit);
-		StateMachine.SetInitialState(LevelCreatorStates.FrontMenu);
 
 		StateMachine.StateNotificationCenter.AddObserver(this, LevelCreatorStateNotification.LevelCreationEnter);
 		StateMachine.StateNotificationCenter.AddObserver(this, LevelCreatorStateNotification.LevelCreationExit);
@@ -111,17 +122,16 @@ public class LevelCreatorController : MonoBehaviour
 		var saves = LevelSerializer.SavedGames[LevelSerializer.PlayerName];
 		var restoreData = saves.Where(e => e.Name == "BeforePreviewSave").FirstOrDefault().Data;
 		LevelSerializer.LoadSavedLevel(restoreData);
-
+		Debug.Log("Loaded saved level");
 		Time.timeScale = 1;
 	}
 
-
-
-	#endregion
+#endregion
 
 
 	public void InitMapForPreview()
 	{
+
 		mapObjects.ForEach(e => e.enabled = false);
 
 		var playerObj = GameObject.FindWithTag("Player");
@@ -135,12 +145,15 @@ public class LevelCreatorController : MonoBehaviour
 
 		var levelController = new GameObject("LevelControllerSingleton").AddComponent<LevelController>();
 
+		levelCreator.CheckEdgeCubeNeighbours();
+
 		var nullCubes = GameObject.FindGameObjectsWithTag("NullCube");
 
-		foreach(var cube in nullCubes)
+		foreach(var nullCube in nullCubes)
 		{
-			cube.renderer.enabled = false;
-			cube.GetComponent<BoxCollider>().size = new Vector3(1, 10, 1);
+			nullCube.renderer.enabled = false;
+			nullCube.collider.enabled = true;
+			nullCube.GetComponent<BoxCollider>().size = new Vector3(1, 10, 1);
 		}
 
 		levelController.InitLevel();

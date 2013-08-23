@@ -95,10 +95,12 @@ public class LevelController : MonoBehaviour
 			levelStateController.SetInitialState();
 	}
 
-	//Holy fuckin shit, what happened here?
 	public void SetInitialFloorColliders()
 	{
 		NotificationCenter<ColourCollisionNotification>.DefaultCenter.PostNotification(ColourCollisionNotification.PlayerChangedColour, PlayerColour);
+
+
+
 		/*
 		FloorPiece[] floorPieces = GameObject.FindGameObjectsWithTag("FloorPiece").ToList().Where(e => e.GetComponent<FloorPiece>() != null).Select(
 			e => e.GetComponent<FloorPiece>()).ToArray();

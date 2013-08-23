@@ -20,7 +20,7 @@ public class DragAndDropPlayerStartMenuItem : DragAndDropMenuItem
 	void HandleColourCycleButtonClick (GameObject go)
 	{
 		playerStartPiece.RotateColour(true);
-		GetComponentInChildren<PlayerCharacter>().ChangeColour(playerStartPiece.objColour);
+		GetComponentInChildren<PlayerCharacter>().SilentlyChangeColour(playerStartPiece.objColour);
 	}
 
 	protected override void OnPress(bool isPressed)
@@ -42,7 +42,7 @@ public class DragAndDropPlayerStartMenuItem : DragAndDropMenuItem
 
 				go.GetComponent<PlayerStartPiece>().ChangeColour(playerStartPiece.objColour);
 				playerSphere.collider.enabled = false;
-				playerCharObj.ChangeColour(playerStartPiece.objColour);
+				playerCharObj.SilentlyChangeColour(playerStartPiece.objColour);
 
 				prefab = go;
 

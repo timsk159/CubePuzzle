@@ -19,47 +19,14 @@ public class DraggableRotatableMapObject : DraggableMapObject
 			{
 				if(dragController.draggingObj == gameObject)
 				{
-					StartCoroutine(RotateObject(false));
+					transform.Rotate(new Vector3(0, -90, 0));
 				}
 			}
 			if(Input.GetKeyDown(KeyCode.RightArrow))
 			{
 				if(dragController.draggingObj == gameObject)
 				{
-					StartCoroutine(RotateObject(true));
-				}
-			}
-		}
-	}
-
-	IEnumerator RotateObject(bool rotateClockwise)
-	{
-		isRotating = true;
-		int frameCounter = 0;
-
-		if(rotateClockwise)
-		{
-			while(isRotating)
-			{
-				transform.Rotate(new Vector3(0, 10 * Time.deltaTime, 0));
-				yield return new WaitForEndOfFrame();
-				frameCounter++;
-				if(frameCounter == 100)
-				{
-					isRotating = false;
-				}
-			}
-		}
-		else
-		{
-			while(isRotating)
-			{
-				transform.Rotate(new Vector3(0, -10 * Time.deltaTime, 0));
-				yield return new WaitForEndOfFrame();
-				frameCounter++;
-				if(frameCounter == 100)
-				{
-					isRotating = false;
+					transform.Rotate(new Vector3(0, 90, 0));
 				}
 			}
 		}

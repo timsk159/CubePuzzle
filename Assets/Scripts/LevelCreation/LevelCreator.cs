@@ -38,6 +38,7 @@ public class LevelCreator : MonoBehaviour
 		LevelSerializer.Progress -= LevelSerializeProgress;
 		LevelSerializer.Progress += LevelSerializeProgress;
 
+		mapRoot = GameObject.Find("MapRoot");
 		Destroy(mapRoot);
 
 		mapRoot = new GameObject("MapRoot");
@@ -97,11 +98,6 @@ public class LevelCreator : MonoBehaviour
 
 		SaveMapForPlayMode(saveLocation);
 
-		while(isSaving)
-		{
-			yield return new WaitForEndOfFrame();
-		}
-
 		playerObj.transform.parent = playerObjParent;
 		StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState (LevelCreatorStates.LevelCreation);
 	}
@@ -136,7 +132,7 @@ public class LevelCreator : MonoBehaviour
 					neighbours.Add(hit.collider.gameObject);
 				}
 			}
-			if(neighbours.Any(e => e.name != "NullCube(Clone)"))
+			if(neighbours.Any(e => e.name != "NullCube(Clone)") && neighbours.Any(e => e.name != "NullCube"))
 			{
 				continue;
 			}
@@ -148,7 +144,6 @@ public class LevelCreator : MonoBehaviour
 
 		//Free up memory:
 		nullCubes = null;
-
 		foreach(var obj in objsToDestroy)
 		{
 			Destroy(obj.GetComponent<UniqueIdentifier>());
@@ -157,7 +152,7 @@ public class LevelCreator : MonoBehaviour
 		}
 	}
 
-	void CheckEdgeCubeNeighbours()
+	public void CheckEdgeCubeNeighbours()
 	{
 		List<GameObject> allCubes = new List<GameObject>();
 		var floors = GameObject.FindGameObjectsWithTag("FloorPiece");
@@ -175,7 +170,6 @@ public class LevelCreator : MonoBehaviour
 		foreach(var cube in allCubes)
 		{
 			var missingNeighbours = cube.GetComponent<ColorCollisionObject>().cubeNeighbours.GetMissingNeighbours();
-
 			if(missingNeighbours.Length > 0)
 			{
 				foreach(var missingNeighbourDirection in missingNeighbours)
@@ -202,6 +196,9 @@ public class LevelCreator : MonoBehaviour
 					newNullCube.transform.position = positionToSpawnCube;
 					newNullCube.collider.enabled = false;
 					newNullCube.renderer.enabled = false;
+					if(mapRoot == null)
+						mapRoot = GameObject.Find("MapRoot");
+					newNullCube.transform.parent = mapRoot.transform;
 				}
 			}
 		}
@@ -303,6 +300,7 @@ public class LevelCreator : MonoBehaviour
 
 	void SetupNullCube(GameObject nullCube)
 	{
+		nullCube.collider.enabled = true;
 		nullCube.renderer.enabled = false;
 		nullCube.GetComponent<BoxCollider>().size = new Vector3(1, 10, 1);
 	}
@@ -313,8 +311,7 @@ public class LevelCreator : MonoBehaviour
 
 		foreach(var cube in nullCubes)
 		{
-			cube.renderer.enabled = false;
-			cube.GetComponent<BoxCollider>().size = new Vector3(1, 10, 1);
+			SetupNullCube(cube);
 		}
 	}
 

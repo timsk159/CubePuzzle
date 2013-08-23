@@ -32,9 +32,9 @@ public class LevelCreatorUIController : MonoBehaviour
 	
 	string selectedFileName;
 
-	static bool cameFromPreview;
+	public static bool cameFromPreview;
 
-	void Start()
+	void Awake()
 	{
 		fileMenu = GameObject.Find("FileMenu").GetComponent<UIPopupList>();
 		levelCreator = GameObject.Find("LevelCreator").GetComponent<LevelCreator>();
@@ -68,6 +68,10 @@ public class LevelCreatorUIController : MonoBehaviour
 		{
 			NGUITools.SetActive(frontMenuPanel, true);
 		}
+		if(fileMenu.items.Contains("Save"))
+			fileMenu.items.Remove("Save");
+		if(fileMenu.items.Contains("TestMap"))
+			fileMenu.items.Remove("TestMap");
 	}
 	
 	void FrontMenuExit()
@@ -80,29 +84,22 @@ public class LevelCreatorUIController : MonoBehaviour
 	
 	void LevelCreationEnter()
 	{
-		Debug.Log ("Level Creation enter!");
+		fileMenu = GameObject.Find("FileMenu").GetComponent<UIPopupList>();
+		levelCreator = GameObject.Find("LevelCreator").GetComponent<LevelCreator>();
+
 		isInFrontMenu = false;
+
+		NGUITools.SetActive(levelAssetMenuPanel, true);
 
 		if(!fileMenu.items.Contains("Save"))
 			fileMenu.items.Insert(1,"Save");
 		if(!fileMenu.items.Contains("TestMap"))
 			fileMenu.items.Insert(2, "TestMap");
-
-		if(cameFromPreview)
-		{
-			fileMenu.items.Clear();
-			fileMenu.items.Insert(0, "Open");
-			fileMenu.items.Insert(1, "Save");
-			fileMenu.items.Insert(2, "Exit");
-			cameFromPreview = false;
-		}
-
-		NGUITools.SetActive(levelAssetMenuPanel, true);
 	}
-	
+
 	void LevelCreationExit()
 	{
-		if (fileMenu.items.Contains("Save"))
+		if(fileMenu.items.Contains("Save"))
 			fileMenu.items.Remove("Save");
 		if(fileMenu.items.Contains("TestMap"))
 			fileMenu.items.Remove("TestMap");
@@ -147,7 +144,11 @@ public class LevelCreatorUIController : MonoBehaviour
 
 	void TestingMapExit()
 	{
-
+		fileMenu.items.Clear();
+		fileMenu.items.Insert(0, "Open");
+		fileMenu.items.Insert(1, "Save");
+		fileMenu.items.Insert(2, "TestMap");
+		fileMenu.items.Insert(3, "Exit");
 	}
 	
 	#endregion
@@ -232,7 +233,6 @@ public class LevelCreatorUIController : MonoBehaviour
 				}
 				break;
 			case "StopTesting":
-
 				StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState(LevelCreatorStates.LevelCreation);
 				break;
 			case "Save":

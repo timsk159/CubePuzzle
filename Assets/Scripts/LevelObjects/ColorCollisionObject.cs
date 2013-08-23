@@ -60,8 +60,11 @@ public class ColorCollisionObject : MonoBehaviour
 	
 	public virtual void ChangeColour(Colour colorToChangeTo)
 	{
-		objColour = colorToChangeTo;
-		gameObject.renderer.material.color = GetObjectRealColor(objColour);
+		if(objColour != Colour.None)
+		{
+			objColour = colorToChangeTo;
+			gameObject.renderer.material.color = GetObjectRealColor(objColour);
+		}
 		
 	}
 	
