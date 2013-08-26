@@ -7,7 +7,6 @@ public class Triggerer : MonoBehaviour
 	
 	void OnTriggerEnter(Collider col)
 	{
-		Debug.Log("Trigger Entered!");
 		foreach(var listener in listeners)
 		{
 			listener.SendMessage("TriggererEntered", col.gameObject, SendMessageOptions.RequireReceiver);

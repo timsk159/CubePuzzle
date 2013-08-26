@@ -37,9 +37,7 @@ public class LevelCreatorController : MonoBehaviour
 
 	void Start()
 	{
-		if (LevelCreatorUIController.cameFromPreview)
-			StateMachine.SetInitialState (LevelCreatorStates.LevelCreation);
-		else
+		if (!LevelCreatorUIController.cameFromPreview)
 			StateMachine.SetInitialState(LevelCreatorStates.FrontMenu);
 	}
 
@@ -56,6 +54,8 @@ public class LevelCreatorController : MonoBehaviour
 		StateMachine.RegisterState(LevelCreatorStates.SavingMap, LevelCreatorStateNotification.SavingMapEnter, LevelCreatorStateNotification.SavingMapExit);
 		StateMachine.RegisterState(LevelCreatorStates.LoadingMap, LevelCreatorStateNotification.LoadingMapEnter, LevelCreatorStateNotification.LoadingMapExit);
 		StateMachine.RegisterState(LevelCreatorStates.TestingMap, LevelCreatorStateNotification.TestingMapEnter, LevelCreatorStateNotification.TestingMapExit);
+
+		StateMachine.StateNotificationCenter.AddObserver(this, LevelCreatorStateNotification.FrontMenuEnter);
 
 		StateMachine.StateNotificationCenter.AddObserver(this, LevelCreatorStateNotification.LevelCreationEnter);
 		StateMachine.StateNotificationCenter.AddObserver(this, LevelCreatorStateNotification.LevelCreationExit);
@@ -91,10 +91,17 @@ public class LevelCreatorController : MonoBehaviour
 
 	#region State Responses
 
+	void FrontMenuEnter()
+	{
+		mapObjects.Clear();
+	}
+
 	void LevelCreationEnter()
 	{
+		GetDraggableMapObjects();
 		mainCam.GetComponent<CameraControls>().enabled = true;
-		mapObjects.ForEach(e => e.enabled = true);
+		TurnOnDraggingMapObjects();
+		TurnOffMapObjectColliders();
 	}
 
 	void LevelCreationExit()
@@ -104,12 +111,12 @@ public class LevelCreatorController : MonoBehaviour
 
 	void SavingMapEnter()
 	{
-		mapObjects.ForEach(e => e.enabled = false);
+		TurnOffDraggingMapObjects();
 	}
 
 	void LoadingMapEnter()
 	{
-		mapObjects.ForEach(e => e.enabled = false);
+		TurnOffDraggingMapObjects();
 	}
 
 	void TestingMapEnter()
@@ -128,11 +135,66 @@ public class LevelCreatorController : MonoBehaviour
 
 #endregion
 
+	public void TurnOffDraggingMapObjects()
+	{
+		mapObjects.ForEach(e => e.enabled = false);
+	}
+
+	public void TurnOnDraggingMapObjects()
+	{
+		mapObjects.ForEach(e => e.enabled = true);
+	}
+
+	public void TurnOnMapObjectColliders()
+	{
+		foreach(var mapObj in mapObjects)
+		{
+			mapObj.collider.enabled = true;
+
+			if(mapObj.transform.childCount > 0)
+			{
+				foreach(Transform child in mapObj.transform)
+				{
+					if(child.collider)
+						child.collider.enabled = true;
+				}
+			}
+		}
+	}
+
+	public void TurnOffMapObjectColliders()
+	{
+		foreach(var mapObj in mapObjects)
+		{
+			mapObj.collider.enabled = true;
+
+			if(mapObj.transform.childCount > 0)
+			{
+				foreach(Transform child in mapObj.transform)
+				{
+					Debug.Log("Turning off collider on: " + child.name);
+					if(child.collider)
+					{
+						Debug.Log("Confirming child has collider");
+						child.collider.enabled = false;
+					}
+				}
+			}
+		}
+	}
+
+	public void GetDraggableMapObjects()
+	{
+		mapObjects.Clear();
+		mapObjects = ((DraggableMapObject[])FindObjectsOfType(typeof(DraggableMapObject))).ToList();
+		Debug.Log("We tried to find all dragging map objects, found this many: " + mapObjects.Count);
+	}
 
 	public void InitMapForPreview()
 	{
+		TurnOnMapObjectColliders();
 
-		mapObjects.ForEach(e => e.enabled = false);
+		TurnOffDraggingMapObjects();
 
 		var playerObj = GameObject.FindWithTag("Player");
 

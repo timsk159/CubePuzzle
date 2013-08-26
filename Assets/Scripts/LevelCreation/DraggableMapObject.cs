@@ -7,6 +7,19 @@ public class DraggableMapObject : MonoBehaviour
 	float doubleClickStart;
 	float doubleClickThreshold = 0.2f;
 
+	void Start()
+	{
+		var prefabID = GetComponent<PrefabIdentifier>();
+
+		if(prefabID == null)
+			prefabID = gameObject.AddComponent<PrefabIdentifier>();
+
+		prefabID.Components.Add(GetType().FullName);
+
+		if(Application.loadedLevelName != "LevelCreator")
+			Destroy(prefabID);
+	}
+
 	protected virtual void OnPress(bool isPressed)
 	{
 		if(UICamera.currentTouchID == -2 && isPressed)
@@ -29,7 +42,7 @@ public class DraggableMapObject : MonoBehaviour
 		}
 	}
 
-	void OnDestroy()
+	protected virtual void OnDestroy()
 	{
 		NotificationCenter<DragAndDropNotification>.DefaultCenter.PostNotification(DragAndDropNotification.MapObjectRemoved, this);
 	}

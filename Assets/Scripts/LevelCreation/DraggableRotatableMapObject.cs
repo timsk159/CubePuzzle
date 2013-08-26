@@ -6,7 +6,7 @@ public class DraggableRotatableMapObject : DraggableMapObject
 	DragAndDropController dragController;
 	bool isRotating;
 
-	void Start()
+	void Awake()
 	{
 		dragController = GameObject.Find("UIController").GetComponent<DragAndDropController>();
 	}
@@ -30,5 +30,10 @@ public class DraggableRotatableMapObject : DraggableMapObject
 				}
 			}
 		}
+	}
+
+	protected override void OnDestroy()
+	{
+		NotificationCenter<DragAndDropNotification>.DefaultCenter.PostNotification(DragAndDropNotification.MapObjectRemoved, this);
 	}
 }
