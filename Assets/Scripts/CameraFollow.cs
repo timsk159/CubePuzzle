@@ -18,6 +18,15 @@ public class CameraFollow : MonoBehaviour
 			pos.x -= distance;
 			pos.z = height;
 			transform.position = pos;
+
+			var newPos = transform.position;
+			newPos.x = target.position.x;
+			newPos.y = target.position.y + height;
+			newPos.z = target.position.z - distance;
+
+			transform.position = newPos;
+
+			transform.LookAt(target, target.up);
 		}
 	}
 
@@ -31,6 +40,7 @@ public class CameraFollow : MonoBehaviour
 			newPos.z = target.position.z - distance;
 
 			transform.position = newPos;
+
 		}
 	}
 }
