@@ -148,7 +148,8 @@ public class LevelCreatorController : MonoBehaviour
 	{
 		foreach(var mapObj in mapObjects)
 		{
-			mapObj.collider.enabled = true;
+			if(mapObj.collider)
+				mapObj.collider.enabled = true;
 
 			if(mapObj.transform.childCount > 0)
 			{
