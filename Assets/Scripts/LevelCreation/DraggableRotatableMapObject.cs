@@ -8,7 +8,8 @@ public class DraggableRotatableMapObject : DraggableMapObject
 
 	void Awake()
 	{
-		dragController = GameObject.Find("UIController").GetComponent<DragAndDropController>();
+		if(GameObject.Find("UIController") != null)
+			dragController = GameObject.Find("UIController").GetComponent<DragAndDropController>();
 	}
 
 	void Update()

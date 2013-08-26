@@ -3,10 +3,16 @@ using System.Collections;
 
 public class Door : ColorCollisionObject
 {
-	bool doorIsDown;
+	bool doorIsDown = true;
 	
 	protected override void Start()
 	{
+		if (transform.parent.GetComponent<ColorCollisionObject>().objColour == objColour)
+		{
+			doorIsDown = true;
+			OpenDoor();
+		}
+
 		base.Start ();
 		doorIsDown = objColour != transform.parent.GetComponent<ColorCollisionObject>().objColour;
 

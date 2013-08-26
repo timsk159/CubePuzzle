@@ -9,15 +9,19 @@ public class DraggableMapObject : MonoBehaviour
 
 	void Start()
 	{
-		var prefabID = GetComponent<PrefabIdentifier>();
+		if (Application.loadedLevelName != "LevelCreator")
+			Destroy(this);
+		else
+		{
 
-		if(prefabID == null)
-			prefabID = gameObject.AddComponent<PrefabIdentifier>();
+			var prefabID = GetComponent<PrefabIdentifier>();
 
-		prefabID.Components.Add(GetType().FullName);
+			if (prefabID == null)
+				prefabID = gameObject.AddComponent<PrefabIdentifier>();
 
-		if(Application.loadedLevelName != "LevelCreator")
-			Destroy(prefabID);
+			prefabID.Components.Add(GetType().FullName);
+		}
+
 	}
 
 	protected virtual void OnPress(bool isPressed)

@@ -54,6 +54,7 @@ public class DoorPiece : ColorCollisionObject
 	
 	void CheckDoor()
 	{
+		Debug.Log("Checked door. Door colour: " + theDoor.objColour + " Base colour: " +objColour );
 		if(theDoor.objColour == objColour)
 		{			
 			theDoor.OpenDoor();
