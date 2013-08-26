@@ -129,7 +129,6 @@ public class LevelCreatorController : MonoBehaviour
 		var saves = LevelSerializer.SavedGames[LevelSerializer.PlayerName];
 		var restoreData = saves.Where(e => e.Name == "BeforePreviewSave").FirstOrDefault().Data;
 		LevelSerializer.LoadSavedLevel(restoreData);
-		Debug.Log("Loaded saved level");
 		Time.timeScale = 1;
 	}
 
@@ -172,10 +171,8 @@ public class LevelCreatorController : MonoBehaviour
 			{
 				foreach(Transform child in mapObj.transform)
 				{
-					Debug.Log("Turning off collider on: " + child.name);
 					if(child.collider)
 					{
-						Debug.Log("Confirming child has collider");
 						child.collider.enabled = false;
 					}
 				}
@@ -187,7 +184,6 @@ public class LevelCreatorController : MonoBehaviour
 	{
 		mapObjects.Clear();
 		mapObjects = ((DraggableMapObject[])FindObjectsOfType(typeof(DraggableMapObject))).ToList();
-		Debug.Log("We tried to find all dragging map objects, found this many: " + mapObjects.Count);
 	}
 
 	public void InitMapForPreview()
