@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 
-public class DoorPiece : ColorCollisionObject 
+public class DoorPiece : FloorPiece 
 {
 	public Door theDoor;
 	
@@ -47,14 +47,13 @@ public class DoorPiece : ColorCollisionObject
 	public void SetDoorColour(Colour colourToSet)
 	{		
 		theDoor.objColour = colourToSet;
-		theDoor.renderer.material.color = theDoor.GetObjectRealColor(theDoor.objColour);
+		theDoor.renderer.sharedMaterial.color = theDoor.GetObjectRealColor(theDoor.objColour);
 		
 		CheckDoor();
 	}
 	
 	void CheckDoor()
 	{
-		Debug.Log("Checked door. Door colour: " + theDoor.objColour + " Base colour: " +objColour );
 		if(theDoor.objColour == objColour)
 		{			
 			theDoor.OpenDoor();

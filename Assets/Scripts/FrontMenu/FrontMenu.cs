@@ -35,6 +35,7 @@ public class FrontMenu : MonoBehaviour
 		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver (this, FrontMenuUINotification.CancelUserLevelMenuPressed);
 		if(firstLoad)
 		{
+			EnsureDirectoriesExist();
 			RegisterPrefabPaths ();
 			firstLoad = false;
 		}
@@ -121,6 +122,13 @@ public class FrontMenu : MonoBehaviour
 		Application.Quit();
 	}
 
+	void EnsureDirectoriesExist()
+	{
+		if(!Directory.Exists(Application.persistentDataPath + LevelCreatorController.mapFilesFilePath))
+		{
+			Directory.CreateDirectory(Application.persistentDataPath + LevelCreatorController.mapFilesFilePath);
+		}
+	}
 
 	void RegisterPrefabPaths()
 	{

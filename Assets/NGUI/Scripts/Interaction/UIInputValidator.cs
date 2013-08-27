@@ -8,10 +8,14 @@ using UnityEngine;
 [AddComponentMenu("NGUI/Interaction/Input Validator")]
 public class UIInputValidator : MonoBehaviour
 {
+	public int minInt;
+	public int maxInt;
+
 	public enum Validation
 	{
 		None,
 		Integer,
+		ClampedInteger,
 		Float,
 		Alphanumeric,
 		Username,
@@ -44,6 +48,31 @@ public class UIInputValidator : MonoBehaviour
 			// Integer number validation
 			if (ch >= '0' && ch <= '9') return ch;
 			if (ch == '-' && text.Length == 0) return ch;
+		}
+		else if(logic == Validation.ClampedInteger)
+		{
+			if(ch >= '0' && ch <= '9')
+			{
+				if(text.Length > 0)
+				{
+					var totalText = text + ch;
+
+					var inputInt = int.Parse(totalText);
+
+					if(inputInt >= minInt && inputInt <= maxInt)
+					{
+						return ch;
+					}
+				}
+				else
+				{
+					return ch;
+				}
+			}
+			if(ch == '-' && text.Length == 0)
+			{
+				return ch;
+			}
 		}
 		else if (logic == Validation.Float)
 		{

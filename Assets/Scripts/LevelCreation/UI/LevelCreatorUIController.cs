@@ -26,7 +26,8 @@ public class LevelCreatorUIController : MonoBehaviour
 	UIPopupList fileMenu;	
 	LevelCreator levelCreator;
 	
-	int selectedMapSize;
+	int selectedMapHeight;
+	int selectedMapWidth;
 	bool isInFrontMenu = true;
 	bool isSavingMap = false;
 	
@@ -171,13 +172,15 @@ public class LevelCreatorUIController : MonoBehaviour
 	
 	void CreateButtonClicked()
 	{
-		var mapsizeinput = GameObject.Find ("MapSize-Input").GetComponentInChildren<UILabel> ();
+		//change to get the input class and get it's label from there.
+		var mapHeightInput = GameObject.Find("MapHeight-Input").GetComponent<UIInput>().label;
+		var mapWidthInput = GameObject.Find("MapWidth-Input").GetComponent<UIInput>().label;
 
-		if (int.TryParse (mapsizeinput.text, out selectedMapSize))
+		if (int.TryParse (mapHeightInput.text, out selectedMapHeight) && int.TryParse(mapWidthInput.text, out selectedMapWidth))
 		{
-			for (int x = 0; x <= selectedMapSize; x++)
+			for (int x = 0; x <= selectedMapWidth; x++)
 			{
-				for (int z = 0; z <= selectedMapSize; z++)
+				for (int z = 0; z <= selectedMapHeight; z++)
 				{
 					var obj = (GameObject)Instantiate (levelCreator.assetManager.nullCubePrefab);
 
@@ -187,7 +190,6 @@ public class LevelCreatorUIController : MonoBehaviour
 				
 				}
 			}
-			levelCreator.mapRoot.GetComponent<MapRoot>().mapSize = selectedMapSize;
 			StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState (LevelCreatorStates.LevelCreation);
 		}
 	}
@@ -195,10 +197,15 @@ public class LevelCreatorUIController : MonoBehaviour
 	void GenericInputSubmitted(NotificationCenter<LevelCreatorUINotification>.Notification notiData)
 	{
 		InputNotificationData inputData = (InputNotificationData)notiData.data;
-		
-		if(inputData.go.name == "MapSize-Input")
+
+
+		if(inputData.go.name == "MapHeight-Input")
 		{
-			selectedMapSize = Convert.ToInt32(inputData.theInput);
+			int.TryParse(inputData.theInput, out selectedMapHeight);
+		}
+		else if(inputData.go.name == "MapWidth-Input")
+		{
+			int.TryParse(inputData.theInput, out selectedMapWidth);
 		}
 		else if(inputData.go.name == "FileNameInput")
 		{

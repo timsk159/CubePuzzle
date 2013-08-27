@@ -42,7 +42,6 @@ public class LevelCreator : MonoBehaviour
 		Destroy(mapRoot);
 
 		mapRoot = new GameObject("MapRoot");
-		mapRoot.AddComponent<MapRoot>();
 	}
 
 	void OnDestroy()

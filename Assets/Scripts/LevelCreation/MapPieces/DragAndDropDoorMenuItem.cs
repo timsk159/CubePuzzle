@@ -40,7 +40,8 @@ public class DragAndDropDoorMenuItem : DragAndDropMenuItem
 			
 			go.GetComponent<DoorPiece>().SetDoorColour(doorPiece.theDoor.objColour);
 			go.GetComponent<DoorPiece>().ChangeColour(doorPiece.objColour);
-			
+			go.AddComponent<DraggableRotatableMapObject>();
+
 			prefab = go;
 			
 			base.OnPress (isPressed);
