@@ -13,6 +13,7 @@ public class PauseMenuController : MonoBehaviour
 		NotificationCenter<PauseMenuNotification>.DefaultCenter.AddObserver(this, PauseMenuNotification.ResumeButtonClicked);
 		NotificationCenter<PauseMenuNotification>.DefaultCenter.AddObserver(this, PauseMenuNotification.QuitButtonClicked);
 		NotificationCenter<PauseMenuNotification>.DefaultCenter.AddObserver(this, PauseMenuNotification.RestartButtonClicked);
+		NotificationCenter<PauseMenuNotification>.DefaultCenter.AddObserver(this, PauseMenuNotification.ReloadCheckpointClicked);
 	}
 	
 	void PauseEnter()
@@ -32,9 +33,15 @@ public class PauseMenuController : MonoBehaviour
 
 	void RestartButtonClicked()
 	{
-		LevelController.Instance.LoadCheckpoint ();
+		LevelController.Instance.ResetLevel();
+	}
 
-		//LevelController.Instance.ResetLevel();
+	void ReloadCheckpointClicked()
+	{
+		if(LevelController.Instance.hasCheckpoint)
+			LevelController.Instance.LoadCheckpoint();
+		else
+			LevelController.Instance.ResetLevel();
 	}
 	
 	void QuitButtonClicked()

@@ -290,48 +290,8 @@ public class LevelCreator : MonoBehaviour
 		{
 			LevelSerializer.LoadObjectTreeFromFile(filePath, delegate(LevelLoader obj)
 			{
-				SetupNullCubes();
-				CreatePlayer();
 				LevelController.Instance.InitLevel();
 			});
 		});
-	}
-
-	void SetupNullCube(GameObject nullCube)
-	{
-		nullCube.collider.enabled = true;
-		nullCube.renderer.enabled = false;
-		nullCube.GetComponent<BoxCollider>().size = new Vector3(1, 10, 1);
-	}
-
-	void SetupNullCubes()
-	{
-		var nullCubes = GameObject.FindGameObjectsWithTag("NullCube");
-
-		foreach(var cube in nullCubes)
-		{
-			SetupNullCube(cube);
-		}
-	}
-
-	void CreatePlayer()
-	{
-		var playerStart = GameObject.Find("PlayerStartCube");
-
-		var playerPrefab = (GameObject)Resources.Load("Player");
-
-		var playerCube = (GameObject)Instantiate(playerPrefab);
-		playerCube.name = playerCube.name.Replace ("(Clone)", string.Empty);
-		var playerPos = playerStart.transform.position;
-
-		playerPos.y += 3;
-
-		playerCube.transform.position = playerPos;
-
-		Resources.UnloadUnusedAssets();
-
-		LevelController.Instance.playerChar = playerCube.GetComponent<PlayerCharacter> ();
-
-		LevelController.Instance.playerChar.ChangeColour(GameObject.Find("PlayerStartCube").GetComponent<PlayerStartPiece>().objColour);
 	}
 }

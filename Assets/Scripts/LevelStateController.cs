@@ -4,7 +4,6 @@ using System.Linq;
 
 public class LevelStateController : MonoBehaviour 
 {
-
 	public void SetInitialState()
 	{
 		LevelSerializer.SaveGame("InitialState");
@@ -20,7 +19,7 @@ public class LevelStateController : MonoBehaviour
 	{
 		var savedGames = LevelSerializer.SavedGames[LevelSerializer.PlayerName];
 		var initialSaveData = savedGames.Where(e => e.Name == "InitialState").FirstOrDefault().Data;
-		LevelSerializer.LoadSavedLevel(initialSaveData);
+		LevelSerializer.LoadSavedLevel(initialSaveData, LevelController.Instance.LoadedSaveComplete);
 		StateMachine<LevelState, LevelStateNotification>.ChangeState(LevelState.InGame) ;
 	}
 

@@ -42,6 +42,8 @@ public class LevelController : MonoBehaviour
 	LevelStateController levelStateController;
 	
 	public bool isStoryMode = false;
+
+	public bool hasCheckpoint;
 	
 	bool canPause = true;
 	bool isPaused;
@@ -76,9 +78,32 @@ public class LevelController : MonoBehaviour
 			isStoryMode = false;
 
 		levelStateController = GetComponent<LevelStateController>();
+
 	}
 	
 	public void InitLevel()
+	{
+		Debug.Log("Init level called");
+		CreatePlayer();
+		var playerObj = GameObject.FindWithTag ("Player");
+
+		if(playerObj != null)
+		{
+			playerChar = playerObj.GetComponent<PlayerCharacter>();
+		}
+
+		SetupNullCubes();
+		SetInitialFloorColliders();
+
+		Camera.main.GetComponent<CameraFollow>().target = playerObj.transform;
+
+		if(levelStateController != null)
+		{
+			levelStateController.SetInitialState();
+		}
+	}
+
+	public void LoadedSaveComplete(GameObject rootObj, List<GameObject> mapObjects)
 	{
 		var playerObj = GameObject.FindWithTag ("Player");
 
@@ -87,79 +112,58 @@ public class LevelController : MonoBehaviour
 			playerChar = playerObj.GetComponent<PlayerCharacter>();
 		}
 
+		SetupNullCubes();
 		SetInitialFloorColliders();
 
 		Camera.main.GetComponent<CameraFollow>().target = playerObj.transform;
 
 		if(levelStateController != null)
+		{
 			levelStateController.SetInitialState();
+		}
 	}
 
 	public void SetInitialFloorColliders()
 	{
 		NotificationCenter<ColourCollisionNotification>.DefaultCenter.PostNotification(ColourCollisionNotification.PlayerChangedColour, PlayerColour);
+	}
 
+	void SetupNullCube(GameObject nullCube)
+	{
+		nullCube.collider.enabled = true;
+		nullCube.renderer.enabled = false;
+		nullCube.GetComponent<BoxCollider>().size = new Vector3(1, 10, 1);
+	}
 
+	void SetupNullCubes()
+	{
+		var nullCubes = GameObject.FindGameObjectsWithTag("NullCube");
 
-		/*
-		FloorPiece[] floorPieces = GameObject.FindGameObjectsWithTag("FloorPiece").ToList().Where(e => e.GetComponent<FloorPiece>() != null).Select(
-			e => e.GetComponent<FloorPiece>()).ToArray();
-
-		ButtonPiece[] buttonPieces = GameObject.FindGameObjectsWithTag("ButtonPiece").ToList().Where(e => e.GetComponent<ButtonPiece>() != null).Select(
-			e => e.GetComponent<ButtonPiece>()).ToArray();
-
-		DoorPiece[] doorPieces = GameObject.FindGameObjectsWithTag("DoorPiece").ToList().Where(e => e.GetComponent<DoorPiece>() != null).Select(
-			e => e.GetComponent<DoorPiece>()).ToArray();
-
-		var checkPoints = GameObject.FindGameObjectsWithTag("FloorPiece").Where(e => e.name == "CheckpointCube").ToArray();
-
-		foreach(var floorPiece in floorPieces)
+		foreach(var cube in nullCubes)
 		{
-			var thisCollider = floorPiece.collider as BoxCollider;
-			thisCollider.enabled = true;
-			if(floorPiece.objColour == PlayerColour)
-			{
-				var newColliderSize = new Vector3(thisCollider.size.x, 10, thisCollider.size.z);
-				
-				thisCollider.size = newColliderSize;		
-			}
-			foreach(Transform child in floorPiece.transform)
-			{
-				if(child.collider)
-					child.collider.enabled = true;
-			}
+			SetupNullCube(cube);
 		}
-		foreach(var buttonPiece in buttonPieces)
-		{
-			var thisCollider = buttonPiece.collider as BoxCollider;
-			thisCollider.enabled = true;
-			foreach(Transform child in buttonPiece.transform)
-			{
-				if(child.collider)
-					child.collider.enabled = true;
-			}
-		}
-		foreach(var doorPiece in doorPieces)
-		{
-			var thisCollider = doorPiece.collider as BoxCollider;
-			thisCollider.enabled = true;
-			foreach(Transform child in doorPiece.transform)
-			{
-				if(child.collider)
-					child.collider.enabled = true;
-			}
-		}
-		foreach(var checkpointCube in checkPoints)
-		{
-			var thisCollider = checkpointCube.collider as BoxCollider;
-			thisCollider.enabled = true;
-			foreach(Transform child in checkpointCube.transform)
-			{
-				if(child.collider)
-					child.collider.enabled = true;
-			}
-		}
-*/
+	}
+
+	void CreatePlayer()
+	{
+		var playerStart = GameObject.Find("PlayerStartCube");
+
+		var playerPrefab = (GameObject)Resources.Load("Player");
+
+		var playerCube = (GameObject)Instantiate(playerPrefab);
+		playerCube.name = playerCube.name.Replace ("(Clone)", string.Empty);
+		var playerPos = playerStart.transform.position;
+
+		playerPos.y += 3;
+
+		playerCube.transform.position = playerPos;
+
+		Resources.UnloadUnusedAssets();
+
+		playerChar = playerCube.GetComponent<PlayerCharacter> ();
+
+		playerChar.ChangeColour(GameObject.Find("PlayerStartCube").GetComponent<PlayerStartPiece>().objColour);
 	}
 	
 	void Update()
@@ -188,6 +192,7 @@ public class LevelController : MonoBehaviour
 
 	public void SetCheckpoint()
 	{
+		hasCheckpoint = true;
 		levelStateController.SetCheckPoint();
 	}
 

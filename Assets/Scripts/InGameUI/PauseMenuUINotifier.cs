@@ -3,7 +3,7 @@ using System.Collections;
 
 public enum PauseMenuNotification
 {
-	ResumeButtonClicked, QuitButtonClicked, RestartButtonClicked
+	ResumeButtonClicked, QuitButtonClicked, RestartButtonClicked, ReloadCheckpointClicked
 };
 
 public class PauseMenuUINotifier : MonoBehaviour 
