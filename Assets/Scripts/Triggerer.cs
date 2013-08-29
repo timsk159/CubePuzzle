@@ -5,7 +5,7 @@ public class Triggerer : MonoBehaviour
 {
 	public GameObject[] listeners;	
 	
-	void OnTriggerEnter(Collider col)
+	protected virtual void OnTriggerEnter(Collider col)
 	{
 		foreach(var listener in listeners)
 		{
@@ -13,7 +13,7 @@ public class Triggerer : MonoBehaviour
 		}
 	}
 	
-	void OnTriggerExit(Collider col)
+	protected virtual void OnTriggerExit(Collider col)
 	{
 		foreach(var listener in listeners)
 		{

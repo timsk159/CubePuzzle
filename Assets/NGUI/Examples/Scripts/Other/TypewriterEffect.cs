@@ -1,4 +1,6 @@
 using UnityEngine;
+using System;
+using System.Collections;
 
 /// <summary>
 /// Trivial script that fills the label's contents gradually, as if someone was typing.
@@ -17,7 +19,7 @@ public class TypewriterEffect : MonoBehaviour
 
 	void Update ()
 	{
-		if (mLabel == null)
+		if(mLabel == null)
 		{
 			mLabel = GetComponent<UILabel>();
 			mLabel.supportEncoding = false;
@@ -25,21 +27,23 @@ public class TypewriterEffect : MonoBehaviour
 			mText = mLabel.font.WrapText(mLabel.text, mLabel.lineWidth / mLabel.cachedTransform.localScale.x, mLabel.maxLineCount, false, UIFont.SymbolStyle.None);
 		}
 
-		if (mOffset < mText.Length)
+		if(mOffset < mText.Length)
 		{
-			if (mNextChar <= Time.time)
+			if(mNextChar <= Time.time)
 			{
 				charsPerSecond = Mathf.Max(1, charsPerSecond);
 
 				// Periods and end-of-line characters should pause for a longer time.
 				float delay = 1f / charsPerSecond;
 				char c = mText[mOffset];
-				if (c == '.' || c == '\n' || c == '!' || c == '?') delay *= 4f;
+				if(c == '.' || c == '\n' || c == '!' || c == '?')
+					delay *= 4f;
 
 				mNextChar = Time.time + delay;
 				mLabel.text = mText.Substring(0, ++mOffset);
 			}
 		}
-		else Destroy(this);
+		else
+			Destroy(this);
 	}
 }

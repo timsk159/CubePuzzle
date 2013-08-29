@@ -16,7 +16,7 @@ public class PlayerCharacter : MonoBehaviour
 	//The current interaction object that the player is stood in
 	InteractiveObject currentInteractionObject;
 	
-	void Start () 
+	void Awake () 
 	{
 		playerMovement = GetComponent<PlayerMovement>();
 		

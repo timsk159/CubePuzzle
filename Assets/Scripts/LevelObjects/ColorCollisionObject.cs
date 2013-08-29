@@ -28,7 +28,7 @@ public class ColorCollisionObject : MonoBehaviour
 	protected virtual void Start()
 	{
 		var col = collider as BoxCollider;
-		initialColliderSize = col.size;
+		initialColliderSize = new Vector3(1, 1, 1);
 		if(objColour != Colour.None)
 			renderer.sharedMaterial.color = GetObjectRealColor(objColour);
 		if(Application.loadedLevelName != "LevelCreator")

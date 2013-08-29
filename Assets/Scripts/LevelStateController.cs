@@ -19,7 +19,8 @@ public class LevelStateController : MonoBehaviour
 	{
 		var savedGames = LevelSerializer.SavedGames[LevelSerializer.PlayerName];
 		var initialSaveData = savedGames.Where(e => e.Name == "InitialState").FirstOrDefault().Data;
-		LevelSerializer.LoadSavedLevel(initialSaveData, LevelController.Instance.LoadedSaveComplete);
+	//	LevelSerializer.LoadSavedLevel(initialSaveData, LevelController.Instance.LoadedSaveComplete);
+		LevelSerializer.LoadSavedLevel(initialSaveData);
 		StateMachine<LevelState, LevelStateNotification>.ChangeState(LevelState.InGame) ;
 	}
 

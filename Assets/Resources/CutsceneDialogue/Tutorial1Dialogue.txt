@@ -1,0 +1,13 @@
+Hello and welcome to cube puzzle!
+
+Use the WASD keys to navigate.
+
+--BREAKLINE--
+
+Cube colours rotate in the order R > G > B. Roll yourself onto a button to activate it.
+
+--BREAKLINE--
+
+Doors will only open when their colour matches the cube below them.
+
+Good luck!

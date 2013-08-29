@@ -5,12 +5,12 @@ using System.Linq;
 
 public enum LevelState
 {
-	InGame, Pause, EndGame
+	InGame, Pause, EndGame, CutScene
 };
 
 public enum LevelStateNotification
 {
-	InGameEnter, InGameExit, PauseEnter, PauseExit, EndGameEnter, EndGameExit
+	InGameEnter, InGameExit, PauseEnter, PauseExit, EndGameEnter, EndGameExit, CutSceneEnter, CutSceneExit
 };
 
 public class LevelController : MonoBehaviour 
@@ -59,6 +59,7 @@ public class LevelController : MonoBehaviour
 		StateMachine<LevelState, LevelStateNotification>.RegisterState(LevelState.InGame, LevelStateNotification.InGameEnter, LevelStateNotification.InGameExit); 
 		StateMachine<LevelState, LevelStateNotification>.RegisterState(LevelState.Pause, LevelStateNotification.PauseEnter, LevelStateNotification.PauseExit); 
 		StateMachine<LevelState, LevelStateNotification>.RegisterState(LevelState.EndGame, LevelStateNotification.EndGameEnter, LevelStateNotification.EndGameExit);
+		StateMachine<LevelState, LevelStateNotification>.RegisterState(LevelState.CutScene, LevelStateNotification.CutSceneEnter, LevelStateNotification.CutSceneExit);
 		
 		StateMachine<LevelState, LevelStateNotification>.StateNotificationCenter.AddObserver(this, LevelStateNotification.InGameEnter);
 		StateMachine<LevelState, LevelStateNotification>.StateNotificationCenter.AddObserver(this, LevelStateNotification.InGameExit);
@@ -68,6 +69,9 @@ public class LevelController : MonoBehaviour
 		
 		StateMachine<LevelState, LevelStateNotification>.StateNotificationCenter.AddObserver(this, LevelStateNotification.EndGameEnter);
 		StateMachine<LevelState, LevelStateNotification>.StateNotificationCenter.AddObserver(this, LevelStateNotification.EndGameExit);
+
+		StateMachine<LevelState, LevelStateNotification>.StateNotificationCenter.AddObserver(this, LevelStateNotification.CutSceneEnter);
+		StateMachine<LevelState, LevelStateNotification>.StateNotificationCenter.AddObserver(this, LevelStateNotification.CutSceneExit);
 		
 		StateMachine<LevelState, LevelStateNotification>.SetInitialState(LevelState.InGame);
 	}
@@ -79,13 +83,21 @@ public class LevelController : MonoBehaviour
 
 		levelStateController = GetComponent<LevelStateController>();
 
+		if(isStoryMode)
+		{
+			NotificationCenter<CutSceneNotification>.DefaultCenter.AddObserver(this, CutSceneNotification.CutSceneStarted);
+			NotificationCenter<CutSceneNotification>.DefaultCenter.AddObserver(this, CutSceneNotification.CutSceneFinished);
+		}
 	}
 	
 	public void InitLevel()
 	{
-		Debug.Log("Init level called");
-		CreatePlayer();
 		var playerObj = GameObject.FindWithTag ("Player");
+		if(playerObj == null)
+		{
+			CreatePlayer();
+			playerObj = GameObject.FindWithTag("Player");
+		}
 
 		if(playerObj != null)
 		{
@@ -155,7 +167,7 @@ public class LevelController : MonoBehaviour
 		playerCube.name = playerCube.name.Replace ("(Clone)", string.Empty);
 		var playerPos = playerStart.transform.position;
 
-		playerPos.y += 3;
+		playerPos.y += 1.01f;
 
 		playerCube.transform.position = playerPos;
 
@@ -164,6 +176,20 @@ public class LevelController : MonoBehaviour
 		playerChar = playerCube.GetComponent<PlayerCharacter> ();
 
 		playerChar.ChangeColour(GameObject.Find("PlayerStartCube").GetComponent<PlayerStartPiece>().objColour);
+	}
+
+	void CutSceneStarted(CutSceneObj cutSceneObj)
+	{
+		canPause = false;
+		playerChar.playerMovement.canMove = false;
+		Camera.main.GetComponent<CameraFollow>().enabled = false;
+	}
+
+	void CutSceneFinished()
+	{
+		canPause = true;
+		playerChar.playerMovement.canMove = true;
+		Camera.main.GetComponent<CameraFollow>().enabled = true;
 	}
 	
 	void Update()
@@ -200,7 +226,7 @@ public class LevelController : MonoBehaviour
 	{
 		levelStateController.LoadCheckpoint();
 	}
-	
+
 	#region State Changes
 	
 	void InGameEnter()
@@ -236,6 +262,16 @@ public class LevelController : MonoBehaviour
 	void EndGameExit()
 	{
 		
+	}
+
+	void CutSceneEnter()
+	{
+
+	}
+
+	void CutSceneExit()
+	{
+
 	}
 	
 	#endregion
