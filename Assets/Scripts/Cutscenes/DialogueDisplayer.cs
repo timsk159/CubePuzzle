@@ -36,7 +36,6 @@ public class DialogueDisplayer : MonoBehaviour
 
 	public IEnumerator DisplayText(string[] textLines)
 	{
-				Debug.Log ("Asked to display: " + textLines.Length + " Lines of text");
 		foreach(var text in textLines)
 		{
 			while(mOffset < text.Length)

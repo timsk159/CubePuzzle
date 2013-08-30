@@ -43,7 +43,7 @@ public class FrontMenu : MonoBehaviour
 	
 	void StoryModeButtonPressed()
 	{
-		SceneLoader.Instance.LoadLevel("TestScene", delegate
+		SceneLoader.Instance.LoadLevel("Tutorial1", delegate
 		{
 			LevelController.Instance.InitLevel();
 		});

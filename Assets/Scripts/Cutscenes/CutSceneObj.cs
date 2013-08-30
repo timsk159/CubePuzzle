@@ -3,12 +3,10 @@ using System;
 using System.Collections;
 
 [System.Serializable]
-public class CutSceneObj
+public class CutsceneObj 
 {
 	public TextAsset dialogueAsset;
-	public AudioClip narrationAudio;
-	public AnimationClip cameraAnimation;
-	public int lengthInSeconds;
+	public int timeInSeconds;
 
 	string[] _dialogueLines;
 

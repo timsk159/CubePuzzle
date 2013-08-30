@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CutSceneTrigger : Triggerer 
 {
-	public CutSceneObj cutSceneObj;
+	public CutsceneObj cutSceneObj;
 	public bool hasPlayed ;
 
 	protected override void OnTriggerEnter(Collider col)
@@ -13,6 +13,7 @@ public class CutSceneTrigger : Triggerer
 			foreach(var listener in listeners)
 			{
 				listener.SendMessage("TriggererEntered", cutSceneObj, SendMessageOptions.RequireReceiver);
+				hasPlayed = true;
 			}
 		}
 	}

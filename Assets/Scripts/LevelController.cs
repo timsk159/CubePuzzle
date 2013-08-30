@@ -80,6 +80,8 @@ public class LevelController : MonoBehaviour
 	{
 		if(Application.loadedLevelName == "UserCreatedLevel")
 			isStoryMode = false;
+		else 
+			isStoryMode = true;
 
 		levelStateController = GetComponent<LevelStateController>();
 
@@ -178,7 +180,7 @@ public class LevelController : MonoBehaviour
 		playerChar.ChangeColour(GameObject.Find("PlayerStartCube").GetComponent<PlayerStartPiece>().objColour);
 	}
 
-	void CutSceneStarted(CutSceneObj cutSceneObj)
+	void CutSceneStarted()
 	{
 		canPause = false;
 		playerChar.playerMovement.canMove = false;

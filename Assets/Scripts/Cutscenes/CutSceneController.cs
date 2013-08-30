@@ -11,36 +11,54 @@ public class CutSceneController : MonoBehaviour
 	public Camera cutSceneCamera;
 	public DialogueDisplayer cutSceneLabel;
 
-	void Awake()
+	void TriggererEntered(CutsceneObj cutSceneObj)
 	{
-	}
+		NotificationCenter<CutSceneNotification>.DefaultCenter.PostNotification(CutSceneNotification.CutSceneStarted, null);
 
-	void TriggererEntered(CutSceneObj cutSceneObj)
-	{
-		NotificationCenter<CutSceneNotification>.DefaultCenter.PostNotification(CutSceneNotification.CutSceneStarted, cutSceneObj.lengthInSeconds);
-
-		StartCoroutine(CutSceneTimerRoutine(cutSceneObj.lengthInSeconds));
+		StartCoroutine(CutSceneTimerRoutine(cutSceneObj.timeInSeconds));
 
 		//Do cutsceney stuff here.
-		if(cutSceneObj.cameraAnimation != null)
-		{
-			cutSceneCamera.depth = 1;
 
-			if(cutSceneCamera.animation.GetClip(cutSceneObj.cameraAnimation.name) == null)
-			{
-				cutSceneCamera.animation.AddClip(cutSceneObj.cameraAnimation, cutSceneObj.cameraAnimation.name);
-			}
-			cutSceneCamera.animation.Play(cutSceneObj.cameraAnimation.name);
+		if(cutSceneObj is SimpleCutSceneObj)
+		{
+			var simepleCutSceneObj = cutSceneObj as SimpleCutSceneObj;
+
+			DisplaySimpleCuscene(simepleCutSceneObj);
+		}
+		else if(cutSceneObj is ComplexCutsceneObj)
+		{
+			var complexCutsceneObj = cutSceneObj as ComplexCutsceneObj;
+
+			DisplayComplexCutscene(complexCutsceneObj);
 		}
 		if(cutSceneObj.dialogue != null)
 		{
 			cutSceneLabel.StartCoroutine(cutSceneLabel.DisplayText(cutSceneObj.dialogueLines));
 		}
-		if(cutSceneObj.narrationAudio != null)
+	}
+
+	void DisplaySimpleCuscene(SimpleCutSceneObj simpleCutSceneObj)
+	{
+		if(simpleCutSceneObj.cameraAnimation != null)
 		{
-			audio.clip = cutSceneObj.narrationAudio;
+			cutSceneCamera.depth = 1;
+
+			if(cutSceneCamera.animation.GetClip(simpleCutSceneObj.cameraAnimation.name) == null)
+			{
+				cutSceneCamera.animation.AddClip(simpleCutSceneObj.cameraAnimation, simpleCutSceneObj.cameraAnimation.name);
+			}
+			cutSceneCamera.animation.Play(simpleCutSceneObj.cameraAnimation.name);
+		}
+		if(simpleCutSceneObj.narrationAudio != null)
+		{
+			audio.clip = simpleCutSceneObj.narrationAudio;
 			audio.Play();
 		}
+	}
+
+	void DisplayComplexCutscene(ComplexCutsceneObj complexCutsceneObj)
+	{
+		var go = (GameObject)Instantiate(complexCutsceneObj.prefabToInstantiate);
 	}
 
 	void StopCutScene()
