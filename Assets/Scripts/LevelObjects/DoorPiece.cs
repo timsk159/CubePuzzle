@@ -47,7 +47,7 @@ public class DoorPiece : FloorPiece
 	public void SetDoorColour(Colour colourToSet)
 	{		
 		theDoor.objColour = colourToSet;
-		theDoor.renderer.sharedMaterial.color = theDoor.GetObjectRealColor(theDoor.objColour);
+		theDoor.renderer.material.color = theDoor.GetObjectRealColor(theDoor.objColour);
 		
 		CheckDoor();
 	}

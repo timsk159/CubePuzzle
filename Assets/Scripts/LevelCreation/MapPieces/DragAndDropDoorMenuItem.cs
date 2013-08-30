@@ -49,6 +49,8 @@ public class DragAndDropDoorMenuItem : DragAndDropMenuItem
 			Destroy(go);
 			
 			prefab = prefabCache;
+			doorPiece = transform.Find("DoorCube").GetComponent<DoorPiece>();
+
 		}
 	}
 }

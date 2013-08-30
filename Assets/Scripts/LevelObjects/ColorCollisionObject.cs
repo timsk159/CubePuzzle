@@ -64,7 +64,7 @@ public class ColorCollisionObject : MonoBehaviour
 		if(objColour != Colour.None)
 		{
 			objColour = colorToChangeTo;
-			gameObject.renderer.sharedMaterial.color = GetObjectRealColor(objColour);
+			gameObject.renderer.material.color = GetObjectRealColor(objColour);
 		}
 		
 	}
