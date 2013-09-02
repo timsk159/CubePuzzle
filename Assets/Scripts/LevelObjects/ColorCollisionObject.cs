@@ -140,10 +140,16 @@ public class CubeNeighbours
 		this.gameObject = gameObject;
 		this.transform = gameObject.transform;
 
+		/*
 		directions[0] = transform.forward;
 		directions[1] = -transform.forward;
 		directions[2] = transform.right;
 		directions[3] = -transform.right;
+		*/
+		directions[0] = Vector3.forward;
+		directions[1] = -Vector3.forward;
+		directions[2] = Vector3.right;
+		directions[3] = -Vector3.right;
 	}
 
 	public GameObject[] neighbours
@@ -172,7 +178,6 @@ public class CubeNeighbours
 			Ray ray = new Ray(transform.position, directions[i]);
 
 			RaycastHit hit;
-
 			if(Physics.Raycast(ray, out hit, 0.6f, 1 << 10))
 			{
 				continue;

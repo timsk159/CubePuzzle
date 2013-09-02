@@ -169,39 +169,42 @@ public class LevelCreator : MonoBehaviour
 
 		foreach(var cube in allCubes)
 		{
-			var missingNeighbours = cube.GetComponent<ColorCollisionObject>().cubeNeighbours.GetMissingNeighbours();
-			if(missingNeighbours.Length > 0)
-			{
-				foreach(var missingNeighbourDirection in missingNeighbours)
+			if(cube.name != "Door" && cube.name != "Door(Clone)")
+			{		
+				var missingNeighbours = cube.GetComponent<ColorCollisionObject>().cubeNeighbours.GetMissingNeighbours();
+				if(missingNeighbours.Length > 0)
 				{
-					Vector3 positionToSpawnCube = new Vector3();
-
-					switch(missingNeighbourDirection)
+					foreach(var missingNeighbourDirection in missingNeighbours)
 					{
-						case CubeNeighbours.NeighbourDirection.Forward:
-							positionToSpawnCube = cube.transform.position + cube.transform.forward;
-							break;
-						case CubeNeighbours.NeighbourDirection.Back:
-							positionToSpawnCube = cube.transform.position + -cube.transform.forward;
-							break;
-						case CubeNeighbours.NeighbourDirection.Right:
-							positionToSpawnCube = cube.transform.position + cube.transform.right;
-							break;
-						case CubeNeighbours.NeighbourDirection.Left:
-							positionToSpawnCube = cube.transform.position + -cube.transform.right;
-							break;
-					}
+						Vector3 positionToSpawnCube = new Vector3();
 
-					var newNullCube = (GameObject)Instantiate(assetManager.nullCubePrefab);
-					newNullCube.transform.position = positionToSpawnCube;
-					newNullCube.collider.enabled = false;
-					newNullCube.renderer.enabled = false;
-					if(mapRoot == null)
-						mapRoot = GameObject.Find("MapRoot");
-					newNullCube.transform.parent = mapRoot.transform;
+						switch(missingNeighbourDirection)
+						{
+							case CubeNeighbours.NeighbourDirection.Forward:
+								positionToSpawnCube = cube.transform.position + Vector3.forward;
+								break;
+							case CubeNeighbours.NeighbourDirection.Back:
+								positionToSpawnCube = cube.transform.position - Vector3.forward;
+								break;
+							case CubeNeighbours.NeighbourDirection.Right:
+								positionToSpawnCube = cube.transform.position + Vector3.right;
+								break;
+							case CubeNeighbours.NeighbourDirection.Left:
+								positionToSpawnCube = cube.transform.position - Vector3.right;
+								break;
+						}
+
+						var newNullCube = (GameObject)Instantiate(assetManager.nullCubePrefab);
+						newNullCube.collider.enabled = false;
+						newNullCube.renderer.enabled = false;
+						if(mapRoot == null)
+							mapRoot = GameObject.Find("MapRoot");
+						newNullCube.transform.parent = mapRoot.transform;
+						newNullCube.transform.position = positionToSpawnCube;
+					}
 				}
 			}
-		}
+		} 	
 	}
 
 	public bool MapIsComplete(out string errorMessage)
