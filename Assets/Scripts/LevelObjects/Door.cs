@@ -7,13 +7,13 @@ public class Door : ColorCollisionObject
 	
 	protected override void Start()
 	{
+		base.Start ();
 		if (transform.parent.GetComponent<ColorCollisionObject>().objColour == objColour)
 		{
 			doorIsDown = true;
 			OpenDoor();
 		}
 
-		base.Start ();
 		doorIsDown = objColour != transform.parent.GetComponent<ColorCollisionObject>().objColour;
 
 	}

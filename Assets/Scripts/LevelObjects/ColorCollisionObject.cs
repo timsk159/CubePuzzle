@@ -30,7 +30,7 @@ public class ColorCollisionObject : MonoBehaviour
 		var col = collider as BoxCollider;
 		initialColliderSize = new Vector3(1, 1, 1);
 		if(objColour != Colour.None)
-			renderer.sharedMaterial.color = GetObjectRealColor(objColour);
+			renderer.material.color = GetObjectRealColor(objColour);
 		if(Application.loadedLevelName != "LevelCreator")
 			EnsureCollidersAreEnabled();
 	}
