@@ -1,8 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Cutscenes\SimpleCutSceneObj.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Editor\CutsceneCreator.cs">
     <Files>
-      <File FileName="Assets\Scripts\Cutscenes\SimpleCutSceneObj.cs" Line="10" Column="2" />
+      <File FileName="Assets\Editor\CutsceneCreator.cs" Line="146" Column="48" />
+      <File FileName="Assets\Scripts\Cutscenes\CutsceneObj.cs" Line="48" Column="33" />
+      <File FileName="Assets\Scripts\Cutscenes\CutSceneTrigger.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Cutscenes\CutSceneController.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

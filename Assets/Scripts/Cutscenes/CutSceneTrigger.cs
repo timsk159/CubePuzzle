@@ -4,6 +4,7 @@ using System.Collections;
 public class CutSceneTrigger : Triggerer 
 {
 	public CutsceneObj cutSceneObj;
+
 	public bool hasPlayed ;
 
 	protected override void OnTriggerEnter(Collider col)
