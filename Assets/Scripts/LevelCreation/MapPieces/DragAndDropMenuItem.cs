@@ -17,6 +17,7 @@ public class DragAndDropMenuItem : MonoBehaviour
 				}
 				else if(UICamera.currentTouchID == -2)
 				{
+					Debug.Log("Right clicked, prefab name: " + prefab.name);
 					NotificationCenter<DragAndDropNotification>.DefaultCenter.PostNotification(DragAndDropNotification.MenuItemRightClicked, prefab);
 				}
 			}

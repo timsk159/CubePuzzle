@@ -32,7 +32,7 @@ public class DragAndDropDoorMenuItem : DragAndDropMenuItem
 	
 	protected override void OnPress(bool isPressed)
 	{
-		if(isPressed)
+		if(isPressed && UICamera.currentTouchID == -1)
 		{
 			var prefabCache = prefab;
 			
@@ -45,7 +45,7 @@ public class DragAndDropDoorMenuItem : DragAndDropMenuItem
 			prefab = go;
 			
 			base.OnPress (isPressed);
-			
+	
 			Destroy(go);
 			
 			prefab = prefabCache;

@@ -27,7 +27,7 @@ public class DragAndDropPlayerStartMenuItem : DragAndDropMenuItem
 	{
 		if(GameObject.Find("PlayerStartCube") == null)
 		{
-			if(isPressed)
+			if(isPressed && UICamera.currentTouchID == -1)
 			{
 				var prefabCache = prefab;
 
