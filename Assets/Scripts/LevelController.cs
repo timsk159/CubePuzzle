@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,14 @@ public class LevelController : MonoBehaviour
 	{
 		get
 		{
-			_playerColour = playerChar.currentColor;
+			try
+			{
+				_playerColour = playerChar.currentColor;
+			}
+			catch(NullReferenceException nre)
+			{
+				Debug.LogWarning("Tried to access player colour, but playerchar was null!");
+			}
 
 			return _playerColour;
 		}
@@ -177,7 +185,7 @@ public class LevelController : MonoBehaviour
 
 		playerChar = playerCube.GetComponent<PlayerCharacter> ();
 
-		playerChar.ChangeColour(GameObject.Find("PlayerStartCube").GetComponent<PlayerStartPiece>().objColour);
+		playerChar.ChangeColour(playerStart.GetComponent<PlayerStartPiece>().objColour);
 	}
 
 	void CutSceneStarted()

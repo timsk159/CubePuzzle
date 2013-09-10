@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using JsonFx.Json;
 using System;
