@@ -11,7 +11,14 @@ public class DragAndDropMenuItem : MonoBehaviour
 		{
 			if(isPressed)
 			{
-				NotificationCenter<DragAndDropNotification>.DefaultCenter.PostNotification(DragAndDropNotification.MenuItemPressed, prefab);
+				if(UICamera.currentTouchID == -1)
+				{
+					NotificationCenter<DragAndDropNotification>.DefaultCenter.PostNotification(DragAndDropNotification.MenuItemPressed, prefab);
+				}
+				else if(UICamera.currentTouchID == -2)
+				{
+					NotificationCenter<DragAndDropNotification>.DefaultCenter.PostNotification(DragAndDropNotification.MenuItemRightClicked, prefab);
+				}
 			}
 		}
 	}

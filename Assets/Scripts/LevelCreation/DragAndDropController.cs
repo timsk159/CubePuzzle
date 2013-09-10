@@ -3,7 +3,7 @@ using System.Collections;
 
 enum DragAndDropNotification
 {
-	MenuItemPressed, MapObjectPressed, ObjectPlaced, DoubleClicked, MapObjectRemoved
+	MenuItemPressed, MapObjectPressed, ObjectPlaced, DoubleClicked, MapObjectRemoved, MenuItemRightClicked
 };
 
 public class DragAndDropController : MonoBehaviour 
@@ -13,7 +13,9 @@ public class DragAndDropController : MonoBehaviour
 	
 	public GameObject draggingObj;
 	LevelAssetManager assetManager;
-	
+
+	GameObject selectedMenuItemPrefab;
+	GameObject selectedMenuItemHighlight;
 	
 	void Start()
 	{
@@ -22,7 +24,8 @@ public class DragAndDropController : MonoBehaviour
 		
 		NotificationCenter<DragAndDropNotification>.DefaultCenter.AddObserver(this, DragAndDropNotification.MenuItemPressed);
 		NotificationCenter<DragAndDropNotification>.DefaultCenter.AddObserver(this, DragAndDropNotification.MapObjectPressed);
-		NotificationCenter<DragAndDropNotification>.DefaultCenter.AddObserver (this, DragAndDropNotification.DoubleClicked);
+		NotificationCenter<DragAndDropNotification>.DefaultCenter.AddObserver(this, DragAndDropNotification.DoubleClicked);
+		NotificationCenter<DragAndDropNotification>.DefaultCenter.AddObserver(this, DragAndDropNotification.MenuItemRightClicked);
 	}
 	
 	void MenuItemPressed(NotificationCenter<DragAndDropNotification>.Notification notiData)
@@ -31,7 +34,6 @@ public class DragAndDropController : MonoBehaviour
 			Destroy(draggingObj);
 		
 		GameObject prefab = (GameObject)notiData.data;
-		
 		
 		draggingObj = (GameObject)Instantiate(prefab);
 		draggingObj.name = draggingObj.name.Replace("(Clone)","");
@@ -47,7 +49,46 @@ public class DragAndDropController : MonoBehaviour
 		worldPos.z = 2.5f;
 		draggingObj.transform.position = worldPos;
 	}
-	
+
+	void MenuItemRightClicked(NotificationCenter<DragAndDropNotification>.Notification notiData)
+	{
+		var prefab = (GameObject)notiData.data;
+
+		if(selectedMenuItemPrefab == prefab)
+		{
+			DeselectMenuItem();
+			selectedMenuItemPrefab = null;
+		}
+		else
+		{
+			DeselectMenuItem();
+
+			var highlight = UICamera.lastHit.collider.transform.Find("HighlightSprite").gameObject;
+			SelectMenuItem(highlight);
+			selectedMenuItemPrefab = prefab;
+		}
+	}
+
+	void SelectMenuItem(GameObject newSelection)
+	{
+		if(selectedMenuItemHighlight != null)
+		{
+			TweenAlpha.Begin(selectedMenuItemHighlight, 0.5f, 0.0f);
+		}
+		selectedMenuItemHighlight = newSelection;
+
+		TweenAlpha.Begin(selectedMenuItemHighlight, 0.5f, 1.0f);
+	}
+
+	void DeselectMenuItem()
+	{
+		if(selectedMenuItemHighlight != null)
+		{
+			TweenAlpha.Begin(selectedMenuItemHighlight, 0.5f, 0.0f);
+			selectedMenuItemHighlight = null;
+		}
+	}
+
 	void MapObjectPressed(NotificationCenter<DragAndDropNotification>.Notification notiData)
 	{
 		GameObject objPressed = (GameObject)notiData.data;
@@ -55,10 +96,9 @@ public class DragAndDropController : MonoBehaviour
 		if(draggingObj != null && objPressed != draggingObj)
 		{
 			Destroy(draggingObj);
-
 		}
 
-			ReplaceFloorPiece(objPressed.transform.position);
+		ReplaceFloorPiece(objPressed.transform.position);
 		
 		draggingObj = objPressed;
 	}
@@ -80,6 +120,13 @@ public class DragAndDropController : MonoBehaviour
 			if(Input.GetMouseButtonUp(0))
 			{
 				FinishDragging();
+			}
+		}
+		else if(selectedMenuItemPrefab != null)
+		{
+			if(Input.GetMouseButtonDown(1))
+			{
+				PlaceSelectedItem();
 			}
 		}
 	}
@@ -165,6 +212,37 @@ public class DragAndDropController : MonoBehaviour
 			if(mapObjScript != null)
 				Destroy(mapObjScript);
 			
+		}
+	}
+
+	void PlaceSelectedItem()
+	{
+		RaycastHit hit;
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+		if(Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << 10))
+		{
+			if(hit.collider != null)
+			{
+				var objToReplace = hit.collider.gameObject;
+
+				var clone = (GameObject)Instantiate(selectedMenuItemPrefab);
+				clone.name = clone.name.Remove(clone.name.IndexOf("(Clone)"), 7);
+
+				if(clone.transform.childCount > 0)
+				{
+					foreach(Transform child in clone.transform)
+					{
+						child.gameObject.layer = 10;
+					}
+				}
+				clone.layer = 10;
+				clone.transform.localScale = Vector3.one;
+				clone.transform.position = hit.collider.transform.position;
+				clone.transform.parent = levelCreator.mapRoot.transform;
+
+				Destroy(objToReplace);
+			}
 		}
 	}
 	

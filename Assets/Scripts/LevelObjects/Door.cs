@@ -15,7 +15,6 @@ public class Door : ColorCollisionObject
 		}
 
 		doorIsDown = objColour != transform.parent.GetComponent<ColorCollisionObject>().objColour;
-
 	}
 	
 	public override void ChangeColour(Colour colorToChangeTo)

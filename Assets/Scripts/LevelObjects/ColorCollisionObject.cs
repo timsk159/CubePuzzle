@@ -18,6 +18,8 @@ public class ColorCollisionObject : MonoBehaviour
 	public Vector3 initialColliderSize;
 	[DoNotSerialize()]
 	public CubeNeighbours cubeNeighbours;
+
+	protected bool useSharedMaterial = true;
 	
 	void Awake()
 	{
@@ -29,13 +31,12 @@ public class ColorCollisionObject : MonoBehaviour
 	{
 		var col = collider as BoxCollider;
 		initialColliderSize = new Vector3(1, 1, 1);
-		if(objColour != Colour.None)
-			renderer.material.color = GetObjectRealColor(objColour);
+		ChangeColour(objColour);
 		if(Application.loadedLevelName != "LevelCreator")
 			EnsureCollidersAreEnabled();
 	}
 
-	void EnsureCollidersAreEnabled()
+	protected void EnsureCollidersAreEnabled()
 	{
 		collider.enabled = true;
 
@@ -64,7 +65,14 @@ public class ColorCollisionObject : MonoBehaviour
 		if(objColour != Colour.None)
 		{
 			objColour = colorToChangeTo;
-			gameObject.renderer.material.color = GetObjectRealColor(objColour);
+			if(useSharedMaterial)
+			{
+				gameObject.renderer.sharedMaterial.color = GetObjectRealColor(objColour);
+			}
+			else
+			{
+				gameObject.renderer.material.color = GetObjectRealColor(objColour);
+			}
 		}
 		
 	}

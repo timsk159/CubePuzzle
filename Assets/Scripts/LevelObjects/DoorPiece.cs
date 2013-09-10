@@ -9,6 +9,8 @@ public class DoorPiece : FloorPiece
 	
 	protected override void Start()
 	{
+		useSharedMaterial = false;
+
 		base.Start ();
 
 		theDoor = GetComponentInChildren<Door>();
