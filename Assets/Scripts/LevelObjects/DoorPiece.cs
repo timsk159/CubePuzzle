@@ -14,8 +14,8 @@ public class DoorPiece : FloorPiece
 		base.Start ();
 
 		theDoor = GetComponentInChildren<Door>();
-		
-		CheckDoor();
+
+		SetDoorColour(theDoor.objColour);
 	}
 	
 	public override void ChangeColour(Colour colorToChangeTo)

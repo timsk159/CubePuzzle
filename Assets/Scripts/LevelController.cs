@@ -116,6 +116,7 @@ public class LevelController : MonoBehaviour
 
 		SetupNullCubes();
 		SetInitialFloorColliders();
+		OptimiseLevelMesh();
 
 		Camera.main.GetComponent<CameraFollow>().target = playerObj.transform;
 
@@ -164,6 +165,43 @@ public class LevelController : MonoBehaviour
 		foreach(var cube in nullCubes)
 		{
 			SetupNullCube(cube);
+		}
+	}
+
+	void OptimiseLevelMesh()
+	{
+		var meshFilters = GameObject.Find("MapRoot").GetComponentsInChildren<MeshFilter>();
+
+		var uniqueMaterials = meshFilters.Select(e => e.renderer.sharedMaterial).Distinct();
+		foreach(var uniqueMat in uniqueMaterials)
+		{
+			if(!uniqueMat.name.Contains("Door"))
+			{
+				var meshFiltersForMat = meshFilters.Where(e => e.renderer.sharedMaterial == uniqueMat).ToArray();
+
+				var combine = new CombineInstance[meshFiltersForMat.Length];
+
+				for(int i = 0; i < meshFiltersForMat.Length; i++)
+				{
+					combine[i].mesh = meshFiltersForMat[i].sharedMesh;
+					combine[i].transform = meshFiltersForMat[i].transform.localToWorldMatrix;
+					meshFiltersForMat[i].renderer.enabled = false;
+				}
+
+				var newMeshObject = new GameObject("CombinedMesh: " + uniqueMat.name.Replace("(Instance)", ""));
+				newMeshObject.transform.position = Vector3.zero;
+
+				var newMeshFilter = newMeshObject.AddComponent<MeshFilter>();
+				newMeshFilter.mesh = new Mesh();
+				newMeshFilter.mesh.CombineMeshes(combine);
+
+				var newMeshRenderer = newMeshObject.AddComponent<MeshRenderer>();
+				newMeshRenderer.material = uniqueMat;
+				if(uniqueMat.name == "NullCubeMat")
+				{
+					newMeshRenderer.enabled = false;
+				}
+			}
 		}
 	}
 
