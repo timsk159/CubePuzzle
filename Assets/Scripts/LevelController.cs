@@ -181,15 +181,20 @@ public class LevelController : MonoBehaviour
 
 				var combine = new CombineInstance[meshFiltersForMat.Length];
 
+				int layerForThisMesh = 1;
+
 				for(int i = 0; i < meshFiltersForMat.Length; i++)
 				{
 					combine[i].mesh = meshFiltersForMat[i].sharedMesh;
 					combine[i].transform = meshFiltersForMat[i].transform.localToWorldMatrix;
 					meshFiltersForMat[i].renderer.enabled = false;
+					if(layerForThisMesh != meshFilters[i].gameObject.layer)
+						layerForThisMesh = meshFilters[i].gameObject.layer;
 				}
 
 				var newMeshObject = new GameObject("CombinedMesh: " + uniqueMat.name.Replace("(Instance)", ""));
 				newMeshObject.transform.position = Vector3.zero;
+				newMeshObject.layer = layerForThisMesh;
 
 				var newMeshFilter = newMeshObject.AddComponent<MeshFilter>();
 				newMeshFilter.mesh = new Mesh();
@@ -201,6 +206,7 @@ public class LevelController : MonoBehaviour
 				{
 					newMeshRenderer.enabled = false;
 				}
+
 			}
 		}
 	}
