@@ -44,7 +44,7 @@ public class CutsceneCreator : EditorWindow
 		cutsceneObj.lengthInSeconds = EditorGUILayout.IntSlider("Length", cutsceneObj.lengthInSeconds, 1, 240);
 
 		DrawTimeline();
-
+		GUILayout.Space(350);
 		DrawAddfileButtons();
 
 		/*
@@ -146,32 +146,69 @@ public class CutsceneCreator : EditorWindow
 			}
 			EditorGUILayout.HelpBox(@"Cut scene assets are places in Resources/Cutscenes/", MessageType.Info);
 		}
-
-
-		
 	}
 
 	void DrawTimeline()
 	{
 		// 3 rows, one for each filetype
 		var boxWidth = window.position.width - 10;
-		GUI.Box(new Rect(0, 50, boxWidth, 50),"");
-		var areaRect = new Rect(0, 50, boxWidth, 50);
-		Debug.Log(areaRect);
-		//GUILayout.BeginHorizontal();
+		var boxTop = 25;
+		var sliderTop = 0;
 
+
+		GUI.Box(new Rect(0, boxTop, boxWidth, 50),"");
+		var areaRect = new Rect(0, boxTop, boxWidth, 50);
 
 		GUI.BeginGroup(areaRect);
 
 		foreach(var timedDialogue in csanim.timedDialogue)
 		{
-			//EditorGUILayout.MinMaxSlider(ref timedDialogue.timeToStart, ref timedDialogue.timeToFinish, 0, cutsceneObj.lengthInSeconds);
-			EditorGUI.MinMaxSlider(new Rect(0, 0, 100, 25), ref timedDialogue.timeToStart, ref timedDialogue.timeToFinish, 0, cutsceneObj.lengthInSeconds);
+			EditorGUI.MinMaxSlider(new Rect(0, sliderTop, boxWidth, 15), ref timedDialogue.timeToStart, ref timedDialogue.timeToFinish, 0, cutsceneObj.lengthInSeconds);
+			sliderTop += 15;
 		}
 
 		GUI.EndGroup();
 
-	//	GUILayout.EndHorizontal();
+		boxTop += 55;
+		sliderTop = 0;
+
+		GUI.Box(new Rect(0, boxTop, boxWidth, 50), "");
+		areaRect = new Rect(0, boxTop, boxWidth, 50);
+
+		GUI.BeginGroup(areaRect);
+
+		foreach(var timedAudio in csanim.timedAudioClips)
+		{
+			if(timedAudio.clip != null)
+			{
+				var endTime = (timedAudio.timeToStart + timedAudio.clip.length);
+				EditorGUI.MinMaxSlider(new Rect(0, sliderTop, boxWidth, 15), ref timedAudio.timeToStart, ref endTime, 0, cutsceneObj.lengthInSeconds);
+				sliderTop += 15;
+			}
+		}
+
+		GUI.EndGroup();
+
+		boxTop += 55;
+		sliderTop = 0;
+
+		GUI.Box(new Rect(0, boxTop, boxWidth, 50), "");
+		areaRect = new Rect(0, boxTop, boxWidth, 50);
+
+		GUI.BeginGroup(areaRect);
+
+		foreach(var timedAnim in csanim.timedAnimationClips)
+		{
+			if(timedAnim.animClip != null)
+			{
+				var endTime = (timedAnim.timeToStart + timedAnim.animClip.length);
+				EditorGUI.MinMaxSlider(new Rect(0, sliderTop, boxWidth, 15), ref timedAnim.timeToStart, ref endTime, 0, cutsceneObj.lengthInSeconds);
+				sliderTop += 15;
+			}
+		}
+
+		GUI.EndGroup();
+		
 	}
 
 	void DrawAddfileButtons()

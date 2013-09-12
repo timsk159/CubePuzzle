@@ -21,9 +21,9 @@ public class PlayerMovement : MonoBehaviour
 				var xForce = horizontalInput * inputSensitivity;
 				
 				var force = new Vector3(xForce, 0, zForce);
-				
+
 				rigidbody.AddForce(Vector3.ClampMagnitude(force, maxSpeed), ForceMode.Acceleration);
-			//	transform.Translate(force * Time.deltaTime, Space.World);
+				//transform.Translate(force * Time.deltaTime, Space.World);
 			}
 		}
 	}
