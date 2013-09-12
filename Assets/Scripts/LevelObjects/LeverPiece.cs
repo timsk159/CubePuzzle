@@ -17,7 +17,7 @@ public class LeverPiece : InteractiveObject
 	GameObject playerObject;
 	List<GameObject> objectsToChange;
 	
-	void Start()
+	protected override void Start()
 	{
 		interactionAnimation = GetComponentInChildren<Animation>();
 		objectsToChange = new List<GameObject>();

@@ -209,7 +209,7 @@ public class SaveGameManager : MonoBehaviour
 		{
 			if(child.GetComponent<UniqueIdentifier>()!=null)
 			{
-				if(!child.gameObject.active)
+				if(!child.gameObject.activeSelf)
 				{
 					GetId(child.gameObject);
 				}

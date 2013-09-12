@@ -24,7 +24,6 @@ public class LevelCreatorController : MonoBehaviour
 	GameObject mainCam;
 	List<DraggableMapObject> mapObjects = new List<DraggableMapObject>();
 	LevelCreator levelCreator;
-	LevelCreatorUIController uiController;
 
 	void Awake()
 	{
@@ -32,7 +31,6 @@ public class LevelCreatorController : MonoBehaviour
 		RegisterStates();
 		mainCam = Camera.main.gameObject;
 		levelCreator = GameObject.Find("LevelCreator").GetComponent<LevelCreator>();
-		uiController = GameObject.Find("UIController").GetComponent<LevelCreatorUIController>();
 	}
 
 	void Start()
@@ -206,7 +204,7 @@ public class LevelCreatorController : MonoBehaviour
 		playerObj.collider.enabled = true;
 		mainCam.AddComponent<CameraFollow>();
 
-		var levelController = new GameObject("LevelControllerSingleton").AddComponent<LevelController>();
+		new GameObject("LevelControllerSingleton").AddComponent<LevelController>();
 
 		levelCreator.CheckEdgeCubeNeighbours();
 

@@ -12,6 +12,9 @@ public class CutsceneCreator : EditorWindow
 
 	CutsceneObj cutsceneObj;
 	string fileName;
+
+	Rect buttonsRect;
+
 	List<CutSceneAnimation.TimedDialogue> dialoguesToRemove = new List<CutSceneAnimation.TimedDialogue>();
 	List<CutSceneAnimation.TimedAudio> audiosToRemove = new List<CutSceneAnimation.TimedAudio>();
 	List<CutSceneAnimation.TimedAnimationClip> animsToRemove = new List<CutSceneAnimation.TimedAnimationClip>();
@@ -40,30 +43,24 @@ public class CutsceneCreator : EditorWindow
 	{
 		cutsceneObj.lengthInSeconds = EditorGUILayout.IntSlider("Length", cutsceneObj.lengthInSeconds, 1, 240);
 
-		if(GUILayout.Button("Add Dialogue"))
-		{
-			csanim.timedDialogue.Add(new CutSceneAnimation.TimedDialogue());
-		}
-		if(GUILayout.Button("Add Audio"))
-		{
-			csanim.timedAudioClips.Add(new CutSceneAnimation.TimedAudio());
-		}
-		if(GUILayout.Button("Add Animation"))
-		{
-			csanim.timedAnimationClips.Add(new CutSceneAnimation.TimedAnimationClip());
-		}
+		DrawTimeline();
 
+		DrawAddfileButtons();
+
+		/*
 		foreach(var timedDialogue in csanim.timedDialogue)
 		{
 			EditorGUILayout.BeginHorizontal();
 
 			timedDialogue.dialogue.dialogueAsset = (TextAsset)EditorGUILayout.ObjectField("Dialogue: ", timedDialogue.dialogue.dialogueAsset, typeof(TextAsset), false);
-			EditorGUILayout.MinMaxSlider(ref timedDialogue.timeToStart, ref timedDialogue.timeToFinish, 0, cutsceneObj.lengthInSeconds);
 
 			if(GUILayout.Button("-", GUILayout.Width(20)))
 			{
 				dialoguesToRemove.Add(timedDialogue);
 			}
+			EditorGUILayout.LabelField ((timedDialogue.timeToFinish - timedDialogue.timeToStart).ToString("##.0") + "s", GUILayout.Width(30));
+
+			EditorGUILayout.MinMaxSlider(ref timedDialogue.timeToStart, ref timedDialogue.timeToFinish, 0, cutsceneObj.lengthInSeconds);
 
 			EditorGUILayout.EndHorizontal();
 		}
@@ -72,15 +69,19 @@ public class CutsceneCreator : EditorWindow
 		{
 			EditorGUILayout.BeginHorizontal();
 			timedAudio.clip = (AudioClip)EditorGUILayout.ObjectField("Audio: ", timedAudio.clip, typeof(AudioClip), false);
-			if(timedAudio.clip != null)
-			{
-				var endTime = (timedAudio.timeToStart + timedAudio.clip.length);
-				EditorGUILayout.MinMaxSlider(ref timedAudio.timeToStart, ref endTime, 0, cutsceneObj.lengthInSeconds);
-			}
 
 			if(GUILayout.Button("-", GUILayout.Width(20)))
 			{
 				audiosToRemove.Add(timedAudio);
+			}
+
+			if(timedAudio.clip != null)
+			{
+				var endTime = (timedAudio.timeToStart + timedAudio.clip.length);
+
+				EditorGUILayout.LabelField ((endTime - timedAudio.timeToStart).ToString("##.0") + "s", GUILayout.Width(30));
+
+				EditorGUILayout.MinMaxSlider(ref timedAudio.timeToStart, ref endTime, 0, cutsceneObj.lengthInSeconds);
 			}
 
 			EditorGUILayout.EndHorizontal();
@@ -91,15 +92,16 @@ public class CutsceneCreator : EditorWindow
 			EditorGUILayout.BeginHorizontal();
 			timedAnim.animClip = (AnimationClip)EditorGUILayout.ObjectField("Animation: ", timedAnim.animClip, typeof(AnimationClip), false);
 
-			if(timedAnim.animClip != null)
-			{
-				var endTime = (timedAnim.timeToStart + timedAnim.animClip.length);
-				EditorGUILayout.MinMaxSlider(ref timedAnim.timeToStart, ref endTime, 0, cutsceneObj.lengthInSeconds);
-			}
-
 			if(GUILayout.Button("-", GUILayout.Width(20)))
 			{
 				animsToRemove.Add(timedAnim);
+			}
+
+			if(timedAnim.animClip != null)
+			{
+				var endTime = (timedAnim.timeToStart + timedAnim.animClip.length);
+				EditorGUILayout.LabelField ((endTime - timedAnim.timeToStart).ToString("##.0") + "s", GUILayout.Width(30));
+				EditorGUILayout.MinMaxSlider(ref timedAnim.timeToStart, ref endTime, 0, cutsceneObj.lengthInSeconds);
 			}
 
 			EditorGUILayout.EndHorizontal();
@@ -126,6 +128,7 @@ public class CutsceneCreator : EditorWindow
 				csanim.timedAnimationClips.Remove(itemtoremove);
 			}
 		}
+		*/
 
 		fileName = EditorGUILayout.TextField("Filename: ", fileName);
 
@@ -140,13 +143,50 @@ public class CutsceneCreator : EditorWindow
 				AssetDatabase.CreateAsset(cutsceneObj, "Assets/Resources/Cutscenes/" + fileName + ".asset");
 
 				AssetDatabase.Refresh();
-
-				//CutsceneObj obj = AssetDatabase.LoadAssetAtPath("Assets/Resources/Cutscenes/" + fileName, typeof(CutsceneObj));
-
-			//	obj.cutSceneAnim.timedDialogue[0].dialogue;
 			}
 			EditorGUILayout.HelpBox(@"Cut scene assets are places in Resources/Cutscenes/", MessageType.Info);
 		}
+
+
 		
+	}
+
+	void DrawTimeline()
+	{
+		// 3 rows, one for each filetype
+		var boxWidth = window.position.width - 10;
+		GUI.Box(new Rect(0, 50, boxWidth, 50),"");
+		var areaRect = new Rect(0, 50, boxWidth, 50);
+		Debug.Log(areaRect);
+		//GUILayout.BeginHorizontal();
+
+
+		GUI.BeginGroup(areaRect);
+
+		foreach(var timedDialogue in csanim.timedDialogue)
+		{
+			//EditorGUILayout.MinMaxSlider(ref timedDialogue.timeToStart, ref timedDialogue.timeToFinish, 0, cutsceneObj.lengthInSeconds);
+			EditorGUI.MinMaxSlider(new Rect(0, 0, 100, 25), ref timedDialogue.timeToStart, ref timedDialogue.timeToFinish, 0, cutsceneObj.lengthInSeconds);
+		}
+
+		GUI.EndGroup();
+
+	//	GUILayout.EndHorizontal();
+	}
+
+	void DrawAddfileButtons()
+	{
+		if(GUILayout.Button("Add Dialogue"))
+		{
+			csanim.timedDialogue.Add(new CutSceneAnimation.TimedDialogue());
+		}
+		if(GUILayout.Button("Add Audio"))
+		{
+			csanim.timedAudioClips.Add(new CutSceneAnimation.TimedAudio());
+		}
+		if(GUILayout.Button("Add Animation"))
+		{
+			csanim.timedAnimationClips.Add(new CutSceneAnimation.TimedAnimationClip());
+		}
 	}
 }

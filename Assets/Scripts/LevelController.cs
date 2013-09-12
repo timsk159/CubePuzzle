@@ -38,7 +38,7 @@ public class LevelController : MonoBehaviour
 			{
 				_playerColour = playerChar.currentColor;
 			}
-			catch(NullReferenceException nre)
+			catch(NullReferenceException)
 			{
 				Debug.LogWarning("Tried to access player colour, but playerchar was null!");
 			}

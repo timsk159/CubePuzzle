@@ -6,12 +6,8 @@ public class CameraControls : MonoBehaviour
 	public float movementSensitivity;
 	public float rotationSensitivity;
 	
-	private Vector3 lastRightClickTarget = Vector3.zero;
-	private float lastRightClickDistance = 0.0f;
-	
 	Vector3 dragOrigin;
-	
-	private bool isDragging;	
+
 	private bool isRotating;	
 	private bool isZooming;
 	
@@ -30,7 +26,6 @@ public class CameraControls : MonoBehaviour
 		if(xInput != 0 || yInput != 0)
 		{
 			dragOrigin = Input.mousePosition;
-			isDragging = true;
 		}
 		
 		if (Input.GetMouseButtonUp(1)) 

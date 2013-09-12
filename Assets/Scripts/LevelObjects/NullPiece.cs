@@ -5,6 +5,6 @@ public class NullPiece : MonoBehaviour
 {
 	void Start()
 	{
-		var normals = GetComponent<MeshFilter>().mesh.normals;
+
 	}
 }

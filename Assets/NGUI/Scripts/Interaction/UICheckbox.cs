@@ -108,7 +108,7 @@ public class UICheckbox : MonoBehaviour
 	/// Activate the initial state.
 	/// </summary>
 
-	public void Start ()
+	protected virtual void Start ()
 	{
 		if (eventReceiver == null) eventReceiver = gameObject;
 		mChecked = !startsChecked;

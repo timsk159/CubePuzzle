@@ -4,7 +4,6 @@ using System.Collections;
 public class DraggableRotatableMapObject : DraggableMapObject 
 {
 	DragAndDropController dragController;
-	bool isRotating;
 
 	void Awake()
 	{
@@ -14,21 +13,18 @@ public class DraggableRotatableMapObject : DraggableMapObject
 
 	void Update()
 	{
-		if(!isRotating)
+		if(Input.GetKeyDown(KeyCode.LeftArrow))
 		{
-			if(Input.GetKeyDown(KeyCode.LeftArrow))
+			if(dragController.draggingObj == gameObject)
 			{
-				if(dragController.draggingObj == gameObject)
-				{
-					transform.Rotate(new Vector3(0, -90, 0));
-				}
+				transform.Rotate(new Vector3(0, -90, 0));
 			}
-			if(Input.GetKeyDown(KeyCode.RightArrow))
+		}
+		if(Input.GetKeyDown(KeyCode.RightArrow))
+		{
+			if(dragController.draggingObj == gameObject)
 			{
-				if(dragController.draggingObj == gameObject)
-				{
-					transform.Rotate(new Vector3(0, 90, 0));
-				}
+				transform.Rotate(new Vector3(0, 90, 0));
 			}
 		}
 	}

@@ -109,7 +109,7 @@ public class DragAndDropController : MonoBehaviour
 		{
 			if(Input.GetMouseButton(0))
 			{
-				if(lastMousePos != null && lastMousePos != Vector3.zero)
+				if(lastMousePos != Vector3.zero)
 				{
 					var delta = Input.mousePosition - lastMousePos;
 					DoDragging(delta);

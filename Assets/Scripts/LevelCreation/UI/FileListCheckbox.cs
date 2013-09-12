@@ -9,7 +9,7 @@ public class FileListCheckbox : UICheckbox
 	
 	public string fullFilePath = "";
 	
-	void Start()
+	protected override void Start()
 	{
 		base.Start();
 		this.onStateChange = HandleStateChanged;

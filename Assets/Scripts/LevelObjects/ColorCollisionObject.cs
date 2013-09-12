@@ -29,7 +29,6 @@ public class ColorCollisionObject : MonoBehaviour
 	
 	protected virtual void Start()
 	{
-		var col = collider as BoxCollider;
 		initialColliderSize = new Vector3(1, 1, 1);
 		ChangeColour(objColour);
 		if(Application.loadedLevelName != "LevelCreator")

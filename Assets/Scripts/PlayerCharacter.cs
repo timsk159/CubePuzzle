@@ -42,12 +42,12 @@ public class PlayerCharacter : MonoBehaviour
 	
 	void PlayerEnteredColour(NotificationCenter<ColourCollisionNotification>.Notification notiData)
 	{
-		ColourCollisionData hitData = (ColourCollisionData)notiData.data;
+		//ColourCollisionData hitData = (ColourCollisionData)notiData.data;
 	}
 	
 	void PlayerExitedColour(NotificationCenter<ColourCollisionNotification>.Notification notiData)
 	{
-		ColourCollisionData hitData = (ColourCollisionData)notiData.data;
+		//ColourCollisionData hitData = (ColourCollisionData)notiData.data;
 	}
 	
 	void InteractionTriggerEnter(NotificationCenter<ColourCollisionNotification>.Notification notiData)
