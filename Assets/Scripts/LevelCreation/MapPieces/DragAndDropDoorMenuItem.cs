@@ -32,25 +32,9 @@ public class DragAndDropDoorMenuItem : DragAndDropMenuItem
 	
 	protected override void OnPress(bool isPressed)
 	{
-		if(isPressed && UICamera.currentTouchID == -1)
-		{
-			var prefabCache = prefab;
-			
-			var go = (GameObject)Instantiate(prefab);
-			
-			go.GetComponent<DoorPiece>().SetDoorColour(doorPiece.theDoor.objColour);
-			go.GetComponent<DoorPiece>().ChangeColour(doorPiece.objColour);
-			go.AddComponent<DraggableRotatableMapObject>();
-
-			prefab = go;
-			
+		if(isPressed)
+		{			
 			base.OnPress (isPressed);
-	
-			Destroy(go);
-			
-			prefab = prefabCache;
-			doorPiece = transform.Find("DoorCube").GetComponent<DoorPiece>();
-
 		}
 	}
 }

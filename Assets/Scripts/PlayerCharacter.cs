@@ -38,6 +38,13 @@ public class PlayerCharacter : MonoBehaviour
 				currentInteractionObject.PlayerInteracted();
 			}
 		}
+		if(Input.GetKeyDown(KeyCode.Space))
+		{
+			if(LevelController.Instance.hasCheckpoint)
+				LevelController.Instance.LoadCheckpoint();
+			else
+				LevelController.Instance.ResetLevel();
+		}
 	}
 	
 	void PlayerEnteredColour(NotificationCenter<ColourCollisionNotification>.Notification notiData)

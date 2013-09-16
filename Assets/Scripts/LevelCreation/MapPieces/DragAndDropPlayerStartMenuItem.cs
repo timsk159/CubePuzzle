@@ -27,30 +27,9 @@ public class DragAndDropPlayerStartMenuItem : DragAndDropMenuItem
 	{
 		if(GameObject.Find("PlayerStartCube") == null)
 		{
-			if(isPressed && UICamera.currentTouchID == -1)
+			if(isPressed )
 			{
-				var prefabCache = prefab;
-
-				var go = (GameObject)Instantiate(prefab);
-
-				var playerSphere = (GameObject)Instantiate (playerSpherePrefab);
-				var playerCharObj = playerSphere.GetComponent<PlayerCharacter>();
-				playerSphere.transform.parent = go.transform;
-				playerSphere.transform.localPosition = new Vector3(0, 1.3f, 0);
-				playerCharObj.rigidbody.useGravity = false;
-				playerCharObj.playerMovement.canMove = false;
-
-				go.GetComponent<PlayerStartPiece>().ChangeColour(playerStartPiece.objColour);
-				playerSphere.collider.enabled = false;
-				playerCharObj.SilentlyChangeColour(playerStartPiece.objColour);
-
-				prefab = go;
-
 				base.OnPress (isPressed);
-
-				Destroy(go);
-
-				prefab = prefabCache;
 			}
 		}
 	}

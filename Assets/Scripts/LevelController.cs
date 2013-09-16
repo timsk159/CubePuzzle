@@ -119,11 +119,24 @@ public class LevelController : MonoBehaviour
 		OptimiseLevelMesh();
 
 		Camera.main.GetComponent<CameraFollow>().target = playerObj.transform;
-
 		if(levelStateController != null)
 		{
 			levelStateController.SetInitialState();
 		}
+	//	StartCoroutine(PlayIntroAnimation());
+	}
+
+	IEnumerator PlayIntroAnimation()
+	{
+		playerChar.playerMovement.canMove = false;
+		Camera.main.GetComponent<CameraFollow>().enabled = false;
+
+		Camera.main.animation.Play();
+
+		yield return new WaitForSeconds(Camera.main.animation.clip.length);
+
+		playerChar.playerMovement.canMove = true;
+		Camera.main.GetComponent<CameraFollow>().enabled = true;
 	}
 
 	public void LoadedSaveComplete(GameObject rootObj, List<GameObject> mapObjects)
@@ -267,7 +280,9 @@ public class LevelController : MonoBehaviour
 
 	public void ResetLevel()
 	{
-		levelStateController.LoadInitialState();
+		levelStateController.LoadInitialState(delegate(GameObject arg1, List<GameObject> arg2) {
+			OptimiseLevelMesh();
+	});
 	}
 
 	public void SetCheckpoint()
@@ -278,7 +293,9 @@ public class LevelController : MonoBehaviour
 
 	public void LoadCheckpoint()
 	{
-		levelStateController.LoadCheckpoint();
+		levelStateController.LoadCheckpoint(delegate(GameObject arg1, List<GameObject> arg2) {
+			OptimiseLevelMesh();
+	});
 	}
 
 	#region State Changes

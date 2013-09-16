@@ -11,6 +11,8 @@ public class DragAndDropController : MonoBehaviour
 	Vector3 lastMousePos;
 	LevelCreator levelCreator;
 	
+	public GameObject playerSpherePrefab;
+	
 	public GameObject draggingObj;
 	LevelAssetManager assetManager;
 
@@ -37,6 +39,17 @@ public class DragAndDropController : MonoBehaviour
 		
 		draggingObj = (GameObject)Instantiate(prefab);
 		draggingObj.name = draggingObj.name.Replace("(Clone)","");
+
+		if(draggingObj.name.Contains("Door"))
+		{
+			SetupDoorPiece(draggingObj);
+		}
+
+		else if(draggingObj.name.Contains("PlayerStart"))
+		{
+			SetupStartPiece(draggingObj);
+		}
+
 		if(draggingObj.transform.childCount > 0)
 		{
 			foreach(Transform child in draggingObj.transform)
@@ -57,7 +70,6 @@ public class DragAndDropController : MonoBehaviour
 		if(selectedMenuItemPrefab == prefab)
 		{
 			DeselectMenuItem();
-			selectedMenuItemPrefab = null;
 		}
 		else
 		{
@@ -86,6 +98,7 @@ public class DragAndDropController : MonoBehaviour
 		{
 			TweenAlpha.Begin(selectedMenuItemHighlight, 0.5f, 0.0f);
 			selectedMenuItemHighlight = null;
+			selectedMenuItemPrefab = null;
 		}
 	}
 
@@ -122,7 +135,7 @@ public class DragAndDropController : MonoBehaviour
 				FinishDragging();
 			}
 		}
-		else if(selectedMenuItemPrefab != null)
+		if(selectedMenuItemPrefab != null)
 		{
 			if(Input.GetMouseButtonDown(1))
 			{
@@ -181,12 +194,7 @@ public class DragAndDropController : MonoBehaviour
 
 				if(draggingObj.GetComponent<DraggableMapObject>() == null)
 				{
-					if(draggingObj.name.Contains("Door"))
-					{
-						draggingObj.AddComponent<DraggableRotatableMapObject>();
-					}
-					else
-						draggingObj.AddComponent<DraggableMapObject>();
+					draggingObj.AddComponent<DraggableMapObject>();
 				}
 
 				if(draggingObj.transform.childCount > 0)
@@ -229,21 +237,81 @@ public class DragAndDropController : MonoBehaviour
 				var clone = (GameObject)Instantiate(selectedMenuItemPrefab);
 				clone.name = clone.name.Remove(clone.name.IndexOf("(Clone)"), 7);
 
+				if(clone.name.Contains("Door"))
+				{
+					SetupDoorPiece(clone);
+				}
+				else if(clone.name.Contains("PlayerStart"))
+				{
+					SetupStartPiece(clone);
+					DeselectMenuItem();
+				}
+				else if(clone.name.Contains("End"))
+				{
+					DeselectMenuItem();
+				}
+				else if(clone.GetComponent<DraggableMapObject>() == null)
+				{
+					clone.AddComponent<DraggableMapObject>();
+				}
+
+
 				if(clone.transform.childCount > 0)
 				{
 					foreach(Transform child in clone.transform)
 					{
 						child.gameObject.layer = 10;
+						if(child.collider)
+						{
+							child.collider.enabled = false;
+						}
 					}
 				}
 				clone.layer = 10;
 				clone.transform.localScale = Vector3.one;
 				clone.transform.position = hit.collider.transform.position;
 				clone.transform.parent = levelCreator.mapRoot.transform;
+				NotificationCenter<DragAndDropNotification>.DefaultCenter.PostNotification(DragAndDropNotification.ObjectPlaced, clone.gameObject);
 
 				Destroy(objToReplace);
 			}
 		}
+	}
+
+	void SetupDoorPiece(GameObject doorGo)
+	{
+		var doorMenuPiece = GameObject.Find("DoorCube");
+
+		var doorPiece = doorMenuPiece.GetComponent<DoorPiece>();
+
+		doorGo.GetComponent<DoorPiece>().SetDoorColour(doorPiece.theDoor.objColour);
+		doorGo.GetComponent<DoorPiece>().ChangeColour(doorPiece.objColour);
+		doorGo.AddComponent<DraggableRotatableMapObject>();
+	}
+
+	void SetupStartPiece(GameObject startGo)
+	{
+		var menuPlayerSphere = GameObject.Find("PlayerStartCubeMenuObj");
+		var menuPlayerObj = menuPlayerSphere.GetComponent<PlayerStartPiece>();
+
+		var playerSphere = (GameObject)Instantiate(playerSpherePrefab);
+
+		var playerCharObj = playerSphere.GetComponent<PlayerCharacter>();
+
+		playerSphere.transform.parent = startGo.transform;
+		playerSphere.transform.localPosition = new Vector3(0, 1.3f, 0);
+		playerCharObj.rigidbody.useGravity = false;
+		playerCharObj.playerMovement.canMove = false;
+
+		startGo.GetComponent<PlayerStartPiece>().ChangeColour(menuPlayerObj.objColour);
+		playerSphere.collider.enabled = false;
+		playerCharObj.SilentlyChangeColour(menuPlayerObj.objColour);
+		startGo.AddComponent<DraggableMapObject>();
+	}
+
+	void SetupEndPiece(GameObject endGo)
+	{
+
 	}
 	
 	void ReplaceFloorPiece(Vector3 pos)

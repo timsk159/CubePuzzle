@@ -5,7 +5,7 @@ public class DragAndDropEndPieceMenuItem : DragAndDropMenuItem
 {
 	protected override void OnPress(bool isPressed)
 	{
-		if(GameObject.Find("EndGameCube") == null && UICamera.currentTouchID == -1)
+		if(GameObject.Find("EndGameCube") == null)
 		{
 			base.OnPress (isPressed);
 		}

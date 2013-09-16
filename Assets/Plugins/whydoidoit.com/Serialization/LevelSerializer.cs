@@ -530,13 +530,13 @@ public static class LevelSerializer
     /// <summary>
     ///   Resume for a stored game state that wasn't directly saved
     /// </summary>
-    public static void Resume()
+    public static void Resume(Action<GameObject, List<GameObject>> onComplete = null)
     {
         var data = PlayerPrefs.GetString(PlayerName + "__RESUME__");
         if (!string.IsNullOrEmpty(data))
         {
             var se = UnitySerializer.Deserialize<SaveEntry>(Convert.FromBase64String(data));
-            se.Load();
+            se.Load(onComplete);
         }
     }
 
@@ -1331,9 +1331,9 @@ public static class LevelSerializer
         /// <summary>
         ///   Load this saved game
         /// </summary>
-        public void Load()
+        public void Load(Action<GameObject, List<GameObject>> onComplete = null)
         {
-            LoadSavedLevel(Data);
+            LoadSavedLevel(Data, onComplete);
         }
 
         /// <summary>
