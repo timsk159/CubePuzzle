@@ -57,7 +57,6 @@ public class FrontMenu : MonoBehaviour
 		{
 			storyModeContinueButton = storyModePanel.transform.Find("StoryModeContinueButton").gameObject;
 		}
-
 		if(string.IsNullOrEmpty(StoryProgressController.Instance.GetStoryProgressSave()))
 		{
 			storyModeContinueButton.SetActive(false);
@@ -71,7 +70,7 @@ public class FrontMenu : MonoBehaviour
 	
 	void LevelCreatorButtonPressed()
 	{
-		Application.LoadLevel("LevelCreator");
+		SceneLoader.Instance.LoadLevel("LevelCreator");
 	}
 	
 	void UserLevelsButtonPressed()
@@ -118,6 +117,7 @@ public class FrontMenu : MonoBehaviour
 	
 	void FileListSelectionChanged(bool isChecked, string fileName)
 	{
+		Debug.Log("isChecked: " + isChecked);
 		if(isChecked)
 		{
 			selectedFileName = fileName;
@@ -130,13 +130,15 @@ public class FrontMenu : MonoBehaviour
 	
 	void PlayUserLevelButtonPressed()
 	{
-		levelCreator.LoadMapForPlayMode (selectedFileName);
+		if(!string.IsNullOrEmpty(selectedFileName))
+			levelCreator.LoadMapForPlayMode (selectedFileName);
 	}
 
 	void CancelUserLevelMenuPressed()
 	{
 		NGUITools.SetActive(frontMenuPanel, true);
 		NGUITools.SetActive(loadMapPanel, false);
+		selectedFileName = "";
 	}
 
 	void QuitButtonPressed()
