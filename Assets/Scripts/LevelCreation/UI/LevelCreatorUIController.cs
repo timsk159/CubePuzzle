@@ -291,6 +291,11 @@ public class LevelCreatorUIController : MonoBehaviour
 	{
 		var fileNameInputText = GameObject.Find ("FileNameInput").GetComponentInChildren<UILabel> ().text.Replace("|","");
 
+		if(fileNameInputText.StartsWith("T-"))
+		{
+			fileNameInputText = fileNameInputText.Remove(0, 2);
+		}
+
 		selectedFileName = LevelCreatorController.mapFilesFilePath + fileNameInputText + ".mpcr";
 
 		if(!string.IsNullOrEmpty(selectedFileName))

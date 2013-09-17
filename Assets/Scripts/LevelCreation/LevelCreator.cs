@@ -285,8 +285,14 @@ public class LevelCreator : MonoBehaviour
 		}
 	}
 
-	//Aren't nested delegates easy to read....
-	//This loads a scene, once it's done, it loads the object tree (map) for that level, once THATS done, it sets up the null cubes in the map.
+	public void LoadStoryLevel(string levelName)
+	{
+		SceneLoader.Instance.LoadLevel(levelName, delegate {
+			LevelController.Instance.InitLevel();
+	});
+	}
+
+
 	public void LoadMapForPlayMode(string filePath)
 	{
 		SceneLoader.Instance.LoadLevel("UserLevelScene", delegate

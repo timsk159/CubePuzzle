@@ -6,7 +6,8 @@ using System.Collections;
 public enum FrontMenuUINotification
 {
 	StoryModeButtonPressed, UserLevelsButtonPressed, LevelCreatorButtonPressed, QuitButtonPressed,
-	PlayUserLevelButtonPressed, CancelUserLevelMenuPressed
+	PlayUserLevelButtonPressed, CancelUserLevelMenuPressed,
+	StoryModeContinueButtonPressed, StoryModeLevelButtonPressed, StoryModeCancelButtonPressed
 };
 
 public class FrontMenu : MonoBehaviour 
@@ -15,6 +16,7 @@ public class FrontMenu : MonoBehaviour
 
 	public GameObject frontMenuPanel;
 	public GameObject loadMapPanel;
+	public GameObject storyModePanel;
 	
 	public GameObject fileMenuEntryPrefab;
 
@@ -23,6 +25,7 @@ public class FrontMenu : MonoBehaviour
 	LevelCreator levelCreator;
 
 	public string selectedFileName;
+	private GameObject storyModeContinueButton;
 	
 	void Start ()
 	{
@@ -33,6 +36,10 @@ public class FrontMenu : MonoBehaviour
 		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver(this, FrontMenuUINotification.UserLevelsButtonPressed);
 		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver(this, FrontMenuUINotification.PlayUserLevelButtonPressed);
 		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver (this, FrontMenuUINotification.CancelUserLevelMenuPressed);
+		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver(this, FrontMenuUINotification.StoryModeContinueButtonPressed);
+		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver(this, FrontMenuUINotification.StoryModeLevelButtonPressed);
+		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver(this, FrontMenuUINotification.StoryModeCancelButtonPressed);
+
 		if(firstLoad)
 		{
 			EnsureDirectoriesExist();
@@ -43,10 +50,23 @@ public class FrontMenu : MonoBehaviour
 	
 	void StoryModeButtonPressed()
 	{
-		SceneLoader.Instance.LoadLevel("Tutorial1", delegate
+		NGUITools.SetActive(frontMenuPanel, false);
+		NGUITools.SetActive(storyModePanel, true);
+
+		if(storyModeContinueButton == null)
 		{
-			LevelController.Instance.InitLevel();
-		});
+			storyModeContinueButton = storyModePanel.transform.Find("StoryModeContinueButton").gameObject;
+		}
+
+		if(string.IsNullOrEmpty(StoryProgressController.Instance.GetStoryProgressSave()))
+		{
+			storyModeContinueButton.SetActive(false);
+		}
+		else
+		{
+			storyModeContinueButton.SetActive(true);
+		}
+		PopulateStoryModePanel();
 	}
 	
 	void LevelCreatorButtonPressed()
@@ -60,7 +80,6 @@ public class FrontMenu : MonoBehaviour
 		NGUITools.SetActive(loadMapPanel, true);
 		
 		PopulateFileMenu();
-		
 	}
 	
 	void PopulateFileMenu()
@@ -123,6 +142,98 @@ public class FrontMenu : MonoBehaviour
 	void QuitButtonPressed()
 	{
 		Application.Quit();
+	}
+
+	void StoryModeCancelButtonPressed()
+	{
+		var levelsGrid = storyModePanel.transform.Find ("LevelListDragPanel/LevelListGrid");
+		foreach(Transform child in levelsGrid)
+		{
+			if(child != levelsGrid)
+				Destroy(child.gameObject);
+			GameObject.Find ("SelectLevelButton").GetComponent<FrontMenuUINotifier> ().payload = "";
+		}
+		NGUITools.SetActive(storyModePanel, false);
+		NGUITools.SetActive(frontMenuPanel, true);
+	}
+
+	void StoryModeLevelButtonPressed(NotificationCenter<FrontMenuUINotification>.Notification notiData)
+	{
+		string selectedLevel = (string)notiData.data;
+
+		if(!string.IsNullOrEmpty(selectedLevel))
+			levelCreator.LoadStoryLevel(selectedLevel);
+	}
+
+	void StoryModeContinueButtonPressed()
+	{
+		LevelSerializer.LoadSavedLevel(StoryProgressController.Instance.GetStoryProgressSave(), delegate(GameObject arg1, System.Collections.Generic.List<GameObject> arg2)
+		{
+			LevelController.Instance.InitLevel();
+
+		});
+	}
+
+	void PopulateStoryModePanel()
+	{
+		var levelsGrid = storyModePanel.transform.Find("LevelListDragPanel/LevelListGrid").gameObject;
+
+		if(StoryProgressController.Instance.HasCompletedTutorial)
+		{
+			var currentLevelNumber = int.Parse(StoryProgressController.Instance.SavedLevelName);
+
+			for(int i = 1; i <= 1; i++)
+			{
+				AddLevelLabel(levelsGrid, i, true);
+			}
+			for(int i = 1; i <= currentLevelNumber; i++)
+			{
+				AddLevelLabel(levelsGrid, i, false);
+			}
+		}
+		else
+		{
+			var currentLevelNumber = int.Parse(StoryProgressController.Instance.SavedLevelName.Replace("T-", ""));
+
+			for(int i = 1; i <= currentLevelNumber; i++)
+			{
+				AddLevelLabel(levelsGrid, i, true);
+			}
+		}
+	}
+
+	void AddLevelLabel(GameObject grid, int levelNumber, bool tutorial)
+	{
+		var prefab = (GameObject)Resources.Load("StoryModeListEntry");
+		var clone = NGUITools.AddChild(grid, prefab);
+
+		var label = clone.GetComponentInChildren<UILabel>();
+
+		label.transform.localScale = new Vector3(30, 30, 1);
+
+		if(tutorial)
+			label.text = "Tutorial: " + levelNumber;
+		else
+			label.text = "Level: " + levelNumber;
+
+		NGUITools.AddWidgetCollider(label.gameObject);
+
+		grid.GetComponent<UIGrid>().Reposition();
+
+		var checkbox = clone.GetComponent<ServerListCheckbox>();
+		checkbox.gameObject.AddComponent<UIDragPanelContents>();
+		checkbox.radioButtonRoot = grid.transform;
+
+		checkbox.onSelectionChanged = StoryModeLevelListSelectionChanged;
+		if(tutorial)
+			checkbox.levelName = "T-" + levelNumber.ToString("00");
+		else
+			checkbox.levelName = levelNumber.ToString("00");
+	}
+
+	void StoryModeLevelListSelectionChanged(bool state, string levelName)
+	{
+		GameObject.Find("SelectLevelButton").GetComponent<FrontMenuUINotifier>().payload = levelName;
 	}
 
 	void EnsureDirectoriesExist()

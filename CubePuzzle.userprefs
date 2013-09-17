@@ -1,9 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\LevelCreation\DragAndDropController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\FrontMenu\FrontMenu.cs">
     <Files>
-      <File FileName="Assets\Scripts\LevelCreation\DragAndDropController.cs" Line="293" Column="64" />
-      <File FileName="Assets\Scripts\LevelCreation\MapPieces\DragAndDropPlayerStartMenuItem.cs" Line="31" Column="5" />
+      <File FileName="Assets\Scripts\FrontMenu\FrontMenu.cs" Line="137" Column="37" />
+      <File FileName="Assets\Scripts\StoryProgressController.cs" Line="52" Column="35" />
+      <File FileName="Assets\Scripts\FrontMenu\ServerListCheckbox.cs" Line="22" Column="39" />
+      <File FileName="Assets\Scripts\FrontMenu\FrontMenuUINotifier.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
