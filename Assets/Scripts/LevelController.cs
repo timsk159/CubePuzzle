@@ -335,6 +335,7 @@ public class LevelController : MonoBehaviour
 	
 	void EndGameEnter()
 	{
+		canPause = false;
 		Time.timeScale = 0;
 		playerChar.playerMovement.canMove = false;
 	}
