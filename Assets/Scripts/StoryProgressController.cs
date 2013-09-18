@@ -56,7 +56,14 @@ public class StoryProgressController : MonoBehaviour
 		}
 		set
 		{
-			PlayerPrefs.SetInt("TutorialFinished", int.Parse(value.ToString()));
+			if(value)
+			{
+				PlayerPrefs.SetInt("TutorialFinished", 1);
+			}
+			else
+			{
+				PlayerPrefs.SetInt("TutorialFinished", 0);
+			}
 			_hasCompletedTutorial = value;
 		}
 	}

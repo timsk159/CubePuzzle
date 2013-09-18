@@ -48,8 +48,22 @@ public class LevelController : MonoBehaviour
 	}	
 
 	LevelStateController levelStateController;
-	
-	public bool isStoryMode = false;
+
+	private bool _isStoryMode;
+
+	public bool isStoryMode
+	{
+		get
+		{
+			if(Application.loadedLevelName == "UserLevelScene")
+				_isStoryMode = false;
+			else
+				_isStoryMode = true;
+
+			return _isStoryMode;
+		}
+	}
+
 
 	public bool hasCheckpoint;
 	
@@ -83,14 +97,9 @@ public class LevelController : MonoBehaviour
 		
 		StateMachine<LevelState, LevelStateNotification>.SetInitialState(LevelState.InGame);
 	}
-	
+
 	void Start()
 	{
-		if(Application.loadedLevelName == "UserCreatedLevel")
-			isStoryMode = false;
-		else 
-			isStoryMode = true;
-
 		levelStateController = GetComponent<LevelStateController>();
 
 		if(isStoryMode)

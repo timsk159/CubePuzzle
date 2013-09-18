@@ -143,6 +143,7 @@ public class FrontMenu : MonoBehaviour
 
 	void QuitButtonPressed()
 	{
+		StoryProgressController.Instance.HasCompletedTutorial = false;
 		Application.Quit();
 	}
 
@@ -235,7 +236,10 @@ public class FrontMenu : MonoBehaviour
 
 	void StoryModeLevelListSelectionChanged(bool state, string levelName)
 	{
-		GameObject.Find("SelectLevelButton").GetComponent<FrontMenuUINotifier>().payload = levelName;
+		if(state)
+			GameObject.Find("SelectLevelButton").GetComponent<FrontMenuUINotifier>().payload = levelName;
+		else
+			GameObject.Find("SelectLevelButton").GetComponent<FrontMenuUINotifier>().payload = "";
 	}
 
 	void EnsureDirectoriesExist()
