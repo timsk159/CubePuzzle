@@ -93,12 +93,18 @@ public class LevelCreator : MonoBehaviour
 
 		RemoveUneededNullCubes ();
 		CheckEdgeCubeNeighbours();
-		yield return new WaitForEndOfFrame ();
+
+		while(LevelSerializer.IsDeserializing)
+			yield return new WaitForEndOfFrame();
 
 		SaveMapForPlayMode(saveLocation);
 
+		while(LevelSerializer.IsDeserializing)
+			yield return new WaitForEndOfFrame();
+		yield return new WaitForEndOfFrame();
+
 		playerObj.transform.parent = playerObjParent;
-		StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState (LevelCreatorStates.LevelCreation);
+		PutBackNullCubes();
 	}
 
 	void SaveMapForPlayMode(string saveLocation)
@@ -148,6 +154,22 @@ public class LevelCreator : MonoBehaviour
 			Destroy(obj.GetComponent<UniqueIdentifier>());
 			Destroy(obj.GetComponent<PrefabIdentifier>());
 			Destroy(obj.GetComponent<StoreMaterials>());
+		}
+	}
+
+	void PutBackNullCubes()
+	{
+		var nullCubes = GameObject.FindGameObjectsWithTag("NullCube");
+
+		var cubesToPutBack = nullCubes.Where(e => e.GetComponent<PrefabIdentifier>() == null).ToList();
+
+		foreach(var cube in cubesToPutBack)
+		{
+			var clone = (GameObject)Instantiate(assetManager.nullCubePrefab, cube.transform.position, cube.transform.rotation);
+
+			clone.transform.parent = mapRoot.transform;
+
+			Destroy(cube);
 		}
 	}
 
