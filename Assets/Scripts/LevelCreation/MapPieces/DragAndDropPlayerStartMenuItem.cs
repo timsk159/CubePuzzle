@@ -25,11 +25,14 @@ public class DragAndDropPlayerStartMenuItem : DragAndDropMenuItem
 
 	protected override void OnPress(bool isPressed)
 	{
-		if(GameObject.Find("PlayerStartCube") == null)
+		if(UICamera.currentTouchID == -1)
 		{
-			if(isPressed )
+			if(GameObject.Find("PlayerStartCube") == null)
 			{
-				base.OnPress (isPressed);
+				if(isPressed)
+				{
+					base.OnPress(isPressed);
+				}
 			}
 		}
 	}
