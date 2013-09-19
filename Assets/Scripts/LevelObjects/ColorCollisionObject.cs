@@ -14,6 +14,7 @@ public enum ColourCollisionNotification
 
 public class ColorCollisionObject : MonoBehaviour 
 {
+	public Colour initialColour;
 	public Colour objColour;
 	public Vector3 initialColliderSize;
 	[DoNotSerialize()]
@@ -25,8 +26,17 @@ public class ColorCollisionObject : MonoBehaviour
 	{
 		NotificationCenter<ColourCollisionNotification>.DefaultCenter.AddObserver(this, ColourCollisionNotification.ButtonPressed);
 		cubeNeighbours = new CubeNeighbours(gameObject);
+		initialColour = objColour;
 	}
-	
+
+	protected virtual void OnDisable()
+	{
+		if(useSharedMaterial)
+		{
+			ChangeColour(initialColour);
+		}
+	}
+
 	protected virtual void Start()
 	{
 		initialColliderSize = new Vector3(1, 1, 1);

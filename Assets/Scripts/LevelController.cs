@@ -6,12 +6,12 @@ using System.Linq;
 
 public enum LevelState
 {
-	InGame, Pause, EndGame, CutScene
+	InGame, Pause, EndGame, CutScene, ExitingLevel
 };
 
 public enum LevelStateNotification
 {
-	InGameEnter, InGameExit, PauseEnter, PauseExit, EndGameEnter, EndGameExit, CutSceneEnter, CutSceneExit
+	InGameEnter, InGameExit, PauseEnter, PauseExit, EndGameEnter, EndGameExit, CutSceneEnter, CutSceneExit, ExitingLevelEnter, ExitingLevelExit
 };
 
 public class LevelController : MonoBehaviour 
@@ -25,7 +25,7 @@ public class LevelController : MonoBehaviour
 			return _instance;
 		}
 	}
-	
+
 	public PlayerCharacter playerChar;
 	
 	private Colour _playerColour;

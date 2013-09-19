@@ -32,12 +32,12 @@ public class EndGameMenuController : MonoBehaviour
 	
 	void NextLevelPressed()
 	{
-		
+
 	}
 	
 	void QuitAndSavePressed()
 	{
-		
+
 	}
 	
 	void QuitPressed()

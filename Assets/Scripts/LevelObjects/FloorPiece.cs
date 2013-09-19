@@ -10,7 +10,7 @@ public class FloorPiece : ColorCollisionObject
 		
 		ColourNotiCenter.DefaultCenter.AddObserver(this, ColourCollisionNotification.PlayerChangedColour);
 	}
-	
+
 	protected void PlayerChangedColour(NotificationCenter<ColourCollisionNotification>.Notification notiData)
 	{
 		var colourToChangeTo = (Colour)notiData.data;
