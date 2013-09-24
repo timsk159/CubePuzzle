@@ -197,7 +197,7 @@ public class LevelController : MonoBehaviour
 		var uniqueMaterials = meshFilters.Select(e => e.renderer.sharedMaterial).Distinct();
 		foreach(var uniqueMat in uniqueMaterials)
 		{
-			if(!uniqueMat.name.Contains("Door"))
+			if(!uniqueMat.name.Contains("Door") && !uniqueMat.name.Contains("Button"))
 			{
 				var meshFiltersForMat = meshFilters.Where(e => e.renderer.sharedMaterial == uniqueMat).ToArray();
 
