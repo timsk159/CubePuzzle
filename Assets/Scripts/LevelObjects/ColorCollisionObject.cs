@@ -9,7 +9,7 @@ public enum ColourCollisionNotification
 {
 	PlayerEnteredColour, PlayerExitedColour, ObjectEnteredColour, ObjectExitedColour,
 	LeverPulled, ButtonPressed, InteractionTriggerEnter, InteractionTriggerExit,
-	PlayerChangedColour, FloorPiecesChangedColour
+	PlayerChangedColour, FloorPiecesChangedColour, PlayerKilled
 };
 
 public class ColorCollisionObject : MonoBehaviour 

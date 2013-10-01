@@ -102,6 +102,8 @@ public class LevelController : MonoBehaviour
 	{
 		levelStateController = GetComponent<LevelStateController>();
 
+		NotificationCenter<ColourCollisionNotification>.DefaultCenter.AddObserver(this, ColourCollisionNotification.PlayerKilled);
+
 		if(isStoryMode)
 		{
 			NotificationCenter<CutSceneNotification>.DefaultCenter.AddObserver(this, CutSceneNotification.CutSceneStarted);
@@ -305,6 +307,14 @@ public class LevelController : MonoBehaviour
 		levelStateController.LoadCheckpoint(delegate(GameObject arg1, List<GameObject> arg2) {
 			OptimiseLevelMesh();
 	});
+	}
+
+	void PlayerKilled()
+	{
+		if(hasCheckpoint)
+			LoadCheckpoint();
+		else
+			ResetLevel();
 	}
 
 	#region State Changes
