@@ -28,11 +28,22 @@ public class EndGameMenuController : MonoBehaviour
 			NGUITools.SetActive(nextLevelButton, false);
 			NGUITools.SetActive(quitAndSaveButton, false);
 		}
+		else
+		{
+			if(Application.loadedLevelName == "T-10")
+				StoryProgressController.Instance.HasCompletedTutorial = true;
+		}
 	}
 	
 	void NextLevelPressed()
 	{
-
+		var nextLevel = StoryProgressController.Instance.NextLevelName();
+		SceneLoader.Instance.LoadLevel(nextLevel, delegate {
+			if(StoryProgressController.Instance.LevelNumber >= StoryProgressController.Instance.SavedLevelNumber)
+				StoryProgressController.Instance.SetStoryProgressSave();
+			Time.timeScale = 1;
+			LevelController.Instance.InitLevel();
+	});
 	}
 	
 	void QuitAndSavePressed()

@@ -39,6 +39,7 @@ public class StoryProgressController : MonoBehaviour
 	private bool _isInTutorial;
 	private int _levelNumber;
 	private string _savedLevelName;
+	private int _savedLevelNumber;
 
 
 	public bool HasCompletedTutorial
@@ -116,17 +117,34 @@ public class StoryProgressController : MonoBehaviour
 		}
 	}
 
+	public int SavedLevelNumber
+	{
+		get
+		{
+			if(SavedLevelName.StartsWith("T"))
+			{
+				var trimmedName = SavedLevelName.Replace("T-", "");
+				_savedLevelNumber = int.Parse(trimmedName);
+			}
+			else
+			{
+				_savedLevelNumber = int.Parse(SavedLevelName);
+			}
+			return _savedLevelNumber;
+		}
+	}
+
 	public string NextLevelName()
 	{
 		var currentLevelNumber = LevelNumber + 1;
 		if(IsInTutorial)
 		{
-			var levelNumberString = currentLevelNumber.ToString("0");
+			var levelNumberString = currentLevelNumber.ToString("00");
 			return ("T-" + levelNumberString);
 		}
 		else
 		{
-			var levelNumberString = currentLevelNumber.ToString("0");
+			var levelNumberString = currentLevelNumber.ToString("00");
 			return levelNumberString;
 		}
 	}
