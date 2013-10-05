@@ -13,8 +13,6 @@ public class PlayerMovement : MonoBehaviour
 	float movementCD = 0.5f;
 	float nextMoveTime;
 
-	//Move 1 unit in desired direction over time, with a timer slightly greater than the movement time.
-
 	void Update()
 	{
 		if(Input.GetKeyDown(KeyCode.F1))
@@ -28,13 +26,14 @@ public class PlayerMovement : MonoBehaviour
 				transform.rotation = Quaternion.identity;
 				transform.position = roundedPos;
 
+				rigidbody.velocity = Vector3.zero;
 				rigidbody.useGravity = false;
 				rigidbody.freezeRotation = true;
 			}
 			else
 			{
-				rigidbody.freezeRotation = true;
-				rigidbody.useGravity = false;
+				rigidbody.freezeRotation = false;
+				rigidbody.useGravity = true;
 			}
 			canMove = true;
 		}
@@ -62,8 +61,8 @@ public class PlayerMovement : MonoBehaviour
 				{
 					if(Time.time > nextMoveTime)
 					{
-						//Normalize doesn't work for negative-length vectors (moving backwards). Have to normalize it manually.
-					//	force.Normalize();
+						//Normalize doesn't work for negative-length vectors. Have to normalize it manually.
+						//force.Normalize();
 
 						force.x = Mathf.Clamp(force.x, -1, 1);
 						force.z = Mathf.Clamp(force.z, -1, 1);
@@ -87,10 +86,5 @@ public class PlayerMovement : MonoBehaviour
 	void MoveComplete()
 	{
 		canMove = true;
-	}
-
-	IEnumerator Move(Vector3 normalizedMoveVector)
-	{
-		yield return 0;
 	}
 }
