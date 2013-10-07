@@ -46,7 +46,7 @@ public class PauseMenuController : MonoBehaviour
 	
 	void QuitButtonClicked()
 	{
-		Application.LoadLevel("FrontMenu");
+		SceneLoader.Instance.LoadLevel("FrontMenu");
 		if(Time.timeScale != 1)
 			Time.timeScale = 1;
 	}

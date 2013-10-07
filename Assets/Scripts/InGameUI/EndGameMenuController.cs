@@ -53,7 +53,7 @@ public class EndGameMenuController : MonoBehaviour
 	
 	void QuitPressed()
 	{
-		Application.LoadLevel("FrontMenu");
+		SceneLoader.Instance.LoadLevel("FrontMenu");
 		if(Time.timeScale != 1)
 			Time.timeScale = 1;
 	}

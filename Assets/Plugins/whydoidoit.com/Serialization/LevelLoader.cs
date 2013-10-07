@@ -27,7 +27,7 @@ public class LevelLoader : MonoBehaviour
     public GameObject Last;
     private float _alpha = 1;
     private bool _loading = true;
-    public bool showGUI = true;
+    public bool showGUI = false;
     public float timeScaleAfterLoading = 1;
 	public bool useJSON;
     public Action<GameObject, List<GameObject>> whenCompleted = delegate { };

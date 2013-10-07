@@ -1182,7 +1182,8 @@ public static class LevelSerializer
         var loader = go.AddComponent<LevelLoader>();
         loader.Data = ld;
 
-        Application.LoadLevel(ld.Name);
+		if(Application.loadedLevelName != ld.Name)
+       	 Application.LoadLevel(ld.Name);
         return loader;
     }
 
@@ -1211,7 +1212,8 @@ public static class LevelSerializer
 		loader.whenCompleted = whenComplete;
 		loader.Data = ld;
 
-		Application.LoadLevel(ld.Name);
+		if(Application.loadedLevelName != ld.Name)
+			Application.LoadLevel(ld.Name);
 		return loader;
 	}
 

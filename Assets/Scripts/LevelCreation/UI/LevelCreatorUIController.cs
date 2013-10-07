@@ -256,7 +256,7 @@ public class LevelCreatorUIController : MonoBehaviour
 				}
 				else
 				{
-					Application.LoadLevel("FrontMenu");
+					SceneLoader.Instance.LoadLevel("FrontMenu");
 				}
 				
 				break;

@@ -29,10 +29,25 @@ public class SceneLoader : MonoBehaviour
 			return _instance;
 		}
 	}
-	
+
+	public GameObject loadingScreenObjsParent;
+	private GameObject progressBarObj;
+	public UISlider progressBar;
+
 	void Awake()
 	{
 		DontDestroyOnLoad(this);
+	}
+
+	void OnDestroy()
+	{
+		LevelSerializer.Progress -= HandleProgress;
+		Destroy(loadingScreenObjsParent);
+	}
+
+	void HandleProgress (string arg1, float arg2)
+	{
+		progressBar.sliderValue = arg2;
 	}
 
 	public void LoadLevel(string levelToLoad)
@@ -45,19 +60,37 @@ public class SceneLoader : MonoBehaviour
 		StartCoroutine(LoadLevelRoutine(levelToLoad, onComplete));
 	}
 
-	public IEnumerator LoadLevelRoutine(string levelToLoad)
-	{
+	private IEnumerator LoadLevelRoutine(string levelToLoad)
+	{		
+		Application.LoadLevel("LoadingScene");
+		yield return new WaitForEndOfFrame();
+		yield return new WaitForEndOfFrame();
+
+		loadingScreenObjsParent = GameObject.Find("LoadingScreenObjs");
+		progressBarObj = GameObject.Find(@"Progress Bar");
+		progressBar = progressBarObj.GetComponent<UISlider>();
+		LevelSerializer.Progress += HandleProgress;
+
 		var asyncOp = Application.LoadLevelAsync (levelToLoad);
 		yield return asyncOp;
+		Destroy(this);
 	}
 
-	public IEnumerator LoadLevelRoutine(string levelToLoad, Action onComplete)
+	private IEnumerator LoadLevelRoutine(string levelToLoad, Action onComplete)
 	{
-		Action doOnComplete = onComplete;
+		Application.LoadLevel("LoadingScene");
+		yield return new WaitForEndOfFrame();
+		yield return new WaitForEndOfFrame();
+
+		loadingScreenObjsParent = GameObject.Find("LoadingScreenObjs");
+		progressBarObj = GameObject.Find(@"Progress Bar");
+		progressBar = progressBarObj.GetComponent<UISlider>();
+		LevelSerializer.Progress += HandleProgress;
+
 		var asyncOp = Application.LoadLevelAsync (levelToLoad);
-		Debug.Log("Scene loading started, waiting for asyncOp to finished");
 		yield return asyncOp;
-		Debug.Log("scene loading finished, we should be loading the objects now");
-		doOnComplete();
+		if(onComplete != null)
+			onComplete();
+		Destroy(this);
 	}
 }

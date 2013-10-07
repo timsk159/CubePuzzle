@@ -1153,7 +1153,8 @@ public static class JSONLevelSerializer
         var loader = go.AddComponent<JSONLevelLoader>();
 		loader.Data = UnitySerializer.JSONDeserialize<LevelData>(UnitySerializer.UnEscape(data));
 
-		Application.LoadLevel(loader.Data.Name);
+		if(Application.loadedLevelName != loader.Data.Name)
+			Application.LoadLevel(loader.Data.Name);
         return loader;
     }
 

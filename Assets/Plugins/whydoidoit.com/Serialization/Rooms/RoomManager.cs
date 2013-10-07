@@ -50,7 +50,8 @@ public class RoomManager
 		{
 			var go = new GameObject("RoomLoader");
 			go.AddComponent<RoomLoader>();
-			Application.LoadLevel(name);
+			if(Application.loadedLevelName != name)
+				Application.LoadLevel(name);
 		}
 	}
 	
