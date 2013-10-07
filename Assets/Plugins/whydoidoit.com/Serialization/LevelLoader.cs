@@ -119,6 +119,7 @@ public class LevelLoader : MonoBehaviour
         }
 
         LevelSerializer.RaiseProgress("Initializing", 0);
+		yield return new WaitForEndOfFrame();
 		 if (Data.rootObject != null)
         {
             Debug.Log(Data.StoredObjectNames.Any(sn=>sn.Name == Data.rootObject) ? "Located " + Data.rootObject : "Not found " + Data.rootObject);
@@ -150,6 +151,7 @@ public class LevelLoader : MonoBehaviour
 		flaggedObjects.AddRange(Data.StoredObjectNames.Select(c=>UniqueIdentifier.GetByName(c.Name)).Where(c=>c!=null).Select(c=>c.GetComponent<UniqueIdentifier>()));
 		
         LevelSerializer.RaiseProgress("Initializing", 0.25f);
+		yield return new WaitForEndOfFrame();
 
         var position = new Vector3(0, 2000, 2000);
         //Next we need to instantiate any items that are needed by the stored scene
@@ -233,6 +235,7 @@ public class LevelLoader : MonoBehaviour
         var loadedGameObjects = new HashSet<GameObject>();
 
         LevelSerializer.RaiseProgress("Initializing", 0.75f);
+		yield return new WaitForEndOfFrame();
 
 
         foreach (var so in Data.StoredObjectNames)
@@ -293,6 +296,7 @@ public class LevelLoader : MonoBehaviour
         LevelSerializer.RaiseProgress("Initializing", 1f);
 
 
+
         using (new Radical.Logging())
         {
             var currentProgress = 0;
@@ -334,8 +338,9 @@ public class LevelLoader : MonoBehaviour
 		
 		
 		                    foreach (var cp in item.Components)
-		                    {
-		                        try
+		                    {	
+								yield return new WaitForEndOfFrame();
+								try
 		                        {
 		                            LevelSerializer.RaiseProgress("Loading", (float) ++currentProgress/(float) Data.StoredItems.Count);
 		                            var type = UnitySerializer.GetTypeEx(cp.Type);

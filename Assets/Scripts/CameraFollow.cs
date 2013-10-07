@@ -7,6 +7,7 @@ public class CameraFollow : MonoBehaviour
 	private float distance = 6.0f;
 	private float height = 7.0f;
 	public float damp = 5.0f;
+	public Vector3 offset;
 
 	IEnumerator Start()
 	{
@@ -23,7 +24,7 @@ public class CameraFollow : MonoBehaviour
 			newPos.x = target.position.x;
 			newPos.y = target.position.y + height;
 			newPos.z = target.position.z - distance;
-
+			newPos += offset;
 			transform.position = newPos;
 
 			transform.LookAt(target, target.up);
@@ -34,13 +35,13 @@ public class CameraFollow : MonoBehaviour
 	{
 		if(target != null)
 		{
-			var newPos = transform.position;
+			var newPos = Vector3.zero;
 			newPos.x = target.position.x;
 			newPos.y = target.position.y + height;
 			newPos.z = target.position.z - distance;
+			newPos += offset;
 
 			transform.position = newPos;
-
 		}
 	}
 }

@@ -30,6 +30,7 @@ public class LevelCreatorUIController : MonoBehaviour
 	int selectedMapWidth;
 	bool isInFrontMenu = true;
 	bool isSavingMap = false;
+	bool isLoadingMap = false;
 	
 	string selectedFileName;
 
@@ -126,6 +127,7 @@ public class LevelCreatorUIController : MonoBehaviour
 	
 	void LoadingMapEnter()
 	{
+		isLoadingMap = true;
 		NGUITools.SetActive(loadingMapPanel, true);
 		var fileMenuGrid = loadingMapPanel.transform.Find("FileListScrollablePanel/FileListGrid").gameObject;
 		StartCoroutine(PopulateFileMenu(fileMenuGrid));
@@ -133,6 +135,7 @@ public class LevelCreatorUIController : MonoBehaviour
 	
 	void LoadingMapExit()
 	{
+		isLoadingMap = false;
 		NGUITools.SetActive(loadingMapPanel, false);
 	}
 
