@@ -16,6 +16,7 @@ public class DragAndDropController : MonoBehaviour
 	public GameObject draggingObj;
 	LevelAssetManager assetManager;
 
+	GameObject selectedMenuItem;
 	GameObject selectedMenuItemPrefab;
 	GameObject selectedMenuItemHighlight;
 	
@@ -75,19 +76,21 @@ public class DragAndDropController : MonoBehaviour
 		{
 			DeselectMenuItem();
 
-			var highlight = UICamera.lastHit.collider.transform.Find("HighlightSprite").gameObject;
-			SelectMenuItem(highlight);
+			SelectMenuItem(UICamera.lastHit.collider.gameObject);
 			selectedMenuItemPrefab = prefab;
 		}
 	}
 
 	void SelectMenuItem(GameObject newSelection)
 	{
+		var highlight = newSelection.transform.Find("HighlightSprite").gameObject;
+
 		if(selectedMenuItemHighlight != null)
 		{
 			TweenAlpha.Begin(selectedMenuItemHighlight, 0.5f, 0.0f);
 		}
-		selectedMenuItemHighlight = newSelection;
+		selectedMenuItemHighlight = highlight;
+		selectedMenuItem = newSelection;
 
 		TweenAlpha.Begin(selectedMenuItemHighlight, 0.5f, 1.0f);
 	}
@@ -137,9 +140,22 @@ public class DragAndDropController : MonoBehaviour
 		}
 		if(selectedMenuItemPrefab != null)
 		{
-			if(Input.GetMouseButtonDown(1))
+			if(UICamera.hoveredObject == null)
 			{
-				PlaceSelectedItem();
+				print("HOVERED OBJECT WAS NULL!");
+			}
+			else
+			{
+				print("Hovered object is: " + UICamera.hoveredObject.name);
+			}
+
+			if(UICamera.hoveredObject != null && UICamera.hoveredObject != selectedMenuItem)
+			{
+				Debug.Log("Hovered object: " + UICamera.hoveredObject + " Selected menu item: " + selectedMenuItem.name);
+				if(Input.GetMouseButtonDown(1))
+				{
+					PlaceSelectedItem();
+				}
 			}
 		}
 	}

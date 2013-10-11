@@ -1,9 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Plugins\whydoidoit.com\Serialization\LevelLoader.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\LevelCreation\UI\LevelCreatorUIController.cs">
     <Files>
-      <File FileName="Assets\Scripts\LevelCreation\UI\LevelCreatorUIController.cs" Line="308" Column="21" />
-      <File FileName="Assets\Plugins\whydoidoit.com\Serialization\LevelLoader.cs" Line="341" Column="25" />
+      <File FileName="Assets\Scripts\LevelCreation\UI\LevelCreatorUIController.cs" Line="178" Column="68" />
+      <File FileName="Assets\Scripts\LevelCreation\LevelCreator.cs" Line="301" Column="29" />
+      <File FileName="Assets\Plugins\whydoidoit.com\Serialization\LevelSerializer.cs" Line="520" Column="43" />
+      <File FileName="Assets\Plugins\whydoidoit.com\Serialization\LevelLoader.cs" Line="334" Column="24" />
+      <File FileName="Assets\Plugins\whydoidoit.com\Serialization\JSONLevelLoader.cs" Line="200" Column="52" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
