@@ -140,18 +140,8 @@ public class DragAndDropController : MonoBehaviour
 		}
 		if(selectedMenuItemPrefab != null)
 		{
-			if(UICamera.hoveredObject == null)
-			{
-				print("HOVERED OBJECT WAS NULL!");
-			}
-			else
-			{
-				print("Hovered object is: " + UICamera.hoveredObject.name);
-			}
-
 			if(UICamera.hoveredObject != null && UICamera.hoveredObject != selectedMenuItem)
 			{
-				Debug.Log("Hovered object: " + UICamera.hoveredObject + " Selected menu item: " + selectedMenuItem.name);
 				if(Input.GetMouseButtonDown(1))
 				{
 					PlaceSelectedItem();
