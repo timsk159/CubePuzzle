@@ -134,6 +134,26 @@ public class LevelCreatorController : MonoBehaviour
 
 #endregion
 
+	void Update()
+	{
+		if(Input.GetKeyDown(KeyCode.Delete))
+		{
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+			RaycastHit hit;
+
+			if(Physics.Raycast(ray, out hit, Mathf.Infinity))
+			{
+				if(hit.collider.GetComponent<DraggableMapObject>())
+				{
+					NotificationCenter<DragAndDropNotification>.DefaultCenter.PostNotification(DragAndDropNotification.DoubleClicked, hit.collider.transform.position);
+
+					Destroy(hit.collider.gameObject);
+				}
+			}
+		}
+	}
+
 	public void TurnOffDraggingMapObjects()
 	{
 		mapObjects.ForEach(e => e.enabled = false);

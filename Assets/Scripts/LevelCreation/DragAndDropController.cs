@@ -214,12 +214,7 @@ public class DragAndDropController : MonoBehaviour
 		}
 		else
 		{
-			DraggableMapObject mapObjScript;
-			mapObjScript = draggingObj.GetComponent<DraggableMapObject>();
-
-			if(mapObjScript != null)
-				Destroy(mapObjScript);
-			
+			Destroy(draggingObj);
 		}
 	}
 

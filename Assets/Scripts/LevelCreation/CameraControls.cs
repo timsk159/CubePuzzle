@@ -18,7 +18,7 @@ public class CameraControls : MonoBehaviour
 		var scrollInput = Input.GetAxis("Mouse ScrollWheel");
 		
 		
-		if(Input.GetMouseButtonDown(1))
+		if(Input.GetMouseButtonDown(2))
 		{
 			dragOrigin = Input.mousePosition;
 			isRotating = true;
@@ -28,7 +28,7 @@ public class CameraControls : MonoBehaviour
 			dragOrigin = Input.mousePosition;
 		}
 		
-		if (Input.GetMouseButtonUp(1)) 
+		if (Input.GetMouseButtonUp(2)) 
 			isRotating=false;
 		
 		//WASD movement

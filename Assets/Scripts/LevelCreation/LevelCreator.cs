@@ -288,7 +288,7 @@ public class LevelCreator : MonoBehaviour
 	{
 		if(status == "Loading")
 		{
-			uiController.UpdateProgressBar (false, progress);
+			uiController.UpdateProgressBar (progress);
 
 			if(progress == 1.0f)
 			{
@@ -298,7 +298,7 @@ public class LevelCreator : MonoBehaviour
 		}
 		else if(status == "Saving")
 		{
-			uiController.UpdateProgressBar (true, progress);
+			uiController.UpdateProgressBar (progress);
 
 			if(progress == 1.0f)
 			{

@@ -14,10 +14,8 @@ public class LevelCreatorUIController : MonoBehaviour
 	public GameObject loadingMapPanel;
 
 	public GameObject loadingProgressPanel;
-	public GameObject savingProgressPanel;
 
 	public UISlider loadingProgressBar;
-	public UISlider savingProgressBar;
 
 	public UILabel saveErrorLabel;
 
@@ -42,6 +40,17 @@ public class LevelCreatorUIController : MonoBehaviour
 		levelCreator = GameObject.Find("LevelCreator").GetComponent<LevelCreator>();
 		RegisterStateListeners();
 		RegisterUIListeners();
+		LevelSerializer.Progress += HandleProgress;
+	}
+
+	void OnDestroy()
+	{
+		LevelSerializer.Progress -= HandleProgress;
+	}
+
+	void OnDeserialized()
+	{
+		TurnOffLoadingBar();
 	}
 	
 	#region State Changes
@@ -145,6 +154,10 @@ public class LevelCreatorUIController : MonoBehaviour
 		var fileMenuList = fileMenu.GetComponent<UIPopupList>();
 		fileMenuList.items.Clear();
 		fileMenuList.items.Add("StopTesting");
+		if(loadingProgressPanel.activeSelf == true)
+		{
+			loadingProgressPanel.SetActive(false);
+		}
 	}
 
 	void TestingMapExit()
@@ -172,6 +185,12 @@ public class LevelCreatorUIController : MonoBehaviour
 		NotificationCenter<LevelCreatorUINotification>.DefaultCenter.AddObserver(this, LevelCreatorUINotification.SaveMenuSaveClicked);
 		
 		fileMenu.GetComponent<UIPopupList>().onSelectionChange = FileMenuSelectionChanged;
+	}
+
+	void HandleProgress (string arg1, float arg2)
+	{
+		if(arg1 != "Initializing")
+			UpdateProgressBar(arg2);
 	}
 	
 	void CreateButtonClicked()
@@ -276,7 +295,6 @@ public class LevelCreatorUIController : MonoBehaviour
 	{
 		if(!string.IsNullOrEmpty(selectedFileName))
 		{
-			NGUITools.SetActive (loadingProgressPanel, true);
 			levelCreator.LoadMap(selectedFileName);
 			selectedFileName = "";
 		}
@@ -304,7 +322,6 @@ public class LevelCreatorUIController : MonoBehaviour
 		if(!string.IsNullOrEmpty(selectedFileName))
 		{
 			string errorMessage = "";
-			NGUITools.SetActive (savingProgressPanel, true);
 			levelCreator.SaveMap(selectedFileName, out errorMessage);
 			if (errorMessage != "")
 			{
@@ -387,22 +404,22 @@ public class LevelCreatorUIController : MonoBehaviour
 
 	public void TurnOffLoadingBar()
 	{
-		NGUITools.SetActive (loadingProgressPanel, false);
-		NGUITools.SetActive (savingProgressPanel, false);
+		loadingProgressPanel.SetActive(false);
 	}
 
-	public void UpdateProgressBar(bool isSaving, float progress)
+	public void UpdateProgressBar(float progress)
 	{
-		if(isSaving)
+		if(loadingProgressPanel.activeSelf == false)
 		{
-			savingProgressBar.sliderValue = progress;
+			loadingProgressPanel.SetActive(true);
 		}
-		else
+		if(loadingProgressBar.gameObject.activeSelf == false)
 		{
-			loadingProgressBar.sliderValue = progress;
+			loadingProgressBar.gameObject.SetActive(true);
 		}
+		loadingProgressBar.sliderValue = progress;
 	}
-
+	
 	IEnumerator PopulateFileMenu(GameObject fileMenuGrid)
 	{
 		yield return StartCoroutine(ClearFileMenu(fileMenuGrid));

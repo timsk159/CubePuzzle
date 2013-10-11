@@ -1182,7 +1182,7 @@ public static class LevelSerializer
         var loader = go.AddComponent<LevelLoader>();
         loader.Data = ld;
 
-		if(Application.loadedLevelName != ld.Name)
+		//if(Application.loadedLevelName != ld.Name)
        	 Application.LoadLevel(ld.Name);
         return loader;
     }

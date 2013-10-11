@@ -26,6 +26,7 @@ public class DraggableMapObject : MonoBehaviour
 
 	protected virtual void OnPress(bool isPressed)
 	{
+		/*
 		if(UICamera.currentTouchID == -2 && isPressed)
 		{
 			if((Time.time - doubleClickStart) < doubleClickThreshold)
@@ -39,6 +40,7 @@ public class DraggableMapObject : MonoBehaviour
 				doubleClickStart = Time.time;
 			}
 		}
+		*/
 
 		if(UICamera.currentTouchID == -1 && isPressed)
 		{
