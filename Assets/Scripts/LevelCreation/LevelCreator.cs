@@ -113,6 +113,7 @@ public class LevelCreator : MonoBehaviour
 	void SaveMapForPlayMode(string saveLocation)
 	{
 		saveLocation = saveLocation.Remove(saveLocation.Length - 2, 2);
+
 		LevelSerializer.SaveObjectTreeToFile (saveLocation, mapRoot);
 	}
 

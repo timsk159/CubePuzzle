@@ -172,6 +172,12 @@ public class LevelController : MonoBehaviour
 
 	public void SetInitialFloorColliders()
 	{
+		//Make sure all the triggers and such are turned on, then tell all the cubes to setup their colliders based on the players colour.
+		foreach(Collider col in GameObject.Find("MapRoot").transform.GetAllComponentsInChildren<Collider>())
+		{
+			col.enabled = true;
+		}
+
 		NotificationCenter<ColourCollisionNotification>.DefaultCenter.PostNotification(ColourCollisionNotification.PlayerChangedColour, PlayerColour);
 	}
 
