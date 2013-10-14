@@ -31,19 +31,22 @@ public class PlayerCharacter : MonoBehaviour
 	
 	void Update()
 	{
-		if(Input.GetKeyDown(KeyCode.E))
+		if(Application.loadedLevelName != "LevelCreator")
 		{
-			if(currentInteractionObject != null)
+			if(Input.GetKeyDown(KeyCode.E))
 			{
-				currentInteractionObject.PlayerInteracted();
+				if(currentInteractionObject != null)
+				{
+					currentInteractionObject.PlayerInteracted();
+				}
 			}
-		}
-		if(Input.GetKeyDown(KeyCode.Space))
-		{
-			if(LevelController.Instance.hasCheckpoint)
-				LevelController.Instance.LoadCheckpoint();
-			else
-				LevelController.Instance.ResetLevel();
+			if(Input.GetKeyDown(KeyCode.Space))
+			{
+				if(LevelController.Instance.hasCheckpoint)
+					LevelController.Instance.LoadCheckpoint();
+				else
+					LevelController.Instance.ResetLevel();
+			}
 		}
 	}
 	

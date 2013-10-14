@@ -156,11 +156,13 @@ public class LevelCreatorController : MonoBehaviour
 
 	public void TurnOffDraggingMapObjects()
 	{
+		mapObjects = mapObjects.Where(e => e != null).ToList();
 		mapObjects.ForEach(e => e.enabled = false);
 	}
 
 	public void TurnOnDraggingMapObjects()
 	{
+		mapObjects = mapObjects.Where(e => e != null).ToList();
 		mapObjects.ForEach(e => e.enabled = true);
 	}
 
