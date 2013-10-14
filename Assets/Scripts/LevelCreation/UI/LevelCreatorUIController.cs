@@ -418,6 +418,11 @@ public class LevelCreatorUIController : MonoBehaviour
 			loadingProgressBar.gameObject.SetActive(true);
 		}
 		loadingProgressBar.sliderValue = progress;
+
+		if(progress > 0.999f)
+		{
+			TurnOffLoadingBar();
+		}
 	}
 	
 	IEnumerator PopulateFileMenu(GameObject fileMenuGrid)

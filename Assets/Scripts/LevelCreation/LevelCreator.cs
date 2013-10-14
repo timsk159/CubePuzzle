@@ -93,6 +93,9 @@ public class LevelCreator : MonoBehaviour
 
 		RemoveUneededNullCubes ();
 		CheckEdgeCubeNeighbours();
+		//After destroying and creating cubes, have to wait a frame or 2 for unity to register it.
+		yield return new WaitForEndOfFrame();
+		yield return new WaitForEndOfFrame();
 
 		while(LevelSerializer.IsDeserializing)
 			yield return new WaitForEndOfFrame();

@@ -34,6 +34,8 @@ public class SceneLoader : MonoBehaviour
 	private GameObject progressBarObj;
 	public UISlider progressBar;
 
+	Action onComplete;
+
 	void Awake()
 	{
 		DontDestroyOnLoad(this);
@@ -47,7 +49,18 @@ public class SceneLoader : MonoBehaviour
 
 	void HandleProgress (string arg1, float arg2)
 	{
-		progressBar.sliderValue = arg2;
+		if(arg1 == "Loading")
+		{
+			progressBar.sliderValue = arg2;
+			if(arg2 > 0.999f)
+				ProgressComplete();
+		}
+	}
+
+	void ProgressComplete()
+	{
+		DestroyLoadingScreenObjects();
+		Destroy(this);
 	}
 
 	public void LoadLevel(string levelToLoad)
@@ -66,31 +79,66 @@ public class SceneLoader : MonoBehaviour
 		yield return new WaitForEndOfFrame();
 		yield return new WaitForEndOfFrame();
 
-		loadingScreenObjsParent = GameObject.Find("LoadingScreenObjs");
-		progressBarObj = GameObject.Find(@"Progress Bar");
-		progressBar = progressBarObj.GetComponent<UISlider>();
+		FindLoadingScreenObjects();
 		LevelSerializer.Progress += HandleProgress;
 
-		var asyncOp = Application.LoadLevelAsync (levelToLoad);
-		yield return asyncOp;
+		if(Application.HasProLicense())
+		{
+			var asyncOp = Application.LoadLevelAsync(levelToLoad);
+			yield return asyncOp;
+		}
+		else
+		{
+			Application.LoadLevel(levelToLoad);
+			yield return new WaitForEndOfFrame();
+			yield return new WaitForEndOfFrame();
+		}
+		if(onComplete != null)
+			onComplete();
+		LevelSerializer.Progress += HandleProgress;
 		Destroy(this);
 	}
 
 	private IEnumerator LoadLevelRoutine(string levelToLoad, Action onComplete)
 	{
+		this.onComplete = onComplete;
 		Application.LoadLevel("LoadingScene");
 		yield return new WaitForEndOfFrame();
 		yield return new WaitForEndOfFrame();
 
+		FindLoadingScreenObjects();
+
+		if(Application.HasProLicense())
+		{
+			var asyncOp = Application.LoadLevelAsync (levelToLoad);
+
+			yield return asyncOp;
+			yield return new WaitForEndOfFrame();
+		}
+		else
+		{
+			Application.LoadLevel(levelToLoad);
+			yield return new WaitForEndOfFrame();
+			yield return new WaitForEndOfFrame();
+		}
+		if(onComplete != null)
+			onComplete();
+		LevelSerializer.Progress += HandleProgress;
+	}
+
+	void FindLoadingScreenObjects()
+	{
 		loadingScreenObjsParent = GameObject.Find("LoadingScreenObjs");
 		progressBarObj = GameObject.Find(@"Progress Bar");
 		progressBar = progressBarObj.GetComponent<UISlider>();
-		LevelSerializer.Progress += HandleProgress;
+		DontDestroyOnLoad(loadingScreenObjsParent);
+	}
 
-		var asyncOp = Application.LoadLevelAsync (levelToLoad);
-		yield return asyncOp;
-		if(onComplete != null)
-			onComplete();
-		Destroy(this);
+	void DestroyLoadingScreenObjects()
+	{
+		if(loadingScreenObjsParent != null)
+		{
+			Destroy(loadingScreenObjsParent);
+		}
 	}
 }
