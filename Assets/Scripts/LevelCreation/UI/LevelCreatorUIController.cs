@@ -201,9 +201,9 @@ public class LevelCreatorUIController : MonoBehaviour
 
 		if (int.TryParse (mapHeightInput.text, out selectedMapHeight) && int.TryParse(mapWidthInput.text, out selectedMapWidth))
 		{
-			for (int x = 0; x <= selectedMapWidth; x++)
+			for (int x = 0; x <= selectedMapWidth - 1; x++)
 			{
-				for (int z = 0; z <= selectedMapHeight; z++)
+				for (int z = 0; z <= selectedMapHeight - 1; z++)
 				{
 					var obj = (GameObject)Instantiate (levelCreator.assetManager.nullCubePrefab);
 
