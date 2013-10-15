@@ -40,9 +40,18 @@ public class ColorCollisionObject : MonoBehaviour
 	protected virtual void Start()
 	{
 		initialColliderSize = new Vector3(1, 1, 1);
-		ChangeColour(objColour);
+		NotificationCenter<LevelState>.DefaultCenter.AddObserver(this, LevelState.LevelInitialized);
+	}
+
+	protected virtual void OnDeserialized()
+	{
 		if(Application.loadedLevelName != "LevelCreator")
 			EnsureCollidersAreEnabled();
+	}
+
+	protected virtual void LevelInitialized()
+	{
+		ChangeColour(objColour);
 	}
 
 	protected void EnsureCollidersAreEnabled()

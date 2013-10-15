@@ -4,6 +4,8 @@ using ColourNotiCenter = NotificationCenter<ColourCollisionNotification>;
 
 public class FloorPiece : ColorCollisionObject 
 {
+	GameObject sharedMeshForThisPiece;
+
 	protected override void Start()
 	{
 		base.Start ();
@@ -17,17 +19,11 @@ public class FloorPiece : ColorCollisionObject
 		
 		if(colourToChangeTo == objColour)
 		{
-			var thisCollider = collider as BoxCollider;
-			var newColliderSize = new Vector3(thisCollider.size.x, 10, thisCollider.size.z);
-			
-			thisCollider.size = newColliderSize;
+			MakeImpassable();
 		}
 		else
 		{			
-			var thisCollider = collider as BoxCollider;
-			var newColliderSize = new Vector3(thisCollider.size.x, initialColliderSize.y, thisCollider.size.z);
-			
-			thisCollider.size = newColliderSize;
+			MakePassable();
 		}
 	}
 	
@@ -39,19 +35,65 @@ public class FloorPiece : ColorCollisionObject
 		{
 			if(LevelController.Instance.PlayerColour == objColour)
 			{
-				var thisCollider = collider as BoxCollider;
-				var newColliderSize = new Vector3(thisCollider.size.x, 10, thisCollider.size.z);
-				
-				thisCollider.size = newColliderSize;
+				MakeImpassable();
 			}
 			else
 			{			
-				var thisCollider = collider as BoxCollider;
-				var newColliderSize = new Vector3(thisCollider.size.x, initialColliderSize.y, thisCollider.size.z);
-				
-				thisCollider.size = newColliderSize;
+				MakePassable();
 			}
 		}
+	}
 
+	protected override void LevelInitialized()
+	{
+		if(sharedMeshForThisPiece == null)
+		{
+			sharedMeshForThisPiece = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));
+		}
+		base.LevelInitialized();
+	}
+
+	void MakePassable()
+	{
+		if(collider != null)
+		{
+			var thisCollider = collider as BoxCollider;
+			var newColliderSize = new Vector3(thisCollider.size.x, initialColliderSize.y, thisCollider.size.z);
+
+			thisCollider.size = newColliderSize;
+		}
+
+		if(sharedMeshForThisPiece != null)
+		{
+			iTween.ScaleTo(sharedMeshForThisPiece, Vector3.one, 0.5f);
+		}
+		else
+		{
+			iTween.ScaleTo(gameObject, Vector3.one, 0.5f);
+		}
+	}
+
+	void MakeImpassable()
+	{
+		if(collider != null)
+		{
+			var thisCollider = collider as BoxCollider;
+			var newColliderSize = new Vector3(thisCollider.size.x, 10, thisCollider.size.z);
+
+			thisCollider.size = newColliderSize;
+		}
+
+		var newSize = transform.localScale;
+
+		newSize.y += (newSize.y * 25f / 100f);
+
+		if(sharedMeshForThisPiece != null)
+		{
+			iTween.ScaleTo(sharedMeshForThisPiece, newSize, 0.5f);
+		}
+		else
+		{
+			iTween.ScaleTo(gameObject, newSize, 0.5f);
+		}
 	}
 }

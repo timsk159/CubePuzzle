@@ -29,6 +29,7 @@ public class DragAndDropController : MonoBehaviour
 		NotificationCenter<DragAndDropNotification>.DefaultCenter.AddObserver(this, DragAndDropNotification.MapObjectPressed);
 		NotificationCenter<DragAndDropNotification>.DefaultCenter.AddObserver(this, DragAndDropNotification.DoubleClicked);
 		NotificationCenter<DragAndDropNotification>.DefaultCenter.AddObserver(this, DragAndDropNotification.MenuItemRightClicked);
+		NotificationCenter<LevelCreatorStateNotification>.DefaultCenter.AddObserver(this, LevelCreatorStateNotification.TestingMapEnter);
 	}
 	
 	void MenuItemPressed(NotificationCenter<DragAndDropNotification>.Notification notiData)
@@ -117,6 +118,11 @@ public class DragAndDropController : MonoBehaviour
 		ReplaceFloorPiece(objPressed.transform.position);
 		
 		draggingObj = objPressed;
+	}
+
+	void TestingMapEnter()
+	{
+		DeselectMenuItem();
 	}
 	
 	void Update()

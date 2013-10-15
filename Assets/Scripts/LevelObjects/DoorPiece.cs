@@ -20,6 +20,8 @@ public class DoorPiece : FloorPiece
 	
 	public override void ChangeColour(Colour colorToChangeTo)
 	{
+		useSharedMaterial = false;
+
 		base.ChangeColour (colorToChangeTo);
 		
 		CheckDoor();
@@ -27,6 +29,8 @@ public class DoorPiece : FloorPiece
 
 	public override void RotateColour (bool forward)
 	{
+		useSharedMaterial = false;
+
 		base.RotateColour (forward);
 
 		CheckDoor();

@@ -6,7 +6,7 @@ using System.Linq;
 
 public enum LevelState
 {
-	InGame, Pause, EndGame, CutScene, ExitingLevel
+	InGame, Pause, EndGame, CutScene, ExitingLevel, LevelInitialized
 };
 
 public enum LevelStateNotification
@@ -126,7 +126,6 @@ public class LevelController : MonoBehaviour
 		}
 
 		SetupNullCubes();
-		SetInitialFloorColliders();
 		OptimiseLevelMesh();
 
 		Camera.main.GetComponent<CameraFollow>().target = playerObj.transform;
@@ -134,7 +133,11 @@ public class LevelController : MonoBehaviour
 		{
 			levelStateController.SetInitialState();
 		}
+
 	//	StartCoroutine(PlayIntroAnimation());
+
+		NotificationCenter<LevelState>.DefaultCenter.PostNotification(LevelState.LevelInitialized, null);
+		SetInitialFloorColliders();
 	}
 
 	IEnumerator PlayIntroAnimation()
@@ -259,7 +262,7 @@ public class LevelController : MonoBehaviour
 
 		playerChar = playerCube.GetComponent<PlayerCharacter> ();
 
-		playerChar.ChangeColour(playerStart.GetComponent<PlayerStartPiece>().objColour);
+		playerChar.SilentlyChangeColour(playerStart.GetComponent<PlayerStartPiece>().objColour);
 	}
 
 	void CutSceneStarted()
