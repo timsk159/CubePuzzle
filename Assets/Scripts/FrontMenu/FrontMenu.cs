@@ -252,6 +252,8 @@ public class FrontMenu : MonoBehaviour
 
 	void RegisterPrefabPaths()
 	{
+		LevelSerializer.useCompression = true;
+
 		string basePath = "LevelObjects/";
 		LevelSerializer.AddPrefabPath (basePath + "BlueCube");
 		LevelSerializer.AddPrefabPath (basePath + "ButtonCube");

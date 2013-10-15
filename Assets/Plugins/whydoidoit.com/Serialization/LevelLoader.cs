@@ -102,9 +102,12 @@ public class LevelLoader : MonoBehaviour
     }
 	
 	static int loadingCount = 0;
-	
+
     public IEnumerator Load(int numberOfFrames, float timeScale = 0)
     {
+		//Yield a frame (to update UI) after loading this many objects:
+		int objectsPerYield = 15;
+
 		loadingCount++;
 		var oldFixedTime = Time.fixedDeltaTime;
 		Time.fixedDeltaTime = 9;
@@ -119,7 +122,6 @@ public class LevelLoader : MonoBehaviour
         }
 
         LevelSerializer.RaiseProgress("Initializing", 0);
-		yield return new WaitForEndOfFrame();
 		 if (Data.rootObject != null)
         {
             Debug.Log(Data.StoredObjectNames.Any(sn=>sn.Name == Data.rootObject) ? "Located " + Data.rootObject : "Not found " + Data.rootObject);
@@ -339,7 +341,11 @@ public class LevelLoader : MonoBehaviour
 		
 		                    foreach (var cp in item.Components)
 		                    {	
-								yield return new WaitForEndOfFrame();
+								if(objectsPerYield < currentProgress)
+								{
+									objectsPerYield *= 2;
+									yield return new WaitForEndOfFrame();
+								}
 								try
 		                        {
 		                            LevelSerializer.RaiseProgress("Loading", (float) ++currentProgress/(float) Data.StoredItems.Count);

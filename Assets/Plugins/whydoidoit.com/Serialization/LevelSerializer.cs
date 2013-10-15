@@ -215,11 +215,19 @@ public static class LevelSerializer
 	/// </param>
 	public static void LoadObjectTreeFromFile(string filename, Action<LevelLoader> onComplete = null)
 	{
-		var x= File.Open(Application.persistentDataPath + "/" + filename, FileMode.Open);
-		var data = new byte[x.Length];
-		x.Read(data, 0, (int)x.Length);
-		x.Close();
-		LoadObjectTree(data, onComplete);
+		var pathName = Application.persistentDataPath + "/" + filename;
+		Loom.RunAsync(delegate
+		{
+			var x= File.Open(pathName, FileMode.Open);
+			var data = new byte[x.Length];
+			x.Read(data, 0, (int)x.Length);
+			x.Close();
+			Loom.QueueOnMainThread(delegate 
+			{
+				LoadObjectTree(data, onComplete);
+			});
+		});
+
 	}
 	
 	/// <summary>
@@ -1143,11 +1151,18 @@ public static class LevelSerializer
 		var l = new GameObject();
 		var loader = l.AddComponent<LevelLoader>();
 		loader.showGUI = showLoadingGUI;
-		var ld = UnitySerializer.Deserialize<LevelSerializer.LevelData> (levelData);
-		loader.Data = ld;
-		loader.DontDelete = dontDeleteExistingItems;
-		//Get the loader to do its job
-		loader.StartCoroutine(PerformLoad(loader, complete));
+
+		Loom.RunAsync(delegate {
+			var ld = UnitySerializer.Deserialize<LevelSerializer.LevelData> (levelData);
+			loader.Data = ld;
+			loader.DontDelete = dontDeleteExistingItems;
+			//Get the loader to do its job
+			Loom.QueueOnMainThread(delegate {
+				loader.StartCoroutine(PerformLoad(loader, complete));
+
+			});
+		});
+
 	}
 	
 	static IEnumerator PerformLoad(LevelLoader loader, Action<LevelLoader> complete)
@@ -1212,7 +1227,7 @@ public static class LevelSerializer
 		loader.whenCompleted = whenComplete;
 		loader.Data = ld;
 
-		if(Application.loadedLevelName != ld.Name)
+	//	if(Application.loadedLevelName != ld.Name)
 			Application.LoadLevel(ld.Name);
 		return loader;
 	}
