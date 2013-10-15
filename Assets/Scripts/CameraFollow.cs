@@ -11,24 +11,11 @@ public class CameraFollow : MonoBehaviour
 
 	IEnumerator Start()
 	{
-		if(target == null)
-			yield return new WaitForEndOfFrame();
-		else
+		while(target == null)
 		{
-			var pos = target.position;
-			pos.x -= distance;
-			pos.z = height;
-			transform.position = pos;
-
-			var newPos = transform.position;
-			newPos.x = target.position.x;
-			newPos.y = target.position.y + height;
-			newPos.z = target.position.z - distance;
-			newPos += offset;
-			transform.position = newPos;
-
-			transform.LookAt(target, target.up);
+			yield return new WaitForEndOfFrame();
 		}
+		transform.LookAt(target, target.up);
 	}
 
 	void FixedUpdate () 
@@ -41,7 +28,9 @@ public class CameraFollow : MonoBehaviour
 			newPos.z = target.position.z - distance;
 			newPos += offset;
 
-			transform.position = newPos;
+			transform.position = Vector3.Lerp(transform.position, newPos, damp * Time.deltaTime);
+
+			transform.LookAt(target, Vector3.up);
 		}
 	}
 }

@@ -133,10 +133,10 @@ public class LevelController : MonoBehaviour
 		{
 			levelStateController.SetInitialState();
 		}
-
-	//	StartCoroutine(PlayIntroAnimation());
-
 		NotificationCenter<LevelState>.DefaultCenter.PostNotification(LevelState.LevelInitialized, null);
+
+		StartCoroutine(PlayIntroAnimation());
+
 		SetInitialFloorColliders();
 	}
 
@@ -145,9 +145,16 @@ public class LevelController : MonoBehaviour
 		playerChar.playerMovement.canMove = false;
 		Camera.main.GetComponent<CameraFollow>().enabled = false;
 
-		Camera.main.animation.Play();
 
-		yield return new WaitForSeconds(Camera.main.animation.clip.length);
+		float animTime = 5.0f;
+		float timeCounter = animTime;
+
+		while(timeCounter > 0)
+		{
+			timeCounter -= Time.deltaTime;
+			Camera.main.transform.RotateAround(playerChar.gameObject.transform.position, Vector3.up, 1.0f);
+			yield return new WaitForEndOfFrame();
+		}
 
 		playerChar.playerMovement.canMove = true;
 		Camera.main.GetComponent<CameraFollow>().enabled = true;
