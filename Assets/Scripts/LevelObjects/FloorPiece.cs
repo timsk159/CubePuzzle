@@ -53,6 +53,15 @@ public class FloorPiece : ColorCollisionObject
 		base.LevelInitialized();
 	}
 
+	protected override void LevelStarted()
+	{
+		if(sharedMeshForThisPiece == null)
+		{
+			sharedMeshForThisPiece = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));
+		}
+		base.LevelStarted();
+	}
+
 	void MakePassable()
 	{
 		if(collider != null)

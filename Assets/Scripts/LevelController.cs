@@ -6,7 +6,7 @@ using System.Linq;
 
 public enum LevelState
 {
-	InGame, Pause, EndGame, CutScene, ExitingLevel, LevelInitialized
+	InGame, Pause, EndGame, CutScene, ExitingLevel, LevelInitialized, LevelStarted
 };
 
 public enum LevelStateNotification
@@ -69,6 +69,8 @@ public class LevelController : MonoBehaviour
 	
 	bool canPause = true;
 	bool isPaused;
+
+	GameObject mapRoot;
 	
 	void Awake()
 	{
@@ -125,39 +127,73 @@ public class LevelController : MonoBehaviour
 			playerChar = playerObj.GetComponent<PlayerCharacter>();
 		}
 
+		mapRoot = GameObject.Find("MapRoot");
 		SetupNullCubes();
-		OptimiseLevelMesh();
 
 		Camera.main.GetComponent<CameraFollow>().target = playerObj.transform;
+
+		NotificationCenter<LevelState>.DefaultCenter.PostNotification(LevelState.LevelInitialized, null);
+
+		StartCoroutine(StartGameAfterIntro());
+	}
+
+	IEnumerator StartGameAfterIntro()
+	{
+		playerChar.playerMovement.canMove = false;
+		playerChar.rigidbody.useGravity = false;
+		Camera.main.GetComponent<CameraFollow>().enabled = false;
+
+		GameObject[] combinedMeshes = OptimiseLevelMesh();
+		foreach(var go in combinedMeshes)
+		{
+			go.renderer.enabled = false;
+		}
+
+		yield return StartCoroutine(PlayIntroAnimation());
+		SetInitialFloorColliders();
+		for(int i = 0; i < mapRoot.transform.childCount; i++)
+		{
+			var child = mapRoot.transform.GetChild(i);
+			if(!child.name.Contains("Door") && !child.name.Contains("Button"))
+			{
+				mapRoot.transform.GetChild(i).renderer.enabled = false;
+			}
+		}
+		foreach(var go in combinedMeshes)
+		{
+			if(!go.name.Contains("Null"))
+				go.renderer.enabled = true;
+		}
+
+		NotificationCenter<LevelState>.DefaultCenter.PostNotification(LevelState.LevelStarted, null);
+
+		playerChar.playerMovement.canMove = true;
+		playerChar.rigidbody.useGravity = true;
+		Camera.main.GetComponent<CameraFollow>().enabled = true;
+		yield return new WaitForEndOfFrame();
 		if(levelStateController != null)
 		{
 			levelStateController.SetInitialState();
 		}
-		NotificationCenter<LevelState>.DefaultCenter.PostNotification(LevelState.LevelInitialized, null);
-
-		StartCoroutine(PlayIntroAnimation());
-
-		SetInitialFloorColliders();
 	}
 
 	IEnumerator PlayIntroAnimation()
 	{
-		playerChar.playerMovement.canMove = false;
-		Camera.main.GetComponent<CameraFollow>().enabled = false;
-
-
-		float animTime = 5.0f;
+		float animTime = 6.0f;
 		float timeCounter = animTime;
+
+		var movePos = mapRoot.transform.up * 20;
+		foreach(Transform child in mapRoot.transform)
+		{
+			iTween.MoveFrom(child.gameObject, iTween.Hash("position", movePos, "time", 1.0f, "delay", UnityEngine.Random.Range(0.5f, 5.0f)));
+		}
 
 		while(timeCounter > 0)
 		{
 			timeCounter -= Time.deltaTime;
-			Camera.main.transform.RotateAround(playerChar.gameObject.transform.position, Vector3.up, 1.0f);
+			Camera.main.transform.RotateAround(playerChar.gameObject.transform.position, Vector3.up, (45f * Time.deltaTime));
 			yield return new WaitForEndOfFrame();
 		}
-
-		playerChar.playerMovement.canMove = true;
-		Camera.main.GetComponent<CameraFollow>().enabled = true;
 	}
 
 	public void LoadedSaveComplete(GameObject rootObj, List<GameObject> mapObjects)
@@ -208,8 +244,9 @@ public class LevelController : MonoBehaviour
 		}
 	}
 
-	void OptimiseLevelMesh()
+	GameObject[] OptimiseLevelMesh()
 	{
+		List<GameObject> combinedMeshes = new List<GameObject>();
 		var meshFilters = GameObject.Find("MapRoot").GetComponentsInChildren<MeshFilter>();
 
 		var uniqueMaterials = meshFilters.Select(e => e.renderer.sharedMaterial).Distinct();
@@ -227,7 +264,6 @@ public class LevelController : MonoBehaviour
 				{
 					combine[i].mesh = meshFiltersForMat[i].sharedMesh;
 					combine[i].transform = meshFiltersForMat[i].transform.localToWorldMatrix;
-					meshFiltersForMat[i].renderer.enabled = false;
 					if(layerForThisMesh != meshFilters[i].gameObject.layer)
 						layerForThisMesh = meshFilters[i].gameObject.layer;
 				}
@@ -246,9 +282,10 @@ public class LevelController : MonoBehaviour
 				{
 					newMeshRenderer.enabled = false;
 				}
-
+				combinedMeshes.Add(newMeshObject);
 			}
 		}
+		return combinedMeshes.ToArray();
 	}
 
 	void CreatePlayer()
