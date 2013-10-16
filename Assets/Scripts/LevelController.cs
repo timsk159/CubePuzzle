@@ -143,20 +143,27 @@ public class LevelController : MonoBehaviour
 		playerChar.rigidbody.useGravity = false;
 		Camera.main.GetComponent<CameraFollow>().enabled = false;
 
+		//Do some caching before the intro animation to stop any judder when the animation finishes.
 		GameObject[] combinedMeshes = OptimiseLevelMesh();
 		foreach(var go in combinedMeshes)
 		{
 			go.renderer.enabled = false;
 		}
+		Transform[] mapRootChildren = new Transform[mapRoot.transform.childCount];
+		for(int i = 0; i < mapRootChildren.Length; i++)
+		{
+			mapRootChildren[i] = mapRoot.transform.GetChild(i);
+		}
 
 		yield return StartCoroutine(PlayIntroAnimation());
+
 		SetInitialFloorColliders();
-		for(int i = 0; i < mapRoot.transform.childCount; i++)
+		for(int i = 0; i < mapRootChildren.Length; i++)
 		{
-			var child = mapRoot.transform.GetChild(i);
+			var child = mapRootChildren[i];
 			if(!child.name.Contains("Door") && !child.name.Contains("Button"))
 			{
-				mapRoot.transform.GetChild(i).renderer.enabled = false;
+				child.renderer.enabled = false;
 			}
 		}
 		foreach(var go in combinedMeshes)
@@ -173,6 +180,7 @@ public class LevelController : MonoBehaviour
 		yield return new WaitForEndOfFrame();
 		if(levelStateController != null)
 		{
+			yield return new WaitForSeconds(0.5f);
 			levelStateController.SetInitialState();
 		}
 	}
@@ -185,13 +193,26 @@ public class LevelController : MonoBehaviour
 		var movePos = mapRoot.transform.up * 20;
 		foreach(Transform child in mapRoot.transform)
 		{
-			iTween.MoveFrom(child.gameObject, iTween.Hash("position", movePos, "time", 1.0f, "delay", UnityEngine.Random.Range(0.5f, 5.0f)));
+			if(!child.name.Contains("Start") && !child.name.Contains("End"))
+			{
+				iTween.MoveFrom(child.gameObject, iTween.Hash("position", movePos, "time", 1.0f, "delay", UnityEngine.Random.Range(0.5f, 5.0f)));
+			}
 		}
 
+		/*
+		//Calculate the angle we need to get the camera behind the player, then animate so that we end up at that pos after animTime seconds.
+		var camForward = Camera.main.transform.position;//.forward;
+		var playerForward = playerChar.transform.position;//.forward;
+
+		var angle = Vector3.Angle(camForward, playerForward);
+		var rotAmount = angle / animTime;
+*/
 		while(timeCounter > 0)
 		{
 			timeCounter -= Time.deltaTime;
-			Camera.main.transform.RotateAround(playerChar.gameObject.transform.position, Vector3.up, (45f * Time.deltaTime));
+
+			Camera.main.transform.RotateAround(playerChar.gameObject.transform.position, Vector3.up, (60f * Time.deltaTime));
+
 			yield return new WaitForEndOfFrame();
 		}
 	}

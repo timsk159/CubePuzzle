@@ -815,7 +815,7 @@ public static class LevelSerializer
 	        {
 	            return "NOCOMPRESSION" + Convert.ToBase64String(data);
 	        }
-			}
+		}
     }
 
     internal static void RaiseProgress(string section, float complete)

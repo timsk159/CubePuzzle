@@ -8,7 +8,6 @@ public class LevelStateController : MonoBehaviour
 {
 	public void SetInitialState()
 	{
-		Debug.Log("Set initial state");
 		LevelSerializer.SaveGame("InitialState");
 	}
 
