@@ -29,14 +29,6 @@ public class ColorCollisionObject : MonoBehaviour
 		initialColour = objColour;
 	}
 
-	protected virtual void OnDisable()
-	{
-		if(useSharedMaterial)
-		{
-			ChangeColour(initialColour);
-		}
-	}
-
 	protected virtual void Start()
 	{
 		initialColliderSize = new Vector3(1, 1, 1);
@@ -59,7 +51,7 @@ public class ColorCollisionObject : MonoBehaviour
 		ChangeColour(objColour);
 	}
 
-	protected void EnsureCollidersAreEnabled()
+	public void EnsureCollidersAreEnabled()
 	{
 		collider.enabled = true;
 

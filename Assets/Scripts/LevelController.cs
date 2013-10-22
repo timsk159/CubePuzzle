@@ -64,14 +64,7 @@ public class LevelController : MonoBehaviour
 		}
 	}
 
-	[DoNotSerialize()]
-	public bool hasCheckpoint
-	{
-		get
-		{
-			return LevelSerializer.CanResume;
-		}
-	}
+	public bool hasCheckpoint;
 	
 	bool canPause = true;
 	bool isPaused;
@@ -126,6 +119,7 @@ public class LevelController : MonoBehaviour
 	
 	public void InitLevel()
 	{
+		hasCheckpoint = false;
 		var playerObj = GameObject.FindWithTag ("Player");
 		if(playerObj == null)
 		{
@@ -160,34 +154,10 @@ public class LevelController : MonoBehaviour
 		{
 			go.renderer.enabled = false;
 		}
-		Transform[] mapRootChildren = new Transform[mapRoot.transform.childCount];
-		for(int i = 0; i < mapRootChildren.Length; i++)
-		{
-			mapRootChildren[i] = mapRoot.transform.GetChild(i);
-		}
 		
 		Action onAnimComplete = delegate() 
 		{
 			SetInitialFloorColliders();
-			for(int i = 0; i < mapRootChildren.Length; i++)
-			{
-				var child = mapRootChildren[i];
-				if(!child.name.Contains("Door") && !child.name.Contains("Button"))
-				{
-					child.renderer.enabled = false;
-					child.collider.enabled = true;
-					if(child.childCount > 0)
-					{
-						foreach(Transform childOfChild in child.transform)
-						{
-							if(childOfChild.collider)
-							{
-								childOfChild.collider.enabled = true;
-							}
-						}
-					}
-				}
-			}
 			foreach(var go in combinedMeshes)
 			{
 				if(!go.name.Contains("Null"))
@@ -208,31 +178,21 @@ public class LevelController : MonoBehaviour
 		StartCoroutine(levelIntro.PlayIntroAnimation(playerChar.gameObject, onAnimComplete));
 
 	}
- 
 
-	public void LoadedSaveComplete(GameObject rootObj, List<GameObject> mapObjects)
+	void OnDeserialized()
 	{
-		var playerObj = GameObject.FindWithTag ("Player");
-
-		if(playerObj != null)
-		{
-			playerChar = playerObj.GetComponent<PlayerCharacter>();
-		}
-
-		SetupNullCubes();
-		SetInitialFloorColliders();
-
-		Camera.main.GetComponent<CameraFollow>().target = playerObj.transform;
-
-		if(levelStateController != null)
-		{
-			levelStateController.SetInitialState();
-		}
+		print("Deserialized");
+		mapRoot = GameObject.Find("MapRoot");
 	}
 
 	public void SetInitialFloorColliders()
 	{
 		//Make sure all the triggers and such are turned on, then tell all the cubes to setup their colliders based on the players colour.
+		foreach(Transform child in mapRoot.transform)
+		{
+			child.GetComponent<ColorCollisionObject>().EnsureCollidersAreEnabled();
+		}
+		print("Initial colliders being set");
 		NotificationCenter<ColourCollisionNotification>.DefaultCenter.PostNotification(ColourCollisionNotification.PlayerChangedColour, PlayerColour);
 	}
 
@@ -255,6 +215,7 @@ public class LevelController : MonoBehaviour
 
 	GameObject[] OptimiseLevelMesh()
 	{
+		print("Meshes being optimised");
 		List<GameObject> combinedMeshes = new List<GameObject>();
 		var meshFilters = GameObject.Find("MapRoot").GetComponentsInChildren<MeshFilter>();
 
@@ -354,12 +315,16 @@ public class LevelController : MonoBehaviour
 	public void ResetLevel()
 	{
 		levelStateController.LoadInitialState(delegate(GameObject arg1, List<GameObject> arg2) {
+			mapRoot = GameObject.Find("MapRoot");
 			OptimiseLevelMesh();
+			SetInitialFloorColliders();
+
 	});
 	}
 
 	public void SetCheckpoint()
 	{
+		hasCheckpoint = true;
 		levelStateController.SetCheckPoint();
 	}
 

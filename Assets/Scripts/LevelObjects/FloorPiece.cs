@@ -19,10 +19,12 @@ public class FloorPiece : ColorCollisionObject
 		
 		if(colourToChangeTo == objColour)
 		{
+			Debug.Log("Color is same, making impassable");
 			MakeImpassable();
 		}
 		else
 		{			
+			Debug.Log("Color is same, making passable");
 			MakePassable();
 		}
 	}
@@ -64,6 +66,10 @@ public class FloorPiece : ColorCollisionObject
 
 	void MakePassable()
 	{
+		if(sharedMeshForThisPiece == null)
+		{
+			sharedMeshForThisPiece = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));
+		}
 		if(collider != null)
 		{
 			var thisCollider = collider as BoxCollider;
@@ -84,6 +90,10 @@ public class FloorPiece : ColorCollisionObject
 
 	void MakeImpassable()
 	{
+		if(sharedMeshForThisPiece == null)
+		{
+			sharedMeshForThisPiece = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));
+		}
 		if(collider != null)
 		{
 			var thisCollider = collider as BoxCollider;
@@ -103,6 +113,16 @@ public class FloorPiece : ColorCollisionObject
 		else
 		{
 		//	iTween.ScaleTo(gameObject, newSize, 0.5f);
+		}
+	}
+
+	void OnDeserialized()
+	{
+		ColourNotiCenter.DefaultCenter.AddObserver(this, ColourCollisionNotification.PlayerChangedColour);
+
+		if(sharedMeshForThisPiece == null)
+		{
+			sharedMeshForThisPiece = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));
 		}
 	}
 }

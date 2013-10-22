@@ -26,7 +26,9 @@ public class CameraFollow : MonoBehaviour
 		{
 			if(dotCamToPlayer == 0)
 			{
-				dotCamToPlayer = Vector3.Dot(transform.position, target.position);
+				var forward = transform.TransformDirection(Vector3.forward);
+				var toOther = target.position - transform.position;
+				dotCamToPlayer = Vector3.Dot(forward, toOther);
 			}
 			var newPos = Vector3.zero;
 			newPos.x = target.position.x;

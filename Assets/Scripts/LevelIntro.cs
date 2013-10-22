@@ -88,9 +88,8 @@ public class LevelIntro : MonoBehaviour
 	{
 		playingIntro = false;
 		var movePos = mapRoot.transform.up * 20;
-		//var allTweens = mapRoot.GetAllComponentsInChildren<iTween>();
 
-		foreach(var cube in animatingCubes) //var child in allTweens.Select(tween => tween.gameObject))
+		foreach(var cube in animatingCubes)
 		{
 			cube.InterruptAnimation();
 		}

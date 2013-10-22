@@ -13,6 +13,7 @@ public class LevelStateController : MonoBehaviour
 
 	public void SetCheckPoint()
 	{
+		print("+++--- set a checkpoint!");
 		LevelSerializer.Checkpoint();
 	}
 
