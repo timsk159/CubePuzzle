@@ -78,7 +78,7 @@ public class FloorPiece : ColorCollisionObject
 		}
 		else
 		{
-			iTween.ScaleTo(gameObject, Vector3.one, 0.5f);
+		//	iTween.ScaleTo(gameObject, Vector3.one, 0.5f);
 		}
 	}
 
@@ -102,7 +102,7 @@ public class FloorPiece : ColorCollisionObject
 		}
 		else
 		{
-			iTween.ScaleTo(gameObject, newSize, 0.5f);
+		//	iTween.ScaleTo(gameObject, newSize, 0.5f);
 		}
 	}
 }

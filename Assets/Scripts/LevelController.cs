@@ -6,12 +6,12 @@ using System.Linq;
 
 public enum LevelState
 {
-	InGame, Pause, EndGame, CutScene, ExitingLevel, LevelInitialized, LevelStarted
+	InGame, Pause, EndGame, CutScene, ExitingLevel
 };
 
 public enum LevelStateNotification
 {
-	InGameEnter, InGameExit, PauseEnter, PauseExit, EndGameEnter, EndGameExit, CutSceneEnter, CutSceneExit, ExitingLevelEnter, ExitingLevelExit
+	InGameEnter, InGameExit, PauseEnter, PauseExit, EndGameEnter, EndGameExit, CutSceneEnter, CutSceneExit, ExitingLevelEnter, ExitingLevelExit, LevelInitialized, LevelStarted
 };
 
 public class LevelController : MonoBehaviour 
@@ -64,18 +64,29 @@ public class LevelController : MonoBehaviour
 		}
 	}
 
-
-	public bool hasCheckpoint;
+	[DoNotSerialize()]
+	public bool hasCheckpoint
+	{
+		get
+		{
+			return LevelSerializer.CanResume;
+		}
+	}
 	
 	bool canPause = true;
 	bool isPaused;
-
 	GameObject mapRoot;
+	LevelIntro levelIntro;
 	
 	void Awake()
 	{
 		_instance = this;
 		RegisterStates();
+		levelIntro = GetComponent<LevelIntro>();
+		if(levelIntro == null)
+		{
+			levelIntro = gameObject.AddComponent<LevelIntro>();
+		}
 	}
 	
 	void RegisterStates()
@@ -132,12 +143,12 @@ public class LevelController : MonoBehaviour
 
 		Camera.main.GetComponent<CameraFollow>().target = playerObj.transform;
 
-		NotificationCenter<LevelState>.DefaultCenter.PostNotification(LevelState.LevelInitialized, null);
+		NotificationCenter<LevelStateNotification>.DefaultCenter.PostNotification(LevelStateNotification.LevelInitialized, null);
 
-		StartCoroutine(StartGameAfterIntro());
+		StartGameAfterIntro();
 	}
 
-	IEnumerator StartGameAfterIntro()
+	void StartGameAfterIntro()
 	{
 		playerChar.playerMovement.canMove = false;
 		playerChar.rigidbody.useGravity = false;
@@ -154,68 +165,50 @@ public class LevelController : MonoBehaviour
 		{
 			mapRootChildren[i] = mapRoot.transform.GetChild(i);
 		}
-
-		yield return StartCoroutine(PlayIntroAnimation());
-
-		SetInitialFloorColliders();
-		for(int i = 0; i < mapRootChildren.Length; i++)
+		
+		Action onAnimComplete = delegate() 
 		{
-			var child = mapRootChildren[i];
-			if(!child.name.Contains("Door") && !child.name.Contains("Button"))
+			SetInitialFloorColliders();
+			for(int i = 0; i < mapRootChildren.Length; i++)
 			{
-				child.renderer.enabled = false;
+				var child = mapRootChildren[i];
+				if(!child.name.Contains("Door") && !child.name.Contains("Button"))
+				{
+					child.renderer.enabled = false;
+					child.collider.enabled = true;
+					if(child.childCount > 0)
+					{
+						foreach(Transform childOfChild in child.transform)
+						{
+							if(childOfChild.collider)
+							{
+								childOfChild.collider.enabled = true;
+							}
+						}
+					}
+				}
 			}
-		}
-		foreach(var go in combinedMeshes)
-		{
-			if(!go.name.Contains("Null"))
-				go.renderer.enabled = true;
-		}
-
-		NotificationCenter<LevelState>.DefaultCenter.PostNotification(LevelState.LevelStarted, null);
-
-		playerChar.playerMovement.canMove = true;
-		playerChar.rigidbody.useGravity = true;
-		Camera.main.GetComponent<CameraFollow>().enabled = true;
-		yield return new WaitForEndOfFrame();
-		if(levelStateController != null)
-		{
-			yield return new WaitForSeconds(0.5f);
-			levelStateController.SetInitialState();
-		}
-	}
-
-	IEnumerator PlayIntroAnimation()
-	{
-		float animTime = 6.0f;
-		float timeCounter = animTime;
-
-		var movePos = mapRoot.transform.up * 20;
-		foreach(Transform child in mapRoot.transform)
-		{
-			if(!child.name.Contains("Start") && !child.name.Contains("End"))
+			foreach(var go in combinedMeshes)
 			{
-				iTween.MoveFrom(child.gameObject, iTween.Hash("position", movePos, "time", 1.0f, "delay", UnityEngine.Random.Range(0.5f, 5.0f)));
+				if(!go.name.Contains("Null"))
+					go.renderer.enabled = true;
 			}
-		}
 
-		/*
-		//Calculate the angle we need to get the camera behind the player, then animate so that we end up at that pos after animTime seconds.
-		var camForward = Camera.main.transform.position;//.forward;
-		var playerForward = playerChar.transform.position;//.forward;
+			NotificationCenter<LevelStateNotification>.DefaultCenter.PostNotification(LevelStateNotification.LevelStarted, null);
 
-		var angle = Vector3.Angle(camForward, playerForward);
-		var rotAmount = angle / animTime;
-*/
-		while(timeCounter > 0)
-		{
-			timeCounter -= Time.deltaTime;
+			playerChar.playerMovement.canMove = true;
+			playerChar.rigidbody.useGravity = true;
+			Camera.main.GetComponent<CameraFollow>().enabled = true;
+			if(levelStateController != null)
+			{
+				levelStateController.SetInitialState();
+			}
+		};
 
-			Camera.main.transform.RotateAround(playerChar.gameObject.transform.position, Vector3.up, (60f * Time.deltaTime));
+		StartCoroutine(levelIntro.PlayIntroAnimation(playerChar.gameObject, onAnimComplete));
 
-			yield return new WaitForEndOfFrame();
-		}
 	}
+ 
 
 	public void LoadedSaveComplete(GameObject rootObj, List<GameObject> mapObjects)
 	{
@@ -240,11 +233,6 @@ public class LevelController : MonoBehaviour
 	public void SetInitialFloorColliders()
 	{
 		//Make sure all the triggers and such are turned on, then tell all the cubes to setup their colliders based on the players colour.
-		foreach(Collider col in GameObject.Find("MapRoot").transform.GetAllComponentsInChildren<Collider>())
-		{
-			col.enabled = true;
-		}
-
 		NotificationCenter<ColourCollisionNotification>.DefaultCenter.PostNotification(ColourCollisionNotification.PlayerChangedColour, PlayerColour);
 	}
 
@@ -372,7 +360,6 @@ public class LevelController : MonoBehaviour
 
 	public void SetCheckpoint()
 	{
-		hasCheckpoint = true;
 		levelStateController.SetCheckPoint();
 	}
 

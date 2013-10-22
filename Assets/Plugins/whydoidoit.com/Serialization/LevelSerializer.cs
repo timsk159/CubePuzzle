@@ -1227,9 +1227,40 @@ public static class LevelSerializer
 		loader.whenCompleted = whenComplete;
 		loader.Data = ld;
 
-	//	if(Application.loadedLevelName != ld.Name)
-			Application.LoadLevel(ld.Name);
+		Application.LoadLevel(ld.Name);
 		return loader;
+	}
+
+	public static LevelLoader LoadSavedLevelIfSameScene(string data, Action<GameObject, List<GameObject>> whenComplete)
+	{
+		LevelData ld;
+		IsDeserializing = true;
+		if (data.StartsWith("NOCOMPRESSION"))
+		{
+			ld = UnitySerializer.Deserialize<LevelData>(Convert.FromBase64String(data.Substring(13)));
+		}
+		else
+		{
+			ld =
+				UnitySerializer.Deserialize<LevelData>(CompressionHelper.Decompress(data));
+		}
+
+		if(ld.Name == Application.loadedLevelName)
+		{
+			SaveGameManager.Loaded();
+			var go = new GameObject();
+			Object.DontDestroyOnLoad(go);
+			var loader = go.AddComponent<LevelLoader>();
+			loader.whenCompleted = whenComplete;
+			loader.Data = ld;
+
+			Application.LoadLevel(ld.Name);
+			return loader;
+		}
+		else
+		{
+			return null;
+		}
 	}
 
     #region Nested type: CompareGameObjects

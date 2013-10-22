@@ -40,8 +40,8 @@ public class ColorCollisionObject : MonoBehaviour
 	protected virtual void Start()
 	{
 		initialColliderSize = new Vector3(1, 1, 1);
-		NotificationCenter<LevelState>.DefaultCenter.AddObserver(this, LevelState.LevelInitialized);
-		NotificationCenter<LevelState>.DefaultCenter.AddObserver(this, LevelState.LevelStarted);
+		NotificationCenter<LevelStateNotification>.DefaultCenter.AddObserver(this, LevelStateNotification.LevelInitialized);
+		NotificationCenter<LevelStateNotification>.DefaultCenter.AddObserver(this, LevelStateNotification.LevelStarted);
 	}
 
 	protected virtual void OnDeserialized()

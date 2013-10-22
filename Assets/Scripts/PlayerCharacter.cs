@@ -15,6 +15,8 @@ public class PlayerCharacter : MonoBehaviour
 	
 	//The current interaction object that the player is stood in
 	InteractiveObject currentInteractionObject;
+	[SerializeThis()]
+	bool canReset;
 	
 	void Awake () 
 	{
@@ -27,6 +29,10 @@ public class PlayerCharacter : MonoBehaviour
 		NotificationCenter<ColourCollisionNotification>.DefaultCenter.AddObserver(this, ColourCollisionNotification.InteractionTriggerExit);
 		
 		NotificationCenter<ColourCollisionNotification>.DefaultCenter.AddObserver(this, ColourCollisionNotification.PlayerChangedColour);
+
+		NotificationCenter<LevelStateNotification>.DefaultCenter.AddObserver(this, LevelStateNotification.LevelStarted);
+		NotificationCenter<LevelStateNotification>.DefaultCenter.AddObserver(this, LevelStateNotification.InGameExit);
+		NotificationCenter<LevelStateNotification>.DefaultCenter.AddObserver(this, LevelStateNotification.InGameEnter);
 	}
 	
 	void Update()
@@ -40,16 +46,34 @@ public class PlayerCharacter : MonoBehaviour
 					currentInteractionObject.PlayerInteracted();
 				}
 			}
-			if(Input.GetKeyDown(KeyCode.Space))
+			if(canReset && !LevelSerializer.IsDeserializing)
 			{
-				if(LevelController.Instance.hasCheckpoint)
-					LevelController.Instance.LoadCheckpoint();
-				else
-					LevelController.Instance.ResetLevel();
+				if(Input.GetKeyDown(KeyCode.Space))
+				{
+					if(LevelController.Instance.hasCheckpoint)
+						LevelController.Instance.LoadCheckpoint();
+					else
+						LevelController.Instance.ResetLevel();
+				}
 			}
 		}
 	}
-	
+
+	void LevelStarted()
+	{
+		canReset = true;
+	}
+
+	void InGameEnter()
+	{
+		canReset = true;
+	}
+
+	void InGameExit()
+	{
+		canReset = false;
+	}
+
 	void PlayerEnteredColour(NotificationCenter<ColourCollisionNotification>.Notification notiData)
 	{
 		//ColourCollisionData hitData = (ColourCollisionData)notiData.data;
