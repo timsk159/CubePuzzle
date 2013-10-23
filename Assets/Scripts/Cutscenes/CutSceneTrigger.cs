@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(BoxCollider))]
 public class CutSceneTrigger : Triggerer 
 {
 	public CutsceneObj cutSceneObj;

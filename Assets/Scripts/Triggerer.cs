@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(BoxCollider))]
 public class Triggerer : MonoBehaviour 
 {
 	public GameObject[] listeners;	

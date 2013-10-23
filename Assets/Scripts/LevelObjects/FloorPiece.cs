@@ -19,12 +19,10 @@ public class FloorPiece : ColorCollisionObject
 		
 		if(colourToChangeTo == objColour)
 		{
-			Debug.Log("Color is same, making impassable");
 			MakeImpassable();
 		}
 		else
-		{			
-			Debug.Log("Color is same, making passable");
+		{
 			MakePassable();
 		}
 	}

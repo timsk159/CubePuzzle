@@ -6,71 +6,34 @@ using System.Collections.Generic;
 [System.Serializable]
 public class CutsceneObj : ScriptableObject
 {
-	public CutSceneAnimation cutSceneAnim;
+	public Dialogue dialogue;
 
-	public int lengthInSeconds;
+	public AudioClip audioClip;
+
+	public float lengthInSeconds;
 }
 
 [System.Serializable]
-public struct CutSceneAnimation
+public class Dialogue
 {
-	public List<TimedDialogue> timedDialogue;
+	public TextAsset dialogueAsset;
 
-	public List<TimedAudio> timedAudioClips;
+	string[] _dialogueLines;
 
-	public List<TimedAnimationClip> timedAnimationClips;
-
-	public void Init()
+	public string dialogue
 	{
-		timedDialogue = new List<TimedDialogue>();
-		timedAudioClips = new List<TimedAudio>();
-		timedAnimationClips = new List<TimedAnimationClip>();
+		get{ return dialogueAsset.text;}
 	}
 
-	[System.Serializable]
-	public class TimedDialogue
+	public string[] dialogueLines
 	{
-		public Dialogue dialogue = new Dialogue();
-		public float timeToStart;
-		public float timeToFinish;
-	}
-
-	[System.Serializable]
-	public class TimedAudio
-	{
-		public AudioClip clip;
-		public float timeToStart;
-	}
-
-	[System.Serializable]
-	public class TimedAnimationClip
-	{
-		public AnimationClip animClip;
-		public float timeToStart;
-	}
-
-	[System.Serializable]
-	public class Dialogue
-	{
-		public TextAsset dialogueAsset;
-
-		string[] _dialogueLines;
-
-		public string dialogue
+		get
 		{
-			get{ return dialogueAsset.text;}
-		}
-
-		public string[] dialogueLines
-		{
-			get
+			if(_dialogueLines == null)
 			{
-				if(_dialogueLines == null)
-				{
-					_dialogueLines = dialogue.Split(new string[] { "--BREAKLINE--" }, StringSplitOptions.RemoveEmptyEntries);
-				}
-				return _dialogueLines;
+				_dialogueLines = dialogue.Split(new string[] { "--BREAKLINE--" }, StringSplitOptions.RemoveEmptyEntries);
 			}
+			return _dialogueLines;
 		}
 	}
 }

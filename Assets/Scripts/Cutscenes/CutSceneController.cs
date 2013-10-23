@@ -8,8 +8,7 @@ public enum CutSceneNotification
 
 public class CutSceneController : MonoBehaviour 
 {
-	public Camera cutSceneCamera;
-	public DialogueDisplayer cutSceneLabel;
+	public DialogueDisplayer dialogueDisplayer;
 
 	void TriggererEntered(CutsceneObj cutSceneObj)
 	{
@@ -17,24 +16,22 @@ public class CutSceneController : MonoBehaviour
 
 		StartCoroutine(CutSceneTimerRoutine(cutSceneObj.lengthInSeconds));
 
-		//Do cutsceney stuff here.
+		DisplayCutscene(cutSceneObj);
 	}
 
-	void DisplayCutscene(CutsceneObj cutsceneObj)
+	void DisplayCutscene(CutsceneObj cutSceneObj)
 	{
 
+		dialogueDisplayer.StartCoroutine(dialogueDisplayer.DisplayText(cutSceneObj.dialogue.dialogueLines));
 	}
 
 	void StopCutScene()
 	{
-		//Put camera back, unload resources.
-		cutSceneCamera.depth = -2;
-
-
+		dialogueDisplayer.StopDisplayingText();
 		NotificationCenter<CutSceneNotification>.DefaultCenter.PostNotification(CutSceneNotification.CutSceneFinished, null);
 	}
 	
-	IEnumerator CutSceneTimerRoutine(int length)
+	IEnumerator CutSceneTimerRoutine(float length)
 	{
 		yield return new WaitForSeconds(length);
 
