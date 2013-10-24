@@ -5,7 +5,9 @@ using System.Collections;
 
 public class CutsceneCreator : EditorWindow
 {
-	CutsceneObj cutsceneObj;
+	CutSceneObj cutsceneObj;
+	TextAsset tempDialogueAsset;
+	AudioClip tempAudioClip;
 
 	[MenuItem("Window/Cutscene Creator")]
 	static void CreateWindow()
@@ -16,42 +18,73 @@ public class CutsceneCreator : EditorWindow
 
 	void Init()
 	{
-		cutsceneObj = ScriptableObject.CreateInstance<CutsceneObj>();
+		cutsceneObj = ScriptableObject.CreateInstance<CutSceneObj>();
 		cutsceneObj.dialogue = new Dialogue();
 	}
 
 	void OnGUI()
 	{
 		EditorGUILayout.PrefixLabel("Dialogue .txt file");
-		cutsceneObj.dialogue.dialogueAsset = (TextAsset)EditorGUILayout.ObjectField(cutsceneObj.dialogue.dialogueAsset, typeof(TextAsset), false);
+		tempDialogueAsset = (TextAsset)EditorGUILayout.ObjectField(tempDialogueAsset, typeof(TextAsset), false);
 
 		EditorGUILayout.PrefixLabel("Audio file");
-		cutsceneObj.audioClip = (AudioClip)EditorGUILayout.ObjectField(cutsceneObj.audioClip, typeof(AudioClip), false);
+		tempAudioClip = (AudioClip)EditorGUILayout.ObjectField(tempAudioClip, typeof(AudioClip), false);
 
 		if(GUILayout.Button("Create"))
 		{
-			/*
-			var mat = new Material(Shader.Find("Specular"));
-			AssetDatabase.CreateAsset(mat, "Assets/testMat.mat");
-
-			var animClip = new AnimationClip();
-			animClip.name = "testAnim";
-			AssetDatabase.AddObjectToAsset(animClip, mat);
-			AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(animClip));
-			*/
-
-			if(cutsceneObj.dialogue.dialogueAsset != null && cutsceneObj.audioClip != null)
+			if(tempDialogueAsset != null && tempAudioClip != null)
 			{
-				var filePath = EditorUtility.SaveFilePanel("Save Location", "", "", ".asset");
+				cutsceneObj.dialogue.dialogueAssetPath = GetResourcesPathForAsset(AssetDatabase.GetAssetPath(tempDialogueAsset));
+				cutsceneObj.audioClipFilePath = GetResourcesPathForAsset(AssetDatabase.GetAssetPath(tempAudioClip));
+
+				Debug.Log("Found resources path for dialogue to be: " + cutsceneObj.dialogue.dialogueAssetPath);
+				Debug.Log("Found resources path for audio to be: " + cutsceneObj.audioClipFilePath);
+
+				var filePath = EditorUtility.SaveFilePanelInProject("Save Location", "", "asset", "");
+				var inAssetsFolder = filePath.Contains("Assets");
+				if(!inAssetsFolder)
+				{
+					EditorUtility.DisplayDialog("Error", "You must save the file in the assets folder for this project", "Ok");
+					filePath = "";
+				}
+
 				if(!string.IsNullOrEmpty(filePath))
 				{
-					AssetDatabase.CreateAsset(cutsceneObj, filePath);
-					AssetDatabase.AddObjectToAsset(cutsceneObj, cutsceneObj.audioClip);
-					AssetDatabase.AddObjectToAsset(cutsceneObj, cutsceneObj.dialogue.dialogueAsset);
+					if(cutsceneObj.audioClipFilePath == "NOT IN RESOURCES!")
+					{
+						EditorUtility.DisplayDialog("Error", "Audio file must be placed inside the Assets/Resources/ folder. Please move the file and try again", "Ok");
+					}
+					else if(cutsceneObj.dialogue.dialogueAssetPath == "NOT IN RESOURCES!")
+					{
+						EditorUtility.DisplayDialog("Error", "Dialogue text file must be placed inside the Assets/Resources/ folder. Please move the file and try again", "Ok");
+					}
+					else
+					{
+						filePath = RemoveWindowsPathFromFilePath(filePath);
 
-					AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(cutsceneObj));
+						AssetDatabase.CreateAsset(cutsceneObj, filePath);
+
+						AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(cutsceneObj));
+					}
 				}
 			}
 		}
+	}
+
+	string GetResourcesPathForAsset(string filePath)
+	{
+		if(!filePath.Contains("Assets/Resources/"))
+		{
+			return "NOT IN RESOURCES!";
+		}
+		var filePathRelativeToResources = filePath.Substring(filePath.IndexOf("Resources/") + 10);
+		var noFileExtension = filePathRelativeToResources.Remove(filePathRelativeToResources.LastIndexOf("."), 4);
+		return noFileExtension;
+	}
+
+	string RemoveWindowsPathFromFilePath(string filePath)
+	{
+		var substr = filePath.Substring(filePath.IndexOf("Assets/"));
+		return substr;
 	}
 }

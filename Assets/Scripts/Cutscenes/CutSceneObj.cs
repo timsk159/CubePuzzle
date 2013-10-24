@@ -3,37 +3,29 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-[System.Serializable]
-public class CutsceneObj : ScriptableObject
+public class CutSceneObj : ScriptableObject
 {
 	public Dialogue dialogue;
 
-	public AudioClip audioClip;
+	public string audioClipFilePath;
 
-	public float lengthInSeconds;
-}
+	private AudioClip _audioClip;
 
-[System.Serializable]
-public class Dialogue
-{
-	public TextAsset dialogueAsset;
-
-	string[] _dialogueLines;
-
-	public string dialogue
-	{
-		get{ return dialogueAsset.text;}
-	}
-
-	public string[] dialogueLines
+	public AudioClip audioClip
 	{
 		get
 		{
-			if(_dialogueLines == null)
-			{
-				_dialogueLines = dialogue.Split(new string[] { "--BREAKLINE--" }, StringSplitOptions.RemoveEmptyEntries);
-			}
-			return _dialogueLines;
+			if(_audioClip == null)
+				_audioClip = (AudioClip)Resources.Load(audioClipFilePath);
+			return _audioClip;
 		}
+	}
+
+	public float lengthInSeconds;
+
+	public void UnloadAudio()
+	{
+		Resources.UnloadAsset(_audioClip);
+		_audioClip = null;
 	}
 }

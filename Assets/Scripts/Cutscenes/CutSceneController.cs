@@ -10,7 +10,7 @@ public class CutSceneController : MonoBehaviour
 {
 	public DialogueDisplayer dialogueDisplayer;
 
-	void TriggererEntered(CutsceneObj cutSceneObj)
+	void TriggererEntered(CutSceneObj cutSceneObj)
 	{
 		NotificationCenter<CutSceneNotification>.DefaultCenter.PostNotification(CutSceneNotification.CutSceneStarted, null);
 
@@ -19,10 +19,20 @@ public class CutSceneController : MonoBehaviour
 		DisplayCutscene(cutSceneObj);
 	}
 
-	void DisplayCutscene(CutsceneObj cutSceneObj)
+	void DisplayCutscene(CutSceneObj cutSceneObj)
 	{
+		if(cutSceneObj.dialogue.dialogueAsset != null)
+		{
+			//Calculate chars per second given amount of chars in each line and the length of this cutscene
 
-		dialogueDisplayer.StartCoroutine(dialogueDisplayer.DisplayText(cutSceneObj.dialogue.dialogueLines));
+			StartCoroutine(dialogueDisplayer.DisplayText(cutSceneObj.dialogue.dialogueLines));
+		}
+		if(cutSceneObj.audioClip != null)
+		{
+			//play audioclip.
+			audio.clip = cutSceneObj.audioClip;
+			audio.Play();
+		}
 	}
 
 	void StopCutScene()
