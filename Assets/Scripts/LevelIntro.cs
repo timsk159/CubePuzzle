@@ -4,13 +4,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+public enum LevelIntroNotification
+{
+	IntroStarted, IntroInterrupted, IntroFinished
+};
+
 public class LevelIntro : MonoBehaviour 
 {
 	bool playingIntro;
 	GameObject mapRoot;
 	float introAnimTime = 4.0f;
 	List<AnimatingCube> animatingCubes;
-	Action onComplete;
 
 	void Awake()
 	{
@@ -21,17 +25,15 @@ public class LevelIntro : MonoBehaviour
 	//Am = amount of cubes.
 	//
 	//TweenTime = T/animTime
-	public IEnumerator PlayIntroAnimation(GameObject playerObj, Action onComplete = null)
+	public IEnumerator PlayIntroAnimation(GameObject playerObj)
 	{
+		NotificationCenter<LevelIntroNotification>.DefaultCenter.PostNotification(LevelIntroNotification.IntroStarted, null);
 		introAnimTime = 4.0f;
 		mapRoot = GameObject.Find("MapRoot"); 
 		playingIntro = true;
 		var movePos = mapRoot.transform.up * 20;
 
 		animatingCubes = new List<AnimatingCube>(mapRoot.transform.childCount);
-
-		if(onComplete != null)
-			this.onComplete = onComplete;
 
 		foreach(Transform child in mapRoot.transform)
 		{
@@ -66,10 +68,9 @@ public class LevelIntro : MonoBehaviour
 		//Anim was not interrupted.
 		if(timeCounter <= 0)
 		{
-			yield return new WaitForSeconds(1.0f);
-			if(onComplete != null)
-				onComplete();
 		}
+		yield return new WaitForSeconds(1.0f);
+		NotificationCenter<LevelIntroNotification>.DefaultCenter.PostNotification(LevelIntroNotification.IntroFinished, null);
 	}
 
 	void Update()
@@ -86,6 +87,7 @@ public class LevelIntro : MonoBehaviour
 
 	IEnumerator QuickFinishAnimation()
 	{
+		NotificationCenter<LevelIntroNotification>.DefaultCenter.PostNotification(LevelIntroNotification.IntroInterrupted, null);
 		playingIntro = false;
 		var movePos = mapRoot.transform.up * 20;
 
@@ -94,8 +96,6 @@ public class LevelIntro : MonoBehaviour
 			cube.InterruptAnimation();
 		}
 		yield return new WaitForSeconds(0.5f);
-		if(onComplete != null)
-			onComplete();
 	}
 
 

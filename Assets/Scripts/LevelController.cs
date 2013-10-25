@@ -142,41 +142,51 @@ public class LevelController : MonoBehaviour
 		StartGameAfterIntro();
 	}
 
+	//Just used to save us having to find the combined meshes after the intro animation.
+	GameObject[] combinedMeshes;
+
 	void StartGameAfterIntro()
 	{
+		NotificationCenter<LevelIntroNotification>.DefaultCenter.AddObserver(this, LevelIntroNotification.IntroFinished);
+		NotificationCenter<LevelIntroNotification>.DefaultCenter.AddObserver(this, LevelIntroNotification.IntroInterrupted);
+
 		playerChar.playerMovement.canMove = false;
 		playerChar.rigidbody.useGravity = false;
 		Camera.main.GetComponent<CameraFollow>().enabled = false;
 
-		//Do some caching before the intro animation to stop any judder when the animation finishes.
-		GameObject[] combinedMeshes = OptimiseLevelMesh();
+		combinedMeshes = OptimiseLevelMesh();
 		foreach(var go in combinedMeshes)
 		{
 			go.renderer.enabled = false;
 		}
-		
-		Action onAnimComplete = delegate() 
+
+		StartCoroutine(levelIntro.PlayIntroAnimation(playerChar.gameObject));
+	}
+
+	void IntroFinished()
+	{
+		SetInitialFloorColliders();
+		foreach(var go in combinedMeshes)
 		{
-			SetInitialFloorColliders();
-			foreach(var go in combinedMeshes)
-			{
-				if(!go.name.Contains("Null"))
-					go.renderer.enabled = true;
-			}
+			if(!go.name.Contains("Null"))
+				go.renderer.enabled = true;
+		}
 
-			NotificationCenter<LevelStateNotification>.DefaultCenter.PostNotification(LevelStateNotification.LevelStarted, null);
+		NotificationCenter<LevelStateNotification>.DefaultCenter.PostNotification(LevelStateNotification.LevelStarted, null);
 
-			playerChar.playerMovement.canMove = true;
-			playerChar.rigidbody.useGravity = true;
-			Camera.main.GetComponent<CameraFollow>().enabled = true;
-			if(levelStateController != null)
-			{
-				levelStateController.SetInitialState();
-			}
-		};
+		playerChar.playerMovement.canMove = true;
+		playerChar.rigidbody.useGravity = true;
+		Camera.main.GetComponent<CameraFollow>().enabled = true;
+		if(levelStateController != null)
+		{
+			levelStateController.SetInitialState();
+		}
+		combinedMeshes = null;
+	}
 
-		StartCoroutine(levelIntro.PlayIntroAnimation(playerChar.gameObject, onAnimComplete));
-
+	void IntroInterrupted()
+	{
+		Camera.main.GetComponent<CameraFollow>().enabled = true;
 	}
 
 	void OnDeserialized()

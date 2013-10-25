@@ -14,7 +14,7 @@ public class CutSceneController : MonoBehaviour
 	{
 		NotificationCenter<CutSceneNotification>.DefaultCenter.PostNotification(CutSceneNotification.CutSceneStarted, null);
 
-		StartCoroutine(CutSceneTimerRoutine(cutSceneObj.lengthInSeconds));
+		StartCoroutine(CutSceneTimerRoutine(cutSceneObj.lengthInSeconds, cutSceneObj));
 
 		DisplayCutscene(cutSceneObj);
 	}
@@ -38,13 +38,15 @@ public class CutSceneController : MonoBehaviour
 	void StopCutScene()
 	{
 		dialogueDisplayer.StopDisplayingText();
+
 		NotificationCenter<CutSceneNotification>.DefaultCenter.PostNotification(CutSceneNotification.CutSceneFinished, null);
 	}
 	
-	IEnumerator CutSceneTimerRoutine(float length)
+	IEnumerator CutSceneTimerRoutine(float length, CutSceneObj cutsceneObj)
 	{
 		yield return new WaitForSeconds(length);
-
 		StopCutScene();
+		cutsceneObj.UnloadAudio();
+		cutsceneObj.dialogue.UnloadDialogue();
 	}
 }

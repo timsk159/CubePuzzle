@@ -36,6 +36,16 @@ public class ColorCollisionObject : MonoBehaviour
 		NotificationCenter<LevelStateNotification>.DefaultCenter.AddObserver(this, LevelStateNotification.LevelStarted);
 	}
 
+	protected virtual void OnDisable()
+	{
+		if(useSharedMaterial)
+		{
+			//Start cube uses neutral cube mat.
+			if(!gameObject.name.Contains("StartCube"))
+				this.renderer.sharedMaterial.color = GetObjectRealColor(initialColour);
+		}
+	}
+
 	protected virtual void OnDeserialized()
 	{
 		if(Application.loadedLevelName != "LevelCreator")
@@ -131,6 +141,8 @@ public class ColorCollisionObject : MonoBehaviour
 				return Color.green;
 			case Colour.Blue:
 				return Color.blue;
+			case Colour.None:
+				return Color.white;
 			default:
 				return Color.white;
 		}
