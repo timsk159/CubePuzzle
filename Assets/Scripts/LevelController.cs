@@ -171,6 +171,11 @@ public class LevelController : MonoBehaviour
 			if(!go.name.Contains("Null"))
 				go.renderer.enabled = true;
 		}
+		var allFloorPieces = (FloorPiece[])FindObjectsOfType(typeof(FloorPiece));
+		foreach(var piece in allFloorPieces)
+		{
+			piece.renderer.enabled = false;
+		}
 
 		NotificationCenter<LevelStateNotification>.DefaultCenter.PostNotification(LevelStateNotification.LevelStarted, null);
 
@@ -328,7 +333,11 @@ public class LevelController : MonoBehaviour
 			mapRoot = GameObject.Find("MapRoot");
 			OptimiseLevelMesh();
 			SetInitialFloorColliders();
-
+			foreach(var go in arg2)
+			{
+				if(go.GetComponent<FloorPiece>() != null)
+					go.renderer.enabled = false;
+			}
 	});
 	}
 

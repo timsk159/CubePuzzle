@@ -87,7 +87,6 @@ public class LevelIntro : MonoBehaviour
 
 	IEnumerator QuickFinishAnimation()
 	{
-		NotificationCenter<LevelIntroNotification>.DefaultCenter.PostNotification(LevelIntroNotification.IntroInterrupted, null);
 		playingIntro = false;
 		var movePos = mapRoot.transform.up * 20;
 
@@ -95,7 +94,8 @@ public class LevelIntro : MonoBehaviour
 		{
 			cube.InterruptAnimation();
 		}
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForEndOfFrame();
+		NotificationCenter<LevelIntroNotification>.DefaultCenter.PostNotification(LevelIntroNotification.IntroInterrupted, null);
 	}
 
 
