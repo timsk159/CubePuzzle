@@ -165,13 +165,15 @@ public class LevelController : MonoBehaviour
 
 	void IntroFinished()
 	{
+		print("INTRO FINISHED!");
 		SetInitialFloorColliders();
 		foreach(var go in combinedMeshes)
 		{
 			if(!go.name.Contains("Null"))
 				go.renderer.enabled = true;
 		}
-		var allFloorPieces = (FloorPiece[])FindObjectsOfType(typeof(FloorPiece));
+
+		var allFloorPieces = GameObject.FindGameObjectsWithTag("FloorPiece");
 		foreach(var piece in allFloorPieces)
 		{
 			piece.renderer.enabled = false;
