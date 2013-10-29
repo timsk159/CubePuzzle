@@ -42,7 +42,7 @@ public class EndGameMenuController : MonoBehaviour
 			if(StoryProgressController.Instance.LevelNumber >= StoryProgressController.Instance.SavedLevelNumber)
 				StoryProgressController.Instance.SetStoryProgressSave();
 			Time.timeScale = 1;
-			LevelController.Instance.InitLevel();
+			LevelController.Instance.InitLevel(true);
 	});
 	}
 	

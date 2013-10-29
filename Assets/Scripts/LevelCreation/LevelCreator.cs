@@ -314,7 +314,8 @@ public class LevelCreator : MonoBehaviour
 	public void LoadStoryLevel(string levelName)
 	{
 		SceneLoader.Instance.LoadLevel(levelName, delegate {
-			LevelController.Instance.InitLevel();
+			LevelController.Instance.InitLevel(true);
+			LevelStateController.currentLevelName = levelName;
 	});
 	}
 
@@ -325,7 +326,8 @@ public class LevelCreator : MonoBehaviour
 		{
 			LevelSerializer.LoadObjectTreeFromFile(filePath, delegate(LevelLoader obj)
 			{
-				LevelController.Instance.InitLevel();
+				LevelController.Instance.InitLevel(true);
+				LevelStateController.currentLevelName = filePath;
 			});
 		});
 	}

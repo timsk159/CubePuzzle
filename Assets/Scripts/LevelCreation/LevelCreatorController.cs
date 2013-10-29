@@ -239,7 +239,7 @@ public class LevelCreatorController : MonoBehaviour
 			nullCube.GetComponent<BoxCollider>().size = new Vector3(1, 10, 1);
 		}
 
-		LevelController.Instance.InitLevel();
+		LevelController.Instance.InitLevel(false);
 	}
 
 }

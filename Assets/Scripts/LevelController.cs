@@ -117,9 +117,11 @@ public class LevelController : MonoBehaviour
 		}
 	}
 	
-	public void InitLevel()
+	public void InitLevel(bool playIntro)
 	{
+		print("Init level called");
 		hasCheckpoint = false;
+		DestroyCombinedMeshes();
 		var playerObj = GameObject.FindWithTag ("Player");
 		if(playerObj == null)
 		{
@@ -137,9 +139,18 @@ public class LevelController : MonoBehaviour
 
 		Camera.main.GetComponent<CameraFollow>().target = playerObj.transform;
 
+		combinedMeshes = OptimiseLevelMesh();
+		foreach(var go in combinedMeshes)
+		{
+			go.renderer.enabled = false;
+		}
+
 		NotificationCenter<LevelStateNotification>.DefaultCenter.PostNotification(LevelStateNotification.LevelInitialized, null);
 
-		StartGameAfterIntro();
+		if(playIntro)
+			StartGameAfterIntro();
+		else
+			IntroFinished();
 	}
 
 	//Just used to save us having to find the combined meshes after the intro animation.
@@ -154,18 +165,11 @@ public class LevelController : MonoBehaviour
 		playerChar.rigidbody.useGravity = false;
 		Camera.main.GetComponent<CameraFollow>().enabled = false;
 
-		combinedMeshes = OptimiseLevelMesh();
-		foreach(var go in combinedMeshes)
-		{
-			go.renderer.enabled = false;
-		}
-
 		StartCoroutine(levelIntro.PlayIntroAnimation(playerChar.gameObject));
 	}
 
 	void IntroFinished()
 	{
-		print("INTRO FINISHED!");
 		SetInitialFloorColliders();
 		foreach(var go in combinedMeshes)
 		{
@@ -176,7 +180,8 @@ public class LevelController : MonoBehaviour
 		var allFloorPieces = GameObject.FindGameObjectsWithTag("FloorPiece");
 		foreach(var piece in allFloorPieces)
 		{
-			piece.renderer.enabled = false;
+			if(piece.name != "CheckpointCube")
+				piece.renderer.enabled = false;
 		}
 
 		NotificationCenter<LevelStateNotification>.DefaultCenter.PostNotification(LevelStateNotification.LevelStarted, null);
@@ -184,11 +189,8 @@ public class LevelController : MonoBehaviour
 		playerChar.playerMovement.canMove = true;
 		playerChar.rigidbody.useGravity = true;
 		Camera.main.GetComponent<CameraFollow>().enabled = true;
-		if(levelStateController != null)
-		{
-			levelStateController.SetInitialState();
-		}
-		combinedMeshes = null;
+
+		//combinedMeshes = null;
 	}
 
 	void IntroInterrupted()
@@ -198,7 +200,6 @@ public class LevelController : MonoBehaviour
 
 	void OnDeserialized()
 	{
-		print("Deserialized");
 		mapRoot = GameObject.Find("MapRoot");
 	}
 
@@ -209,7 +210,6 @@ public class LevelController : MonoBehaviour
 		{
 			child.GetComponent<ColorCollisionObject>().EnsureCollidersAreEnabled();
 		}
-		print("Initial colliders being set");
 		NotificationCenter<ColourCollisionNotification>.DefaultCenter.PostNotification(ColourCollisionNotification.PlayerChangedColour, PlayerColour);
 	}
 
@@ -258,6 +258,7 @@ public class LevelController : MonoBehaviour
 				var newMeshObject = new GameObject("CombinedMesh: " + uniqueMat.name.Replace("(Instance)", ""));
 				newMeshObject.transform.position = Vector3.zero;
 				newMeshObject.layer = layerForThisMesh;
+				newMeshObject.tag = "CombinedMesh";
 
 				var newMeshFilter = newMeshObject.AddComponent<MeshFilter>();
 				newMeshFilter.mesh = new Mesh();
@@ -296,6 +297,26 @@ public class LevelController : MonoBehaviour
 		playerChar.SilentlyChangeColour(playerStart.GetComponent<PlayerStartPiece>().objColour);
 	}
 
+	void DestroyCombinedMeshes()
+	{
+		if(combinedMeshes == null)
+		{
+			combinedMeshes = GameObject.FindGameObjectsWithTag("CombinedMesh");
+		}
+		if(combinedMeshes != null)
+		{
+			if(combinedMeshes.Length > 0)
+			{
+				print("Destroying this many combined meshes: " + combinedMeshes.Length);
+
+				foreach(var cMesh in combinedMeshes)
+				{
+					Destroy(cMesh);
+				}
+			}
+		}
+	}
+
 	void CutSceneStarted()
 	{
 		canPause = false;
@@ -331,16 +352,13 @@ public class LevelController : MonoBehaviour
 
 	public void ResetLevel()
 	{
-		levelStateController.LoadInitialState(delegate(GameObject arg1, List<GameObject> arg2) {
-			mapRoot = GameObject.Find("MapRoot");
-			OptimiseLevelMesh();
-			SetInitialFloorColliders();
-			foreach(var go in arg2)
-			{
-				if(go.GetComponent<FloorPiece>() != null)
-					go.renderer.enabled = false;
-			}
-	});
+		//LevelSerializer has some odd behavior when your trying to load in objects that already exist
+		//We have to do some tidy up before we reset the level.
+		DestroyCombinedMeshes();
+		Destroy(playerChar.gameObject);
+		Destroy(mapRoot);
+		levelStateController.LoadInitialState();
+		StateMachine<LevelState, LevelStateNotification>.ChangeState(LevelState.InGame);
 	}
 
 	public void SetCheckpoint()
@@ -352,7 +370,7 @@ public class LevelController : MonoBehaviour
 	public void LoadCheckpoint()
 	{
 		levelStateController.LoadCheckpoint(delegate(GameObject arg1, List<GameObject> arg2) {
-			OptimiseLevelMesh();
+			InitLevel(false);
 	});
 	}
 

@@ -172,7 +172,7 @@ public class FrontMenu : MonoBehaviour
 	{
 		LevelSerializer.LoadSavedLevel(StoryProgressController.Instance.GetStoryProgressSave(), delegate(GameObject arg1, System.Collections.Generic.List<GameObject> arg2)
 		{
-			LevelController.Instance.InitLevel();
+			LevelController.Instance.InitLevel(true);
 
 		});
 	}
