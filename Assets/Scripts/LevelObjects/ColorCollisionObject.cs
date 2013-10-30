@@ -40,8 +40,8 @@ public class ColorCollisionObject : MonoBehaviour
 	{
 		if(useSharedMaterial)
 		{
-			//Start cube uses neutral cube mat.
-			if(!gameObject.name.Contains("StartCube"))
+			//Start cube uses neutral cube mat. buttons are yellow.
+			if(!gameObject.name.Contains("StartCube") && !gameObject.name.Contains("PlayerButton"))
 				this.renderer.sharedMaterial.color = GetObjectRealColor(initialColour);
 		}
 	}

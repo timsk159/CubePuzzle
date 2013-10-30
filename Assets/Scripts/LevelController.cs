@@ -365,6 +365,10 @@ public class LevelController : MonoBehaviour
 	{
 		hasCheckpoint = true;
 		levelStateController.SetCheckPoint();
+		if(isStoryMode)
+		{
+			StoryProgressController.Instance.SetStoryProgressSave();
+		}
 	}
 
 	public void LoadCheckpoint()

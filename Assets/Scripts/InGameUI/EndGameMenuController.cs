@@ -12,7 +12,6 @@ public class EndGameMenuController : MonoBehaviour
 		StateMachine<LevelState, LevelStateNotification>.StateNotificationCenter.AddObserver(this, LevelStateNotification.EndGameEnter);
 		
 		NotificationCenter<EndGameMenuNotification>.DefaultCenter.AddObserver(this, EndGameMenuNotification.NextLevelPressed);
-		NotificationCenter<EndGameMenuNotification>.DefaultCenter.AddObserver(this, EndGameMenuNotification.QuitAndSavePressed);
 		NotificationCenter<EndGameMenuNotification>.DefaultCenter.AddObserver(this, EndGameMenuNotification.QuitPressed); 
 	}
 	
@@ -44,11 +43,6 @@ public class EndGameMenuController : MonoBehaviour
 			Time.timeScale = 1;
 			LevelController.Instance.InitLevel(true);
 	});
-	}
-	
-	void QuitAndSavePressed()
-	{
-
 	}
 	
 	void QuitPressed()

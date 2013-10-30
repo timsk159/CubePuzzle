@@ -15,7 +15,7 @@ public class PlayerCharacter : MonoBehaviour
 	
 	//The current interaction object that the player is stood in
 	InteractiveObject currentInteractionObject;
-	[SerializeThis()]
+	[SerializeThis()][SerializeField()]
 	bool canReset;
 	
 	void Awake () 
@@ -61,11 +61,13 @@ public class PlayerCharacter : MonoBehaviour
 
 	void LevelStarted()
 	{
+		print("Level Started!");
 		canReset = true;
 	}
 
 	void InGameEnter()
 	{
+		print("In Game Entered!");
 		canReset = true;
 	}
 

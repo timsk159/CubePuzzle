@@ -117,7 +117,6 @@ public class FrontMenu : MonoBehaviour
 	
 	void FileListSelectionChanged(bool isChecked, string fileName)
 	{
-		Debug.Log("isChecked: " + isChecked);
 		if(isChecked)
 		{
 			selectedFileName = fileName;
@@ -143,7 +142,7 @@ public class FrontMenu : MonoBehaviour
 
 	void QuitButtonPressed()
 	{
-		StoryProgressController.Instance.HasCompletedTutorial = false;
+		PlayerPrefs.DeleteAll(); 
 		Application.Quit();
 	}
 

@@ -93,10 +93,15 @@ public class SceneLoader : MonoBehaviour
 			yield return new WaitForEndOfFrame();
 			yield return new WaitForEndOfFrame();
 		}
-		if(onComplete != null)
-			onComplete();
-		LevelSerializer.Progress += HandleProgress;
-		Destroy(this);
+		if(LevelController.Instance.isStoryMode)
+		{
+			ProgressComplete();
+		}
+		else
+		{
+			LevelSerializer.Progress += HandleProgress;
+			Destroy(this);
+		}
 	}
 
 	private IEnumerator LoadLevelRoutine(string levelToLoad, Action onComplete)
@@ -123,7 +128,14 @@ public class SceneLoader : MonoBehaviour
 		}
 		if(onComplete != null)
 			onComplete();
-		LevelSerializer.Progress += HandleProgress;
+		if(LevelController.Instance.isStoryMode)
+		{
+			ProgressComplete();
+		}
+		else
+		{
+			LevelSerializer.Progress += HandleProgress;
+		}
 	}
 
 	void FindLoadingScreenObjects()

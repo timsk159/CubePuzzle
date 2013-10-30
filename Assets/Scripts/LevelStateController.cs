@@ -30,7 +30,7 @@ public class LevelStateController : MonoBehaviour
 		*/
 		if(LevelController.Instance.isStoryMode)
 		{
-			SceneLoader.Instance.LoadLevel(currentLevelName, delegate {
+			SceneLoader.Instance.LoadLevel(Application.loadedLevelName, delegate {
 				LevelController.Instance.InitLevel(true);
 			});
 		}

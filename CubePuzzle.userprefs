@@ -1,14 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Plugins\whydoidoit.com\Serialization\LevelSerializer.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\LevelCreation\DragAndDropController.cs">
     <Files>
-      <File FileName="Assets\Scripts\LevelIntro.cs" Line="52" Column="51" />
-      <File FileName="Assets\Scripts\LevelController.cs" Line="339" Column="29" />
-      <File FileName="Assets\Scripts\CameraFollow.cs" Line="7" Column="32" />
-      <File FileName="Assets\Scripts\LevelStateController.cs" Line="39" Column="35" />
-      <File FileName="Assets\Scripts\SceneLoader.cs" Line="98" Column="28" />
-      <File FileName="Assets\Scripts\LevelCreation\LevelCreator.cs" Line="316" Column="1" />
-      <File FileName="Assets\Plugins\whydoidoit.com\Serialization\LevelSerializer.cs" Line="216" Column="2" />
+      <File FileName="Assets\Scripts\LevelObjects\ColorCollisionObject.cs" Line="34" Column="37" />
+      <File FileName="Assets\Scripts\LevelObjects\FloorPiece.cs" Line="110" Column="4" />
+      <File FileName="Assets\Scripts\LevelCreation\DragAndDropController.cs" Line="220" Column="40" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

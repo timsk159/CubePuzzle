@@ -3,7 +3,7 @@ using System.Collections;
 
 public enum EndGameMenuNotification
 {
-	NextLevelPressed, QuitPressed, QuitAndSavePressed
+	NextLevelPressed, QuitPressed
 }
 
 public class EndGameMenuUINotifier : MonoBehaviour 
