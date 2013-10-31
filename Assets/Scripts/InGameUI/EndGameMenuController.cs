@@ -29,16 +29,18 @@ public class EndGameMenuController : MonoBehaviour
 		}
 		else
 		{
-			if(Application.loadedLevelName == "T-10")
-				StoryProgressController.Instance.HasCompletedTutorial = true;
+		//	if(Application.loadedLevelName == "T-" + StoryProgressController.amountOfTutorialLevels)
+		//		StoryProgressController.Instance.HasCompletedTutorial = true;
 		}
 	}
 	
 	void NextLevelPressed()
 	{
-		var nextLevel = StoryProgressController.Instance.NextLevelName();
+		var nextLevel = StoryProgressController.Instance.NextLevel.levelName;
 		SceneLoader.Instance.LoadLevel(nextLevel, delegate {
-			if(StoryProgressController.Instance.LevelNumber >= StoryProgressController.Instance.SavedLevelNumber)
+			if(StoryProgressController.Instance.SavedLevel == null)
+				StoryProgressController.Instance.SetStoryProgressSave();
+			else if(StoryProgressController.Instance.CurrentLevel.levelNumber >= StoryProgressController.Instance.SavedLevel.levelNumber)
 				StoryProgressController.Instance.SetStoryProgressSave();
 			Time.timeScale = 1;
 			LevelController.Instance.InitLevel(true);

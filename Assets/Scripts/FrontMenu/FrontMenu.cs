@@ -57,12 +57,14 @@ public class FrontMenu : MonoBehaviour
 		{
 			storyModeContinueButton = storyModePanel.transform.Find("StoryModeContinueButton").gameObject;
 		}
-		if(string.IsNullOrEmpty(StoryProgressController.Instance.GetStoryProgressSave()))
+		if(StoryProgressController.Instance.GetStoryProgressSave() == null && StoryProgressController.Instance.SavedLevel == null)
 		{
 			storyModeContinueButton.SetActive(false);
 		}
 		else
 		{
+			print(StoryProgressController.Instance.SavedLevel.levelName);
+
 			storyModeContinueButton.SetActive(true);
 		}
 		PopulateStoryModePanel();
@@ -169,42 +171,49 @@ public class FrontMenu : MonoBehaviour
 
 	void StoryModeContinueButtonPressed()
 	{
-		LevelSerializer.LoadSavedLevel(StoryProgressController.Instance.GetStoryProgressSave(), delegate(GameObject arg1, System.Collections.Generic.List<GameObject> arg2)
-		{
-			LevelController.Instance.InitLevel(true);
+		//Make sure we didn't click so quick that the playerprefs didn't save.
+		PlayerPrefs.Save();
+		//If user pressed quit instead of next level the last time they completed a level, the story progress save will be different from the saved level.
+		//If this is the case, we just load the saved level, not the progress save. This is so we can still use the progress save for checkpoints.
+		var storyProgressSave = StoryProgressController.Instance.GetStoryProgressSave();
 
-		});
+		if(storyProgressSave.Level != StoryProgressController.Instance.SavedLevel.levelName)
+		{
+			SceneLoader.Instance.LoadLevel(StoryProgressController.Instance.SavedLevel.levelName, delegate
+			{
+				LevelController.Instance.InitLevel(true);
+			});
+		}
+		else
+		{
+			LevelSerializer.LoadSavedLevel(storyProgressSave.Data, delegate
+			{
+				LevelController.Instance.InitLevel(false);
+
+			});
+		}
 	}
 
 	void PopulateStoryModePanel()
 	{
 		var levelsGrid = storyModePanel.transform.Find("LevelListDragPanel/LevelListGrid").gameObject;
 
-		if(StoryProgressController.Instance.HasCompletedTutorial)
+		if(StoryProgressController.Instance.SavedLevel == null)
 		{
-			var currentLevelNumber = int.Parse(StoryProgressController.Instance.SavedLevelName);
-
-			for(int i = 1; i <= 1; i++)
-			{
-				AddLevelLabel(levelsGrid, i, true);
-			}
-			for(int i = 1; i <= currentLevelNumber; i++)
-			{
-				AddLevelLabel(levelsGrid, i, false);
-			}
+			AddLevelLabel(levelsGrid, StoryProgressController.Instance.AllLevels[0]);
 		}
 		else
 		{
-			var currentLevelNumber = int.Parse(StoryProgressController.Instance.SavedLevelName.Replace("T-", ""));
+			var currentLevelNumber = StoryProgressController.Instance.SavedLevel.levelNumber;
 
 			for(int i = 1; i <= currentLevelNumber; i++)
 			{
-				AddLevelLabel(levelsGrid, i, true);
+				AddLevelLabel(levelsGrid, StoryProgressController.Instance.AllLevels[i - 1]);
 			}
 		}
 	}
 
-	void AddLevelLabel(GameObject grid, int levelNumber, bool tutorial)
+	void AddLevelLabel(GameObject grid, StoryLevel level)
 	{
 		var prefab = (GameObject)Resources.Load("StoryModeListEntry");
 		var clone = NGUITools.AddChild(grid, prefab);
@@ -213,10 +222,7 @@ public class FrontMenu : MonoBehaviour
 
 		label.transform.localScale = new Vector3(30, 30, 1);
 
-		if(tutorial)
-			label.text = "Tutorial: " + levelNumber;
-		else
-			label.text = "Level: " + levelNumber;
+		label.text = level.displayName;
 
 		NGUITools.AddWidgetCollider(label.gameObject);
 
@@ -227,10 +233,8 @@ public class FrontMenu : MonoBehaviour
 		checkbox.radioButtonRoot = grid.transform;
 
 		checkbox.onSelectionChanged = StoryModeLevelListSelectionChanged;
-		if(tutorial)
-			checkbox.levelName = "T-" + levelNumber.ToString("00");
-		else
-			checkbox.levelName = levelNumber.ToString("00");
+		
+		checkbox.levelName = level.levelName;
 	}
 
 	void StoryModeLevelListSelectionChanged(bool state, string levelName)

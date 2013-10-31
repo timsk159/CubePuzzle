@@ -35,138 +35,104 @@ public class StoryProgressController : MonoBehaviour
 		}
 	}
 
-	private bool _hasCompletedTutorial;
-	private bool _isInTutorial;
-	private int _levelNumber;
-	private string _savedLevelName;
-	private int _savedLevelNumber;
+	static List<StoryLevel> allLevels;
+	StoryLevel currentLevel;
+	StoryLevel savedLevel;
 
+	List<StoryLevel> ParseLevelsIni()
+	{
+		List<StoryLevel> levelsList = new List<StoryLevel>();
+		var iniFile = (TextAsset)Resources.Load("StoryLevels.ini", typeof(TextAsset));
+		var levelLines = iniFile.text.Split(new char[]{';'}, System.StringSplitOptions.RemoveEmptyEntries);
 
-	public bool HasCompletedTutorial
+		foreach(var levelLine in levelLines)
+		{
+			levelsList.Add(new StoryLevel(levelLine));
+		}
+		return levelsList;
+	}
+
+	public List<StoryLevel> AllLevels
 	{
 		get
 		{
-			var _hasCompletedTutorialInt = PlayerPrefs.GetInt("TutorialFinished", 0);
-			if(_hasCompletedTutorialInt == 1)
-				_hasCompletedTutorial = true;
-			else
-				_hasCompletedTutorial = false;
-
-
-			return _hasCompletedTutorial;
-		}
-		set
-		{
-			if(value)
+			if(allLevels == null || allLevels.Count == 0)
 			{
-				PlayerPrefs.SetInt("TutorialFinished", 1);
+				allLevels = ParseLevelsIni();
 			}
-			else
-			{
-				PlayerPrefs.SetInt("TutorialFinished", 0);
-			}
-			_hasCompletedTutorial = value;
+			return allLevels;
 		}
 	}
 
-	public bool IsInTutorial
+	public StoryLevel CurrentLevel
 	{
 		get
 		{
-			if(Application.loadedLevelName.StartsWith("T"))
-			{
-				_isInTutorial = true;
-			}
-			else
-			{
-				_isInTutorial = false;
-			}
-			return _isInTutorial;
+			currentLevel = allLevels.Where(level => level.levelName == Application.loadedLevelName).FirstOrDefault();
+			return currentLevel;
 		}
 	}
 
-	public int LevelNumber
+	public StoryLevel SavedLevel
 	{
 		get
 		{
-			string levelName = "";
-			if(IsInTutorial)
-			{
-				levelName = Application.loadedLevelName.Replace("T-", "");
-			}
-			else
-			{
-				levelName = Application.loadedLevelName;
-			}
-			_levelNumber = int.Parse(levelName);
-			return _levelNumber;
+			var savedLevelName = PlayerPrefs.GetString("SavedLevelName");
+			if(string.IsNullOrEmpty(savedLevelName))
+				return null;
+			return AllLevels.Where(level => level.levelName == savedLevelName).FirstOrDefault();
+		}
+		private set
+		{
+			PlayerPrefs.SetString("SavedLevelName", value.levelName);
+			PlayerPrefs.Save();
 		}
 	}
 
-	public string SavedLevelName
+	public StoryLevel NextLevel
 	{
 		get
 		{
-			_savedLevelName = PlayerPrefs.GetString("SavedLevelName", "T-01");
-			return _savedLevelName;
-		}
-		set
-		{
-			_savedLevelName = value;
-			PlayerPrefs.SetString("SavedLevelName", value);
+			var currentIndex = allLevels.IndexOf(CurrentLevel);
+			return allLevels[currentIndex + 1];
 		}
 	}
 
-	public int SavedLevelNumber
-	{
-		get
-		{
-			if(SavedLevelName.StartsWith("T"))
-			{
-				var trimmedName = SavedLevelName.Replace("T-", "");
-				_savedLevelNumber = int.Parse(trimmedName);
-			}
-			else
-			{
-				_savedLevelNumber = int.Parse(SavedLevelName);
-			}
-			return _savedLevelNumber;
-		}
-	}
-
-	public string NextLevelName()
-	{
-		var currentLevelNumber = LevelNumber + 1;
-		if(IsInTutorial)
-		{
-			var levelNumberString = currentLevelNumber.ToString("00");
-			return ("T-" + levelNumberString);
-		}
-		else
-		{
-			var levelNumberString = currentLevelNumber.ToString("00");
-			return levelNumberString;
-		}
-	}
-
-	public string GetStoryProgressSave()
+	public LevelSerializer.SaveEntry GetStoryProgressSave()
 	{
 		var savedGames = LevelSerializer.SavedGames[LevelSerializer.PlayerName];
 
 		if(savedGames == null)
-			return "";
+			return null;
 
 		var initialSaveData = savedGames.Where(e => e.Name == "ProgressSave").FirstOrDefault();
 
-		if(initialSaveData == null)
-			return "";
-
-		return initialSaveData.Data;
+		return initialSaveData;
 	}
 
 	public void SetStoryProgressSave()
 	{
-		SavedLevelName = Application.loadedLevelName;
+		SavedLevel = CurrentLevel;
 		LevelSerializer.SaveGame("ProgressSave");
+	}
+
+	public void SetNextLevelAsProgressSave()
+	{
+		SavedLevel = NextLevel;
+	}
+}
+
+public class StoryLevel
+{
+	public int levelNumber;
+	public string displayName;
+	public string levelName;
+
+	public StoryLevel(string lineFromIni)
+	{
+		var splitLine = lineFromIni.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries);
+		levelNumber = (int)int.Parse(splitLine[0]);
+		displayName = splitLine[1];
+		levelName = splitLine[2];
 	}
 }
