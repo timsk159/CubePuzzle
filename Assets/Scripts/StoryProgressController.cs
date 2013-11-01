@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 //Scene Naming:
 //"T-01" Tutorial one
@@ -38,6 +39,28 @@ public class StoryProgressController : MonoBehaviour
 	static List<StoryLevel> allLevels;
 	StoryLevel currentLevel;
 	StoryLevel savedLevel;
+
+	#region Binary File Experiments
+	void CreateBinaryFile()
+	{
+		List<StoryLevel> levels = BuildStoryLevelListForFile();
+	}
+
+	List<StoryLevel> BuildStoryLevelListForFile()
+	{
+		var levels = new List<StoryLevel>(11);
+
+		for(int i = 0; i < levels.Capacity; i++)
+		{
+			levels[i].levelName = "0" + (i + 1);
+			levels[i].levelNumber = (i + 1);
+			levels[i].displayName = "Introduction " + (i + 1);
+		}
+
+		return levels;
+	}
+
+	#endregion
 
 	List<StoryLevel> ParseLevelsIni()
 	{

@@ -61,13 +61,11 @@ public class PlayerCharacter : MonoBehaviour
 
 	void LevelStarted()
 	{
-		print("Level Started!");
 		canReset = true;
 	}
 
 	void InGameEnter()
 	{
-		print("In Game Entered!");
 		canReset = true;
 	}
 

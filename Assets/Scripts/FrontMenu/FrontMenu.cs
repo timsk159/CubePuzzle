@@ -35,7 +35,7 @@ public class FrontMenu : MonoBehaviour
 		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver(this, FrontMenuUINotification.LevelCreatorButtonPressed);
 		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver(this, FrontMenuUINotification.UserLevelsButtonPressed);
 		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver(this, FrontMenuUINotification.PlayUserLevelButtonPressed);
-		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver (this, FrontMenuUINotification.CancelUserLevelMenuPressed);
+		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver(this, FrontMenuUINotification.CancelUserLevelMenuPressed);
 		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver(this, FrontMenuUINotification.StoryModeContinueButtonPressed);
 		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver(this, FrontMenuUINotification.StoryModeLevelButtonPressed);
 		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver(this, FrontMenuUINotification.StoryModeCancelButtonPressed);
@@ -63,8 +63,6 @@ public class FrontMenu : MonoBehaviour
 		}
 		else
 		{
-			print(StoryProgressController.Instance.SavedLevel.levelName);
-
 			storyModeContinueButton.SetActive(true);
 		}
 		PopulateStoryModePanel();
@@ -189,7 +187,6 @@ public class FrontMenu : MonoBehaviour
 			LevelSerializer.LoadSavedLevel(storyProgressSave.Data, delegate
 			{
 				LevelController.Instance.InitLevel(false);
-
 			});
 		}
 	}

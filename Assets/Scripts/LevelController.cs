@@ -119,7 +119,6 @@ public class LevelController : MonoBehaviour
 	
 	public void InitLevel(bool playIntro)
 	{
-		print("Init level called");
 		hasCheckpoint = false;
 		DestroyCombinedMeshes();
 		var playerObj = GameObject.FindWithTag ("Player");
@@ -234,7 +233,6 @@ public class LevelController : MonoBehaviour
 
 	GameObject[] OptimiseLevelMesh()
 	{
-		print("Meshes being optimised");
 		List<GameObject> combinedMeshes = new List<GameObject>();
 		var meshFilters = GameObject.Find("MapRoot").GetComponentsInChildren<MeshFilter>();
 
@@ -309,8 +307,6 @@ public class LevelController : MonoBehaviour
 		{
 			if(combinedMeshes.Length > 0)
 			{
-				print("Destroying this many combined meshes: " + combinedMeshes.Length);
-
 				foreach(var cMesh in combinedMeshes)
 				{
 					Destroy(cMesh);
