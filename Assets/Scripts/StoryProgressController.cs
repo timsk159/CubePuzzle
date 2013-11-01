@@ -8,34 +8,8 @@ using System.IO;
 //"T-01" Tutorial one
 //"01" Story one
 
-public class StoryProgressController : MonoBehaviour 
+public class StoryProgressController : MonoSingleton<StoryProgressController>
 {
-	private static StoryProgressController _instance;
-
-	public static StoryProgressController Instance 
-	{
-		get
-		{
-			if(_instance == null)
-			{
-				if(GameObject.Find("StoryProgressController") == null)
-				{
-					_instance = new GameObject("StoryProgressController").AddComponent<StoryProgressController>();
-				}
-				else
-				{
-					_instance = GameObject.Find ("StoryProgressController").GetComponent<StoryProgressController> ();
-				}
-
-				if(_instance == null)
-				{
-					_instance = new GameObject ("StoryProgressController").AddComponent<StoryProgressController> ();
-				}
-			}
-			return _instance;
-		}
-	}
-
 	static List<StoryLevel> allLevels;
 	StoryLevel currentLevel;
 	StoryLevel savedLevel;

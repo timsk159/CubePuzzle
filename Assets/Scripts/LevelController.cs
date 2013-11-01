@@ -14,18 +14,8 @@ public enum LevelStateNotification
 	InGameEnter, InGameExit, PauseEnter, PauseExit, EndGameEnter, EndGameExit, CutSceneEnter, CutSceneExit, ExitingLevelEnter, ExitingLevelExit, LevelInitialized, LevelStarted
 };
 
-public class LevelController : MonoBehaviour 
+public class LevelController : MonoSingleton<LevelController> 
 {
-	private static LevelController _instance;
-
-	public static LevelController Instance 
-	{
-		get
-		{
-			return _instance;
-		}
-	}
-
 	public PlayerCharacter playerChar;
 	
 	private Colour _playerColour;
@@ -46,8 +36,6 @@ public class LevelController : MonoBehaviour
 			return _playerColour;
 		}
 	}	
-
-	LevelStateController levelStateController;
 
 	private bool _isStoryMode;
 
@@ -73,7 +61,6 @@ public class LevelController : MonoBehaviour
 	
 	void Awake()
 	{
-		_instance = this;
 		RegisterStates();
 		levelIntro = GetComponent<LevelIntro>();
 		if(levelIntro == null)
@@ -106,8 +93,6 @@ public class LevelController : MonoBehaviour
 
 	void Start()
 	{
-		levelStateController = GetComponent<LevelStateController>();
-
 		NotificationCenter<ColourCollisionNotification>.DefaultCenter.AddObserver(this, ColourCollisionNotification.PlayerKilled);
 
 		if(isStoryMode)
@@ -355,14 +340,14 @@ public class LevelController : MonoBehaviour
 		DestroyCombinedMeshes();
 		Destroy(playerChar.gameObject);
 		Destroy(mapRoot);
-		levelStateController.LoadInitialState();
+		LevelStateController.Instance.LoadInitialState();
 		StateMachine<LevelState, LevelStateNotification>.ChangeState(LevelState.InGame);
 	}
 
 	public void SetCheckpoint()
 	{
 		hasCheckpoint = true;
-		levelStateController.SetCheckPoint();
+		LevelStateController.Instance.SetCheckPoint();
 		if(isStoryMode)
 		{
 			StoryProgressController.Instance.SetStoryProgressSave();
@@ -371,8 +356,9 @@ public class LevelController : MonoBehaviour
 
 	public void LoadCheckpoint()
 	{
-		levelStateController.LoadCheckpoint(delegate(GameObject arg1, List<GameObject> arg2) {
+		LevelStateController.Instance.LoadCheckpoint(delegate(GameObject arg1, List<GameObject> arg2) {
 			InitLevel(false);
+			hasCheckpoint = true;
 	});
 	}
 

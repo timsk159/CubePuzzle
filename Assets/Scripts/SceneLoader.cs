@@ -2,34 +2,8 @@ using UnityEngine;
 using System;
 using System.Collections;
 
-public class SceneLoader : MonoBehaviour 
+public class SceneLoader : MonoSingleton<SceneLoader> 
 {
-	private static SceneLoader _instance;
-
-	public static SceneLoader Instance 
-	{
-		get
-		{
-			if(_instance == null)
-			{
-				if(GameObject.Find("SceneLoader") == null)
-				{
-					_instance = new GameObject("SceneLoader").AddComponent<SceneLoader>();
-				}
-				else
-				{
-					_instance = GameObject.Find ("SceneLoader").GetComponent<SceneLoader> ();
-				}
-
-				if(_instance == null)
-				{
-					_instance = new GameObject ("SceneLoader").AddComponent<SceneLoader> ();
-				}
-			}
-			return _instance;
-		}
-	}
-
 	public GameObject loadingScreenObjsParent;
 	private GameObject progressBarObj;
 	public UISlider progressBar;

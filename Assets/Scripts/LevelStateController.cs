@@ -4,14 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-public class LevelStateController : MonoBehaviour 
+public class LevelStateController : MonoSingleton<LevelStateController> 
 {
 	public static string currentLevelName;
-
-	public void SetInitialState()
-	{
-	//	LevelSerializer.SaveGame("InitialState");
-	}
 
 	public void SetCheckPoint()
 	{

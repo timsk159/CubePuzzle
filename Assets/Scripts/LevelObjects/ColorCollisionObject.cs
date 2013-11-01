@@ -16,6 +16,7 @@ public class ColorCollisionObject : MonoBehaviour
 {
 	public Colour initialColour;
 	public Colour objColour;
+	[DoNotSerialize()]
 	public Vector3 initialColliderSize;
 	[DoNotSerialize()]
 	public CubeNeighbours cubeNeighbours;
