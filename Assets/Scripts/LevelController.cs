@@ -102,7 +102,7 @@ public class LevelController : MonoSingleton<LevelController>
 		}
 	}
 	
-	public void InitLevel(bool playIntro)
+	public void InitLevel(bool playIntro, CutSceneObj introCutsceneObj = null)
 	{
 		hasCheckpoint = false;
 		DestroyCombinedMeshes();
@@ -132,7 +132,9 @@ public class LevelController : MonoSingleton<LevelController>
 		NotificationCenter<LevelStateNotification>.DefaultCenter.PostNotification(LevelStateNotification.LevelInitialized, null);
 
 		if(playIntro)
-			StartGameAfterIntro();
+		{
+			StartGameAfterIntro(introCutsceneObj);
+		}
 		else
 			IntroFinished();
 	}
@@ -140,7 +142,7 @@ public class LevelController : MonoSingleton<LevelController>
 	//Just used to save us having to find the combined meshes after the intro animation.
 	GameObject[] combinedMeshes;
 
-	void StartGameAfterIntro()
+	void StartGameAfterIntro(CutSceneObj introCutsceneObj = null)
 	{
 		NotificationCenter<LevelIntroNotification>.DefaultCenter.AddObserver(this, LevelIntroNotification.IntroFinished);
 		NotificationCenter<LevelIntroNotification>.DefaultCenter.AddObserver(this, LevelIntroNotification.IntroInterrupted);
@@ -148,8 +150,8 @@ public class LevelController : MonoSingleton<LevelController>
 		playerChar.playerMovement.canMove = false;
 		playerChar.rigidbody.useGravity = false;
 		Camera.main.GetComponent<CameraFollow>().enabled = false;
-
-		StartCoroutine(levelIntro.PlayIntroAnimation(playerChar.gameObject));
+		
+		StartCoroutine(levelIntro.PlayIntroAnimation(playerChar.gameObject, introCutsceneObj)); 
 	}
 
 	void IntroFinished()

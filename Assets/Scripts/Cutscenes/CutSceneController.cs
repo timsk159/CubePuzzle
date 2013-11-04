@@ -8,24 +8,29 @@ public enum CutSceneNotification
 
 public class CutSceneController : MonoBehaviour 
 {
-	public DialogueDisplayer dialogueDisplayer;
+	DialogueDisplayer dialogueDisplayer;
+
+	void Awake()
+	{
+		dialogueDisplayer = (DialogueDisplayer)FindObjectOfType(typeof(DialogueDisplayer));
+	}
 
 	void TriggererEntered(CutSceneObj cutSceneObj)
 	{
-		NotificationCenter<CutSceneNotification>.DefaultCenter.PostNotification(CutSceneNotification.CutSceneStarted, null);
-
 		StartCoroutine(CutSceneTimerRoutine(cutSceneObj.lengthInSeconds, cutSceneObj));
 
 		DisplayCutscene(cutSceneObj);
 	}
 
-	void DisplayCutscene(CutSceneObj cutSceneObj)
+	public void DisplayCutscene(CutSceneObj cutSceneObj)
 	{
+		NotificationCenter<CutSceneNotification>.DefaultCenter.PostNotification(CutSceneNotification.CutSceneStarted, null);
+
 		if(cutSceneObj.dialogue.dialogueAsset != null)
 		{
 			//Calculate chars per second given amount of chars in each line and the length of this cutscene
 
-			StartCoroutine(dialogueDisplayer.DisplayText(cutSceneObj.dialogue.dialogueLines));
+			dialogueDisplayer.StartCoroutine(dialogueDisplayer.DisplayText(cutSceneObj.dialogue.dialogueLines));
 		}
 		if(cutSceneObj.audioClip != null)
 		{
@@ -35,9 +40,11 @@ public class CutSceneController : MonoBehaviour
 		}
 	}
 
-	void StopCutScene()
+	public void StopCutScene()
 	{
-		dialogueDisplayer.StopDisplayingText();
+		if(dialogueDisplayer != null)
+			dialogueDisplayer.StopDisplayingText();
+		audio.Stop();
 
 		NotificationCenter<CutSceneNotification>.DefaultCenter.PostNotification(CutSceneNotification.CutSceneFinished, null);
 	}

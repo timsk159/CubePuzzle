@@ -37,9 +37,6 @@ public class CutsceneCreator : EditorWindow
 				cutsceneObj.dialogue.dialogueAssetPath = GetResourcesPathForAsset(AssetDatabase.GetAssetPath(tempDialogueAsset));
 				cutsceneObj.audioClipFilePath = GetResourcesPathForAsset(AssetDatabase.GetAssetPath(tempAudioClip));
 
-				Debug.Log("Found resources path for dialogue to be: " + cutsceneObj.dialogue.dialogueAssetPath);
-				Debug.Log("Found resources path for audio to be: " + cutsceneObj.audioClipFilePath);
-
 				var filePath = EditorUtility.SaveFilePanelInProject("Save Location", "", "asset", "");
 				var inAssetsFolder = filePath.Contains("Assets");
 				if(!inAssetsFolder)

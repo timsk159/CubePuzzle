@@ -15,20 +15,39 @@ public class LevelIntro : MonoBehaviour
 	GameObject mapRoot;
 	float introAnimTime = 4.0f;
 	List<AnimatingCube> animatingCubes;
+	CutSceneObj playingCutsceneObj;
+	CutSceneController cutSceneController;
 
 	void Awake()
 	{
 		mapRoot = GameObject.Find("MapRoot");
+		cutSceneController = (CutSceneController)FindObjectOfType(typeof(CutSceneController));
+	}
+
+	void OnLevelWasLoaded(int levelId)
+	{
+		Awake();
 	}
 
 	//T = 0.0 - 1.0 defines progress of animation.
 	//Am = amount of cubes.
 	//
 	//TweenTime = T/animTime
-	public IEnumerator PlayIntroAnimation(GameObject playerObj)
+	public IEnumerator PlayIntroAnimation(GameObject playerObj, CutSceneObj introCutsceneObj = null)
 	{
 		NotificationCenter<LevelIntroNotification>.DefaultCenter.PostNotification(LevelIntroNotification.IntroStarted, null);
-		introAnimTime = 4.0f;
+		if(introCutsceneObj != null && cutSceneController != null)
+		{
+			playingCutsceneObj = introCutsceneObj;
+			cutSceneController.DisplayCutscene(playingCutsceneObj);
+			print(playingCutsceneObj.lengthInSeconds);
+			introAnimTime = playingCutsceneObj.lengthInSeconds;
+		}
+		else
+		{
+			introAnimTime = 4.0f;
+		}
+
 		mapRoot = GameObject.Find("MapRoot"); 
 		playingIntro = true;
 		var movePos = mapRoot.transform.up * 20;
@@ -95,6 +114,12 @@ public class LevelIntro : MonoBehaviour
 			cube.InterruptAnimation();
 		}
 		yield return new WaitForEndOfFrame();
+
+		if(playingCutsceneObj)
+		{
+			cutSceneController.StopCutScene();
+		}
+
 		NotificationCenter<LevelIntroNotification>.DefaultCenter.PostNotification(LevelIntroNotification.IntroInterrupted, null);
 	}
 

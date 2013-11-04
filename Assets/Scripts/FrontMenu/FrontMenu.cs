@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.IO;
 using System.Collections;
+using System.Linq;
 
 public enum FrontMenuUINotification
 {
@@ -130,7 +131,16 @@ public class FrontMenu : MonoBehaviour
 	void PlayUserLevelButtonPressed()
 	{
 		if(!string.IsNullOrEmpty(selectedFileName))
-			levelCreator.LoadMapForPlayMode (selectedFileName);
+		{
+			SceneLoader.Instance.LoadLevel("UserLevelScene", delegate
+			{
+				LevelSerializer.LoadObjectTreeFromFile(selectedFileName, delegate(LevelLoader obj)
+				{
+					LevelController.Instance.InitLevel(true);
+					LevelStateController.currentLevelName = selectedFileName;
+				});
+			});
+		}
 	}
 
 	void CancelUserLevelMenuPressed()
@@ -164,7 +174,12 @@ public class FrontMenu : MonoBehaviour
 		string selectedLevel = (string)notiData.data;
 
 		if(!string.IsNullOrEmpty(selectedLevel))
-			levelCreator.LoadStoryLevel(selectedLevel);
+		{
+			SceneLoader.Instance.LoadLevel(selectedLevel, delegate {
+				LevelController.Instance.InitLevel(true, StoryProgressController.Instance.AllLevels.Where(e => e.levelName == selectedLevel).FirstOrDefault().cutSceneObj);
+				LevelStateController.currentLevelName = selectedLevel;
+			});
+		}
 	}
 
 	void StoryModeContinueButtonPressed()
@@ -179,7 +194,7 @@ public class FrontMenu : MonoBehaviour
 		{
 			SceneLoader.Instance.LoadLevel(StoryProgressController.Instance.SavedLevel.levelName, delegate
 			{
-				LevelController.Instance.InitLevel(true);
+				LevelController.Instance.InitLevel(true, StoryProgressController.Instance.SavedLevel.cutSceneObj);
 			});
 		}
 		else

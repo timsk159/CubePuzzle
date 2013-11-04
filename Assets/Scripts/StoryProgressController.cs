@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using JsonFx;
 
 //Scene Naming:
 //"T-01" Tutorial one
@@ -124,6 +125,8 @@ public class StoryLevel
 	public int levelNumber;
 	public string displayName;
 	public string levelName;
+	private string introCutSceneObjFilename;
+	public CutSceneObj cutSceneObj;
 
 	public StoryLevel(string lineFromIni)
 	{
@@ -131,5 +134,15 @@ public class StoryLevel
 		levelNumber = (int)int.Parse(splitLine[0]);
 		displayName = splitLine[1];
 		levelName = splitLine[2];
+		if(splitLine.Length > 3)
+		{
+			if(!string.IsNullOrEmpty(splitLine[3]))
+			{
+				introCutSceneObjFilename = splitLine[3];
+				cutSceneObj = (CutSceneObj)Resources.Load(introCutSceneObjFilename, typeof(CutSceneObj));
+				Debug.Log("Loaded cutscene obj from: " + introCutSceneObjFilename);
+				Debug.Log("Cutscene obj: " + cutSceneObj);
+			}
+		}
 	}
 }

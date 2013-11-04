@@ -310,25 +310,4 @@ public class LevelCreator : MonoBehaviour
 			}
 		}
 	}
-
-	public void LoadStoryLevel(string levelName)
-	{
-		SceneLoader.Instance.LoadLevel(levelName, delegate {
-			LevelController.Instance.InitLevel(true);
-			LevelStateController.currentLevelName = levelName;
-	});
-	}
-
-
-	public void LoadMapForPlayMode(string filePath)
-	{
-		SceneLoader.Instance.LoadLevel("UserLevelScene", delegate
-		{
-			LevelSerializer.LoadObjectTreeFromFile(filePath, delegate(LevelLoader obj)
-			{
-				LevelController.Instance.InitLevel(true);
-				LevelStateController.currentLevelName = filePath;
-			});
-		});
-	}
 }

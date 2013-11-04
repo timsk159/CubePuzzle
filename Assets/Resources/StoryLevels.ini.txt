@@ -1,4 +1,4 @@
-01,Introduction 1,01;
+01,Introduction 1,01,Cutscenes/Level1Cutscene;
 02,Introduction 2,02;
 03,Introduction 3,03;
 04,Introduction 4,04;
