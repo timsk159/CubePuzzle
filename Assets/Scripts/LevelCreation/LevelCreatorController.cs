@@ -127,6 +127,10 @@ public class LevelCreatorController : MonoBehaviour
 	void TestingMapExit()
 	{
 		var saves = LevelSerializer.SavedGames[LevelSerializer.PlayerName];
+		foreach(var save in saves)
+		{
+			print(save.Name);
+		}
 		var restoreData = saves.Where(e => e.Name == "BeforePreviewSave").FirstOrDefault().Data;
 		LevelSerializer.LoadSavedLevel(restoreData);
 		Time.timeScale = 1;
@@ -225,9 +229,6 @@ public class LevelCreatorController : MonoBehaviour
 		playerObj.rigidbody.useGravity = true;
 		playerObj.collider.enabled = true;
 		mainCam.AddComponent<CameraFollow>();
-
-		new GameObject("LevelControllerSingleton").AddComponent<LevelController>();
-
 		levelCreator.CheckEdgeCubeNeighbours();
 
 		var nullCubes = GameObject.FindGameObjectsWithTag("NullCube");

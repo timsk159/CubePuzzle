@@ -111,6 +111,14 @@ public class StoryProgressController : MonoSingleton<StoryProgressController>
 	public void SetStoryProgressSave()
 	{
 		SavedLevel = CurrentLevel;
+
+		var previousSave = LevelSerializer.SavedGames[LevelSerializer.PlayerName].Where(e => e.Name == "ProgressSave").FirstOrDefault();
+
+		if(previousSave != null)
+		{
+			LevelSerializer.SavedGames[LevelSerializer.PlayerName].Remove(previousSave);
+		}
+
 		LevelSerializer.SaveGame("ProgressSave");
 	}
 
