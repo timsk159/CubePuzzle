@@ -6,10 +6,27 @@ public class PlayerMovement : MonoBehaviour
 	private bool physicsMovement = true;
 
 	public bool canMove = true;
+	public bool isMoving;
+
+	private bool  _isMovingFast;
+
+	public bool isMovingFast
+	{
+		get
+		{
+			var vMag = rigidbody.velocity.magnitude;
+
+			if(vMag > fastMovement)
+				return true;
+
+			return false;
+		}
+	}
 	
 	public float inputSensitivity;
 	public float maxSpeed;
 
+	public float fastMovement;
 	float movementCD = 0.5f;
 	float nextMoveTime;
 
@@ -48,6 +65,7 @@ public class PlayerMovement : MonoBehaviour
 
 			if(verticalInput != 0 || horizontalInput != 0)
 			{
+				isMoving = true;
 				var zForce = verticalInput * inputSensitivity;
 				var xForce = horizontalInput * inputSensitivity;
 
@@ -79,6 +97,10 @@ public class PlayerMovement : MonoBehaviour
 						}
 					}
 				}
+			}
+			else
+			{
+				isMoving = false;
 			}
 		}
 	}
