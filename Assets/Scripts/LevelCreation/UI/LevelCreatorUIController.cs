@@ -101,7 +101,6 @@ public class LevelCreatorUIController : MonoBehaviour
 		isInFrontMenu = false;
 
 		NGUITools.SetActive(levelAssetMenuPanel, true);
-		RefreshUIMaterials(levelAssetMenuPanel.GetComponent<UIPanel>());
 
 		if(!fileMenu.items.Contains("Save"))
 			fileMenu.items.Insert(1,"Save");
@@ -268,6 +267,9 @@ public class LevelCreatorUIController : MonoBehaviour
 			case "Save":
 				StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState(LevelCreatorStates.SavingMap);
 				break;
+			case "Help":
+				Debug.LogError("Help screen not implemented!");
+				break;
 			case "Exit":
 				if(fileMenu.GetComponent<UIPopupList>().items.Contains("Save"))
 				{
@@ -390,17 +392,6 @@ public class LevelCreatorUIController : MonoBehaviour
 	}
 	
 	#endregion
-
-	void RefreshUIMaterials(UIPanel panelToRefresh)
-	{
-		var renderers = panelToRefresh.GetComponentsInChildren<Renderer>();
-
-		foreach(var rend in renderers)
-		{
-			panelToRefresh.MarkMaterialAsChanged(rend.sharedMaterial, false);
-		}
-		panelToRefresh.Refresh();
-	}
 
 	public void TurnOffLoadingBar()
 	{

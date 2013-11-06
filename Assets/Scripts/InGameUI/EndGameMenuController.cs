@@ -22,15 +22,8 @@ public class EndGameMenuController : MonoBehaviour
 		if(!LevelController.Instance.isStoryMode)
 		{
 			var nextLevelButton = endGameMenuPanel.transform.Find("NextLevelButton").gameObject;
-			var quitAndSaveButton = endGameMenuPanel.transform.Find("QuitAndSaveButton").gameObject;
 			
 			NGUITools.SetActive(nextLevelButton, false);
-			NGUITools.SetActive(quitAndSaveButton, false);
-		}
-		else
-		{
-		//	if(Application.loadedLevelName == "T-" + StoryProgressController.amountOfTutorialLevels)
-		//		StoryProgressController.Instance.HasCompletedTutorial = true;
 		}
 	}
 	

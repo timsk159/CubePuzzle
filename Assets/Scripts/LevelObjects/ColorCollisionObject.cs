@@ -43,7 +43,9 @@ public class ColorCollisionObject : MonoBehaviour
 		{
 			//Start cube uses neutral cube mat. buttons are yellow.
 			if(!gameObject.name.Contains("StartCube") && !gameObject.name.Contains("PlayerButton"))
+			{
 				this.renderer.sharedMaterial.color = GetObjectRealColor(initialColour);
+			}
 		}
 	}
 
@@ -143,9 +145,9 @@ public class ColorCollisionObject : MonoBehaviour
 			case Colour.Blue:
 				return Color.blue;
 			case Colour.None:
-				return Color.white;
+				return renderer.material.color;
 			default:
-				return Color.white;
+				return renderer.material.color;
 		}
 	}
 	

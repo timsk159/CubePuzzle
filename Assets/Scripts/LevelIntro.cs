@@ -118,6 +118,7 @@ public class LevelIntro : MonoBehaviour
 		if(playingCutsceneObj)
 		{
 			cutSceneController.StopCutScene();
+			playingCutsceneObj = null;
 		}
 
 		NotificationCenter<LevelIntroNotification>.DefaultCenter.PostNotification(LevelIntroNotification.IntroInterrupted, null);
