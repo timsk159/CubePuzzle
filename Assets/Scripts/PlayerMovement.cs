@@ -72,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
 				var force = new Vector3(xForce, 0, zForce);
 				if(physicsMovement)
 				{
-					if(rigidbody.velocity.x < maxSpeed && rigidbody.velocity.y < maxSpeed && rigidbody.velocity.z < maxSpeed)
+					if(rigidbody.velocity.magnitude < maxSpeed)
 						rigidbody.AddForce(force, ForceMode.Acceleration);
 				}
 				else

@@ -1,13 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\InGameUI\EndGameMenuController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerMovement.cs">
     <Files>
-      <File FileName="Assets\Scripts\LevelCreation\DragAndDropController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\LevelIntro.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\LevelCreation\UI\LevelCreatorUIController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\LevelObjects\ColorCollisionObject.cs" Line="150" Column="12" />
-      <File FileName="Assets\Scripts\LevelCreation\LevelCreatorController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\InGameUI\EndGameMenuController.cs" Line="23" Column="4" />
+      <File FileName="Assets\Scripts\PlayerMovement.cs" Line="75" Column="48" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
