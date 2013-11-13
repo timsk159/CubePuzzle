@@ -16,6 +16,8 @@ public class Rotation : MonoBehaviour
 
 	public bool playOnStart;
 
+	public Space space;	
+
 	Vector3 rotateAmount;
 
 	void Start()
@@ -27,7 +29,7 @@ public class Rotation : MonoBehaviour
 		else
 		{
 			rotateAmount = scale.normalized * speed;
-			iTween.RotateAdd(gameObject, iTween.Hash("amount", rotateAmount, "time", time, "looptype", loopType, "easetype", easeType));
+			iTween.RotateAdd(gameObject, iTween.Hash("amount", rotateAmount, "time", time, "looptype", loopType, "easetype", easeType, "space", space));
 		}
 	}
 
@@ -39,7 +41,7 @@ public class Rotation : MonoBehaviour
 
 		rotateAmount = randomRotation;
 
-		iTween.RotateAdd(gameObject, iTween.Hash("amount", rotateAmount, "time", time, "easetype", easeType, "oncomplete", "RandomRotation"));
+		iTween.RotateAdd(gameObject, iTween.Hash("amount", rotateAmount, "time", time, "easetype", easeType, "oncomplete", "RandomRotation", "space", space));
 	}
 
 	public void Play()

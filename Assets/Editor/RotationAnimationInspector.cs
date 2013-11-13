@@ -13,8 +13,6 @@ public class RotationAnimationInspector : Editor
 	{
 		_target = target as Rotation;
 		previousRandomValue = _target.random;
-		//if(_target.scale == null)
-		//	_target.scale = new Vector3();
 	}
 
 	public override void OnInspectorGUI()
@@ -25,6 +23,7 @@ public class RotationAnimationInspector : Editor
 		_target.time = EditorGUILayout.FloatField("Time", _target.time);
 		_target.easeType = (iTween.EaseType)EditorGUILayout.EnumPopup("Ease type", _target.easeType);
 		_target.playOnStart = EditorGUILayout.Toggle("Play on start", _target.playOnStart);
+		_target.space = (Space)EditorGUILayout.EnumPopup("Space", _target.space);
 
 		_target.random = EditorGUILayout.Toggle("Random animation?", _target.random);
 
