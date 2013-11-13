@@ -13,6 +13,7 @@ public class PlayerCharacter : MonoBehaviour
 	public PlayerMovement playerMovement;
 	public Colour currentColor;
 	ParticleSystem smokeParticles;
+	Light childLight;
 
 	//The current interaction object that the player is stood in
 	InteractiveObject currentInteractionObject;
@@ -21,6 +22,7 @@ public class PlayerCharacter : MonoBehaviour
 	
 	void Awake () 
 	{
+		childLight = transform.Find("PointLight").GetComponent<Light>();
 		smokeParticles = transform.Find("SmokeTrail").GetComponent<ParticleSystem>();
 		smokeParticles.transform.parent = null;
 		playerMovement = GetComponent<PlayerMovement>();
@@ -118,14 +120,18 @@ public class PlayerCharacter : MonoBehaviour
 	public void ChangeColour(Colour colourToChangeTo)
 	{
 		currentColor = colourToChangeTo;
-		gameObject.renderer.material.color = GetRealColor();
+		var realColor = GetRealColor();
+		gameObject.renderer.material.color = realColor;
+		childLight.color = realColor;
 		NotificationCenter<ColourCollisionNotification>.DefaultCenter.PostNotification(ColourCollisionNotification.PlayerChangedColour, currentColor);
 	}
 
 	public void SilentlyChangeColour(Colour colourToChangeTo)
 	{
 		currentColor = colourToChangeTo;
-		gameObject.renderer.material.color = GetRealColor();
+		var realColor = GetRealColor();
+		gameObject.renderer.material.color = realColor;
+		childLight.color = realColor;
 	}
 	
 	public void RotateColour(bool forward)
