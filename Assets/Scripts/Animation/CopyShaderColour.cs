@@ -8,23 +8,49 @@ public class CopyShaderColour : MonoBehaviour
 	public bool includeAlpha;
 
 	private Color cachedTargetColour;
+	private Material cachedMat;
+	private Material cachedTargetMat;
+
+	public string colourPropertyName = "";
+
+	void Start()
+	{
+		cachedMat = renderer.material;
+		cachedTargetMat = target.renderer.material;
+	}
 
 	void Update () 
 	{
-		var targetColour = target.renderer.material.color;
+		var targetColour = cachedTargetMat.color;
 
 		if(targetColour != cachedTargetColour)
 		{
 			cachedTargetColour = targetColour;
 			if(includeAlpha)
 			{
-				renderer.material.color = targetColour;
+				if(!string.IsNullOrEmpty(colourPropertyName))
+				{
+					cachedMat.SetColor(colourPropertyName, targetColour);
+				}
+				else
+				{
+					cachedMat.color = targetColour;
+				}
 			}
 			else
 			{
 				var newColour = targetColour;
-				newColour.a = renderer.material.color.a;
-				renderer.material.color = newColour;
+				if(!string.IsNullOrEmpty(colourPropertyName))
+				{
+					newColour.a = cachedMat.GetColor(colourPropertyName).a;
+
+					cachedMat.SetColor(colourPropertyName, newColour);
+				}
+				else
+				{
+					newColour.a = cachedMat.color.a;
+					cachedMat.color = newColour;
+				}
 			}
 		}
 	}

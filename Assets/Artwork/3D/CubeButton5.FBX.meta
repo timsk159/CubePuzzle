@@ -1,30 +1,30 @@
 fileFormatVersion: 2
-guid: 0725c90780a9ddb4f972f99d295e3d4a
+guid: be9b1d5cebfd1534db7772b6c89716d5
 ModelImporter:
   serializedVersion: 15
   fileIDToRecycleName:
     100000: Box001
     100002: Box002
-    100004: //RootNode
-    100006: Cylinder001
+    100004: Cone001
+    100006: //RootNode
     100008: Sphere001
     400000: Box001
     400002: Box002
-    400004: //RootNode
-    400006: Cylinder001
+    400004: Cone001
+    400006: //RootNode
     400008: Sphere001
     2300000: Box001
     2300002: Box002
-    2300004: Cylinder001
+    2300004: Cone001
     2300006: Sphere001
     3300000: Box001
     3300002: Box002
-    3300004: Cylinder001
+    3300004: Cone001
     3300006: Sphere001
     4300000: Box001
     4300002: Sphere001
     4300004: Box002
-    4300006: Cylinder001
+    4300006: Cone001
     9500000: //RootNode
   materials:
     importMaterials: 1
