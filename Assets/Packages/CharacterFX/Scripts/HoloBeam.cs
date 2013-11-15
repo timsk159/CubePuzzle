@@ -25,13 +25,13 @@ public class HoloBeam : MonoBehaviour
 		}
 
 		DoBrightnessTween();
-		DoRimTween();
+	//	DoRimTween();
 	}
 
 	void DoBrightnessTween()
 	{
 		var oldBrightness = brightness;
-		brightness -= 0.5f;
+		brightness += 0.25f;
 
 		iTween.ValueTo(gameObject, iTween.Hash("from", oldBrightness, "to", brightness, "onupdate", "OnBrightnessTweenUpdate", "looptype", iTween.LoopType.pingPong));
 	}
