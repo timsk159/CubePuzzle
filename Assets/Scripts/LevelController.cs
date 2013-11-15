@@ -163,10 +163,10 @@ public class LevelController : MonoSingleton<LevelController>
 				go.renderer.enabled = true;
 		}
 
-		var allFloorPieces = GameObject.FindGameObjectsWithTag("FloorPiece");
+		var allFloorPieces = GameObject.FindGameObjectsWithTag("FloorPiece").Select(e => e.GetComponent<ColorCollisionObject>()).ToArray();
 		foreach(var piece in allFloorPieces)
 		{
-			if(piece.name != "CheckpointCube")
+			if(piece.meshCanBeOptimized)
 				piece.renderer.enabled = false;
 		}
 
@@ -221,44 +221,45 @@ public class LevelController : MonoSingleton<LevelController>
 	GameObject[] OptimiseLevelMesh()
 	{
 		List<GameObject> combinedMeshes = new List<GameObject>();
-		var meshFilters = GameObject.Find("MapRoot").GetComponentsInChildren<MeshFilter>();
+		var mapObjects = GameObject.Find("MapRoot").GetComponentsInChildren<ColorCollisionObject>().ToList();
+
+		mapObjects = (List<ColorCollisionObject>)mapObjects.Where(e => e.meshCanBeOptimized).ToList();
+		List<MeshFilter> meshFilters = new List<MeshFilter>();
+		mapObjects.ForEach(e => meshFilters.AddRange(e.GetComponentsInChildren<MeshFilter>()));
 
 		var uniqueMaterials = meshFilters.Select(e => e.renderer.sharedMaterial).Distinct();
 		foreach(var uniqueMat in uniqueMaterials)
 		{
-			if(!uniqueMat.name.Contains("Door") && !uniqueMat.name.Contains("Button"))
+			var meshFiltersForMat = meshFilters.Where(e => e.renderer.sharedMaterial == uniqueMat).ToArray();
+
+			var combine = new CombineInstance[meshFiltersForMat.Length];
+
+			int layerForThisMesh = 1;
+
+			for(int i = 0; i < meshFiltersForMat.Length; i++)
 			{
-				var meshFiltersForMat = meshFilters.Where(e => e.renderer.sharedMaterial == uniqueMat).ToArray();
-
-				var combine = new CombineInstance[meshFiltersForMat.Length];
-
-				int layerForThisMesh = 1;
-
-				for(int i = 0; i < meshFiltersForMat.Length; i++)
-				{
-					combine[i].mesh = meshFiltersForMat[i].sharedMesh;
-					combine[i].transform = meshFiltersForMat[i].transform.localToWorldMatrix;
-					if(layerForThisMesh != meshFilters[i].gameObject.layer)
-						layerForThisMesh = meshFilters[i].gameObject.layer;
-				}
-
-				var newMeshObject = new GameObject("CombinedMesh: " + uniqueMat.name.Replace("(Instance)", ""));
-				newMeshObject.transform.position = Vector3.zero;
-				newMeshObject.layer = layerForThisMesh;
-				newMeshObject.tag = "CombinedMesh";
-
-				var newMeshFilter = newMeshObject.AddComponent<MeshFilter>();
-				newMeshFilter.mesh = new Mesh();
-				newMeshFilter.mesh.CombineMeshes(combine);
-
-				var newMeshRenderer = newMeshObject.AddComponent<MeshRenderer>();
-				newMeshRenderer.material = uniqueMat;
-				if(uniqueMat.name == "NullCubeMat")
-				{
-					newMeshRenderer.enabled = false;
-				}
-				combinedMeshes.Add(newMeshObject);
+				combine[i].mesh = meshFiltersForMat[i].sharedMesh;
+				combine[i].transform = meshFiltersForMat[i].transform.localToWorldMatrix;
+				if(layerForThisMesh != meshFilters[i].gameObject.layer)
+					layerForThisMesh = meshFilters[i].gameObject.layer;
 			}
+
+			var newMeshObject = new GameObject("CombinedMesh: " + uniqueMat.name.Replace("(Instance)", ""));
+			newMeshObject.transform.position = Vector3.zero;
+			newMeshObject.layer = layerForThisMesh;
+			newMeshObject.tag = "CombinedMesh";
+
+			var newMeshFilter = newMeshObject.AddComponent<MeshFilter>();
+			newMeshFilter.mesh = new Mesh();
+			newMeshFilter.mesh.CombineMeshes(combine);
+
+			var newMeshRenderer = newMeshObject.AddComponent<MeshRenderer>();
+			newMeshRenderer.material = uniqueMat;
+			if(uniqueMat.name == "NullCubeMat")
+			{
+				newMeshRenderer.enabled = false;
+			}
+			combinedMeshes.Add(newMeshObject);
 		}
 		return combinedMeshes.ToArray();
 	}

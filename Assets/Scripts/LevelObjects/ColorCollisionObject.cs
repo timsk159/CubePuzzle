@@ -20,6 +20,8 @@ public class ColorCollisionObject : MonoBehaviour
 	public Vector3 initialColliderSize;
 	[DoNotSerialize()]
 	public CubeNeighbours cubeNeighbours;
+	[DoNotSerialize()]
+	public bool meshCanBeOptimized;
 
 	protected bool useSharedMaterial = true;
 	
