@@ -34,7 +34,7 @@ public class ButtonPiece : InteractiveObject
 	protected override void TriggererExited(GameObject go)
 	{
 		base.TriggererExited(go);
-		buttonSphere.animation.Play ("ButtonSphereUp");
+		//Play any animation here.
 	} 
 
 	public override void RotateColour (bool forward)
@@ -77,6 +77,6 @@ public class ButtonPiece : InteractiveObject
 			LevelController.Instance.playerChar.RotateColour(rotateForward);
 		}
 		RotateColour(true);
-		buttonSphere.animation.Play("ButtonSphereDown");
+		//Play any animations here.
 	}
 }
