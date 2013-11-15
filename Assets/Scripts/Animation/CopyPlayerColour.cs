@@ -1,31 +1,29 @@
 using UnityEngine;
 using System.Collections;
 
-public class CopyShaderColour : MonoBehaviour 
+public class CopyPlayerColour : MonoBehaviour 
 {
-	public Transform target;
-
 	public bool includeAlpha;
 
-	private Color cachedTargetColour;
 	private Material cachedMat;
-	private Material cachedTargetMat;
 
 	public string colourPropertyName = "";
 
 	void Start()
 	{
 		cachedMat = renderer.material;
-		cachedTargetMat = target.renderer.material;
+
+		NotificationCenter<ColourCollisionNotification>.DefaultCenter.AddObserver(this, ColourCollisionNotification.PlayerChangedColour);
 	}
 
-	void Update () 
+	void PlayerChangedColour(NotificationCenter<ColourCollisionNotification>.Notification notiData)
 	{
-		var targetColour = cachedTargetMat.color;
+		var playersNewColour = (Colour)notiData.data;
 
-		if(targetColour != cachedTargetColour)
+		var targetColour = ColorCollisionObject.GetObjectRealColor(playersNewColour);
+
+		if(targetColour != cachedMat.color)
 		{
-			cachedTargetColour = targetColour;
 			if(includeAlpha)
 			{
 				if(!string.IsNullOrEmpty(colourPropertyName))

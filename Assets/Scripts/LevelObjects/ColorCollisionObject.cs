@@ -46,7 +46,7 @@ public class ColorCollisionObject : MonoBehaviour
 			//Start cube uses neutral cube mat. buttons are yellow.
 			if(!gameObject.name.Contains("StartCube"))
 			{
-				this.renderer.sharedMaterial.color = GetObjectRealColor(initialColour);
+				this.renderer.sharedMaterial.color = ColorCollisionObject.GetObjectRealColor(initialColour);
 			}
 		}
 	}
@@ -97,11 +97,11 @@ public class ColorCollisionObject : MonoBehaviour
 			objColour = colorToChangeTo;
 			if(useSharedMaterial)
 			{
-				gameObject.renderer.sharedMaterial.color = GetObjectRealColor(objColour);
+				gameObject.renderer.sharedMaterial.color = ColorCollisionObject.GetObjectRealColor(objColour);
 			}
 			else
 			{
-				gameObject.renderer.material.color = GetObjectRealColor(objColour);
+				gameObject.renderer.material.color = ColorCollisionObject.GetObjectRealColor(objColour);
 			}
 		}
 		
@@ -136,7 +136,7 @@ public class ColorCollisionObject : MonoBehaviour
 		}
 	}
 	
-	public Color GetObjectRealColor(Colour objectsColour)
+	public static Color GetObjectRealColor(Colour objectsColour)
 	{
 		switch(objectsColour)
 		{
@@ -147,9 +147,9 @@ public class ColorCollisionObject : MonoBehaviour
 			case Colour.Blue:
 				return Color.blue;
 			case Colour.None:
-				return renderer.material.color;
+				return Color.white;
 			default:
-				return renderer.material.color;
+				return Color.white;
 		}
 	}
 	

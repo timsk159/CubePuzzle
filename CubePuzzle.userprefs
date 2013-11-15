@@ -1,9 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\LevelController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Animation\CopyPlayerColour.cs">
     <Files>
-      <File FileName="Assets\Scripts\LevelController.cs" Line="224" Column="102" />
-      <File FileName="Assets\Scripts\LevelObjects\ColorCollisionObject.cs" Line="24" Column="33" />
+      <File FileName="Assets\Scripts\LevelController.cs" Line="169" Column="32" />
+      <File FileName="Assets\Scripts\LevelObjects\ColorCollisionObject.cs" Line="104" Column="42" />
+      <File FileName="Assets\Scripts\Animation\CopyPlayerColour.cs" Line="13" Column="3" />
+      <File FileName="Assets\Scripts\LevelObjects\FloorPiece.cs" Line="32" Column="39" />
+      <File FileName="Assets\Scripts\LevelObjects\DoorPiece.cs" Line="25" Column="39" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
