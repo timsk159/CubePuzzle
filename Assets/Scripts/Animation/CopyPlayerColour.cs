@@ -22,33 +22,30 @@ public class CopyPlayerColour : MonoBehaviour
 
 		var targetColour = ColorCollisionObject.GetObjectRealColor(playersNewColour);
 
-		if(targetColour != cachedMat.color)
+		if(includeAlpha)
 		{
-			if(includeAlpha)
+			if(!string.IsNullOrEmpty(colourPropertyName))
 			{
-				if(!string.IsNullOrEmpty(colourPropertyName))
-				{
-					cachedMat.SetColor(colourPropertyName, targetColour);
-				}
-				else
-				{
-					cachedMat.color = targetColour;
-				}
+				cachedMat.SetColor(colourPropertyName, targetColour);
 			}
 			else
 			{
-				var newColour = targetColour;
-				if(!string.IsNullOrEmpty(colourPropertyName))
-				{
-					newColour.a = cachedMat.GetColor(colourPropertyName).a;
+				cachedMat.color = targetColour;
+			}
+		}
+		else
+		{
+			var newColour = targetColour;
+			if(!string.IsNullOrEmpty(colourPropertyName))
+			{
+				newColour.a = cachedMat.GetColor(colourPropertyName).a;
 
-					cachedMat.SetColor(colourPropertyName, newColour);
-				}
-				else
-				{
-					newColour.a = cachedMat.color.a;
-					cachedMat.color = newColour;
-				}
+				cachedMat.SetColor(colourPropertyName, newColour);
+			}
+			else
+			{
+				newColour.a = cachedMat.color.a;
+				cachedMat.color = newColour;
 			}
 		}
 	}
