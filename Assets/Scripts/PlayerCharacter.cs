@@ -22,9 +22,14 @@ public class PlayerCharacter : MonoBehaviour
 	
 	void Awake () 
 	{
+		//No smoke in level creator.
+		if(Application.loadedLevelName != "LevelCreator")
+		{
+			smokeParticles = transform.Find("SmokeTrail").GetComponent<ParticleSystem>();
+			smokeParticles.transform.parent = null;
+		}
 		childLight = transform.Find("PointLight").GetComponent<Light>();
-		smokeParticles = transform.Find("SmokeTrail").GetComponent<ParticleSystem>();
-		smokeParticles.transform.parent = null;
+
 		playerMovement = GetComponent<PlayerMovement>();
 		
 		NotificationCenter<ColourCollisionNotification>.DefaultCenter.AddObserver(this, ColourCollisionNotification.PlayerEnteredColour);
@@ -42,26 +47,26 @@ public class PlayerCharacter : MonoBehaviour
 	
 	void Update()
 	{
-		if(smokeParticles.isPlaying)
-		{
-			var smokePos = transform.position;
-			smokePos.y -= 0.4f;
-			smokePos.z += 0.35f;
-			smokeParticles.transform.position = smokePos;
-
-			smokeParticles.transform.forward = -rigidbody.velocity.normalized;
-		}
-		if(!smokeParticles.isPlaying)
-		{
-			if(playerMovement.isMovingFast)
-				smokeParticles.Play();
-		}
-		else if(smokeParticles.isPlaying && !smokeParticles.isStopped && !playerMovement.isMovingFast)
-		{
-			smokeParticles.Stop();
-		}
 		if(Application.loadedLevelName != "LevelCreator")
 		{
+			if(smokeParticles.isPlaying)
+			{
+				var smokePos = transform.position;
+				smokePos.y -= 0.4f;
+				smokePos.z += 0.35f;
+				smokeParticles.transform.position = smokePos;
+
+				smokeParticles.transform.forward = -rigidbody.velocity.normalized;
+			}
+			if(!smokeParticles.isPlaying)
+			{
+				if(playerMovement.isMovingFast)
+					smokeParticles.Play();
+			}
+			else if(smokeParticles.isPlaying && !smokeParticles.isStopped && !playerMovement.isMovingFast)
+			{
+				smokeParticles.Stop();
+			}
 			if(Input.GetKeyDown(KeyCode.E))
 			{
 				if(currentInteractionObject != null)
