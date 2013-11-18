@@ -8,13 +8,6 @@ public class SceneLoader : MonoSingleton<SceneLoader>
 	private GameObject progressBarObj;
 	public UISlider progressBar;
 
-	Action onComplete;
-
-	void Awake()
-	{
-		DontDestroyOnLoad(this);
-	}
-
 	void OnDestroy()
 	{
 		LevelSerializer.Progress -= HandleProgress;
@@ -80,7 +73,6 @@ public class SceneLoader : MonoSingleton<SceneLoader>
 
 	private IEnumerator LoadLevelRoutine(string levelToLoad, Action onComplete)
 	{
-		this.onComplete = onComplete;
 		Application.LoadLevel("LoadingScene");
 		yield return new WaitForEndOfFrame();
 		yield return new WaitForEndOfFrame();

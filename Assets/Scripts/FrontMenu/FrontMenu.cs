@@ -23,14 +23,11 @@ public class FrontMenu : MonoBehaviour
 
 	public GameObject fileMenuGrid;
 
-	LevelCreator levelCreator;
-
 	public string selectedFileName;
 	private GameObject storyModeContinueButton;
 	
 	void Start ()
 	{
-		levelCreator = GetComponent<LevelCreator> ();
 		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver(this, FrontMenuUINotification.StoryModeButtonPressed);
 		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver(this, FrontMenuUINotification.QuitButtonPressed);
 		NotificationCenter<FrontMenuUINotification>.DefaultCenter.AddObserver(this, FrontMenuUINotification.LevelCreatorButtonPressed);

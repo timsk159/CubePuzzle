@@ -6,7 +6,6 @@ public class DragAndDropPlayerStartMenuItem : DragAndDropMenuItem
 	GameObject cycleColourButton;
 
 	PlayerStartPiece playerStartPiece;
-	GameObject playerSpherePrefab;
 
 	void Start()
 	{
@@ -14,7 +13,6 @@ public class DragAndDropPlayerStartMenuItem : DragAndDropMenuItem
 		UIEventListener.Get(cycleColourButton).onClick = HandleColourCycleButtonClick;
 
 		playerStartPiece = transform.Find("PlayerStartCubeMenuObj").GetComponent<PlayerStartPiece>();
-		playerSpherePrefab = (GameObject)Resources.Load("Player");
 	}
 
 	void HandleColourCycleButtonClick (GameObject go)

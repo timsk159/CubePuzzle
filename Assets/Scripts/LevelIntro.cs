@@ -107,7 +107,6 @@ public class LevelIntro : MonoBehaviour
 	IEnumerator QuickFinishAnimation()
 	{
 		playingIntro = false;
-		var movePos = mapRoot.transform.up * 20;
 
 		foreach(var cube in animatingCubes)
 		{

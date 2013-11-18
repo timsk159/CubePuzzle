@@ -15,28 +15,6 @@ public class StoryProgressController : MonoSingleton<StoryProgressController>
 	StoryLevel currentLevel;
 	StoryLevel savedLevel;
 
-	#region Binary File Experiments
-	void CreateBinaryFile()
-	{
-		List<StoryLevel> levels = BuildStoryLevelListForFile();
-	}
-
-	List<StoryLevel> BuildStoryLevelListForFile()
-	{
-		var levels = new List<StoryLevel>(11);
-
-		for(int i = 0; i < levels.Capacity; i++)
-		{
-			levels[i].levelName = "0" + (i + 1);
-			levels[i].levelNumber = (i + 1);
-			levels[i].displayName = "Introduction " + (i + 1);
-		}
-
-		return levels;
-	}
-
-	#endregion
-
 	List<StoryLevel> ParseLevelsIni()
 	{
 		List<StoryLevel> levelsList = new List<StoryLevel>();

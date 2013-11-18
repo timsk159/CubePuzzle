@@ -114,7 +114,7 @@ public class FloorPiece : ColorCollisionObject
 		}
 	}
 
-	void OnDeserialized()
+	protected override void OnDeserialized()
 	{
 		ColourNotiCenter.DefaultCenter.AddObserver(this, ColourCollisionNotification.PlayerChangedColour);
 

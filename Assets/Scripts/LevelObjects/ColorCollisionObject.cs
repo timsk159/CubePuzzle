@@ -162,7 +162,6 @@ public class ColorCollisionObject : MonoBehaviour
 
 public class CubeNeighbours
 {
-	GameObject gameObject;
 	Transform transform;
 
 	public enum NeighbourDirection
@@ -174,10 +173,9 @@ public class CubeNeighbours
 
 	GameObject[] _neighbours;
 
-	public CubeNeighbours(GameObject gameObject)
+	public CubeNeighbours(GameObject go)
 	{
-		this.gameObject = gameObject;
-		this.transform = gameObject.transform;
+		this.transform = go.transform;
 
 		/*
 		directions[0] = transform.forward;

@@ -7,17 +7,11 @@ public class ButtonPiece : InteractiveObject
 	public bool rotateForward = true;
 	public bool shouldChangePlayer;
 	public Colour buttonSphereColour;
-
-	GameObject buttonSphere;
 	
 	protected override void Start()
 	{
 		objColour = Colour.None;
 		base.Start();
-		
-		buttonSphere = transform.Find("ButtonSphere").gameObject;		
-		
-		SetButtonSphereColour(buttonSphereColour);
 	}
 	
 	public override void PlayerInteracted()
@@ -48,21 +42,11 @@ public class ButtonPiece : InteractiveObject
 		{
 			currentColourIndex = 1;
 		}
-
-		SetButtonSphereColour((Colour)currentColourIndex);
 	}
 
 	public override void ChangeColour(Colour colorToChangeTo)
 	{
-		SetButtonSphereColour(colorToChangeTo);
-	}
 
-	void SetButtonSphereColour(Colour colourToChangeto)
-	{
-		if(buttonSphere == null)
-			buttonSphere = transform.Find("ButtonSphere").gameObject;
-	//	buttonSphere.renderer.material.color = GetObjectRealColor((Colour)colourToChangeto);
-		buttonSphereColour = (Colour)colourToChangeto;
 	}
 	
 	void PressButton()
