@@ -84,11 +84,7 @@ public class LevelIntro : MonoBehaviour
 			yield return new WaitForEndOfFrame();
 		}
 
-		//Anim was not interrupted.
-		if(timeCounter <= 0)
-		{
-		}
-		yield return new WaitForSeconds(1.0f);
+	//	yield return new WaitForSeconds(1.0f);
 		NotificationCenter<LevelIntroNotification>.DefaultCenter.PostNotification(LevelIntroNotification.IntroFinished, null);
 	}
 

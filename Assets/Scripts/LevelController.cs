@@ -156,6 +156,8 @@ public class LevelController : MonoSingleton<LevelController>
 
 	void IntroFinished()
 	{
+		Camera.main.GetComponent<CameraFollow>().enabled = true;
+
 		SetInitialFloorColliders();
 		foreach(var go in combinedMeshes)
 		{
@@ -174,9 +176,6 @@ public class LevelController : MonoSingleton<LevelController>
 
 		playerChar.playerMovement.canMove = true;
 		playerChar.rigidbody.useGravity = true;
-		Camera.main.GetComponent<CameraFollow>().enabled = true;
-
-		//combinedMeshes = null;
 	}
 
 	void IntroInterrupted()
