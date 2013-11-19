@@ -62,6 +62,7 @@ public class ColorCollisionObject : MonoBehaviour
 
 	protected virtual void LevelStarted()
 	{
+		EnsureCollidersAreEnabled();
 		ChangeColour(objColour);
 	}
 

@@ -191,12 +191,6 @@ public class LevelController : MonoSingleton<LevelController>
 	public void SetInitialFloorColliders()
 	{
 		//Make sure all the triggers and such are turned on, then tell all the cubes to setup their colliders based on the players colour.
-		foreach(Transform child in mapRoot.transform)
-		{
-			var colObj = child.GetComponent<ColorCollisionObject>();
-			if(colObj != null)
-				colObj.EnsureCollidersAreEnabled();
-		}
 		NotificationCenter<ColourCollisionNotification>.DefaultCenter.PostNotification(ColourCollisionNotification.PlayerChangedColour, PlayerColour);
 	}
 
@@ -260,6 +254,7 @@ public class LevelController : MonoSingleton<LevelController>
 			}
 			combinedMeshes.Add(newMeshObject);
 		}
+
 		return combinedMeshes.ToArray();
 	}
 
