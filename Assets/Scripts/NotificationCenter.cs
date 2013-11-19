@@ -127,48 +127,48 @@ public class NotificationCenter<T>
 	{
 		// First make sure that the name of the notification is valid.
 		//Debug.Log("sender: " + aNotification.name);
-		if (string.IsNullOrEmpty (_Notification.type.ToString()))
+		if(string.IsNullOrEmpty(_Notification.type.ToString()))
 		{
-			Debug.Log ("Null name sent to PostNotification.");
+			Debug.Log("Null name sent to PostNotification.");
 			return;
 		}
 		
 		List<Component> observerListForNotification = notifications[_Notification.type.ToString()] as List<Component>;
-		if (observerListForNotification != null)
+		if(observerListForNotification != null)
 		{
 			List<Component> observerList = new List<Component>();
-			foreach (Component observer in observerListForNotification)
+			foreach(Component observer in observerListForNotification)
 			{
 				observerList.Add(observer);
 			}
 		
-		if (observerList != null)
-		{
-			// Create an array to keep track of invalid observers that we need to remove
-			List<Component> observersToRemove = new List<Component> ();
-			
-			// Itterate through all the objects that have signed up to be notified by this type of notification.
-			foreach (Component observer in observerList)
+			if(observerList != null)
 			{
-				// If the observer isn't valid, then keep track of it so we can remove it later.
-				// We can't remove it right now, or it will mess the for loop up.
-				if (!observer)
+				// Create an array to keep track of invalid observers that we need to remove
+				List<Component> observersToRemove = new List<Component>();
+
+
+				// Itterate through all the objects that have signed up to be notified by this type of notification.
+				foreach(Component observer in observerList)
 				{
-					observersToRemove.Add(observer);
+					// If the observer isn't valid, then keep track of it so we can remove it later.
+					// We can't remove it right now, or it will mess the for loop up.
+					if(!observer)
+					{
+						observersToRemove.Add(observer);
+					}
+					else
+					{
+						// If the observer is valid, then send it the notification. The message that's sent is the name of the notification.
+						observer.SendMessage(_Notification.type.ToString(), _Notification, SendMessageOptions.DontRequireReceiver);
+					}
 				}
-				else
+				// Remove all the invalid observers
+				foreach(Component invalidObserver in observersToRemove)
 				{
-					// If the observer is valid, then send it the notification. The message that's sent is the name of the notification.
-					observer.SendMessage(_Notification.type.ToString(), _Notification, SendMessageOptions.DontRequireReceiver);
+					//observersToRemove.Remove(invalidObserver);
+					RemoveObserver(invalidObserver, _Notification.type);
 				}
-			}
-				
-			// Remove all the invalid observers
-			foreach (Component invalidObserver in observersToRemove)
-			{
-				//observersToRemove.Remove(invalidObserver);
-				RemoveObserver(invalidObserver, _Notification.type);
-			}
 			}
 		}
 	}
