@@ -8,13 +8,16 @@ public class HUD : MonoBehaviour
 
 	void Start()
 	{
-		NotificationCenter<ColourCollisionNotification>.DefaultCenter.AddObserver(this, ColourCollisionNotification.PlayerChangedColour);
+		Messenger<Colour>.AddListener(ColourCollisionNotification.PlayerChangedColour.ToString(), PlayerChangedColour);
 	}
 
-	void PlayerChangedColour(NotificationCenter<ColourCollisionNotification>.Notification notiData)
+	void OnDestroy()
 	{
-		var colourToChangeTo = (Colour)notiData.data;
+		Messenger<Colour>.RemoveListener(ColourCollisionNotification.PlayerChangedColour.ToString(), PlayerChangedColour);
+	}
 
+	void PlayerChangedColour(Colour colourToChangeTo)
+	{
 		switch(colourToChangeTo)
 		{
 			case Colour.Blue:

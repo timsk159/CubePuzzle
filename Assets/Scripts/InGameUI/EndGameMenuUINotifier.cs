@@ -12,6 +12,6 @@ public class EndGameMenuUINotifier : MonoBehaviour
 	
 	void OnClick()
 	{
-		NotificationCenter<EndGameMenuNotification>.DefaultCenter.PostNotification(notiType, null);
+		Messenger.Invoke(notiType.ToString());
 	}
 }

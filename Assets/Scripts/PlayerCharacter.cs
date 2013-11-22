@@ -2,6 +2,8 @@ using UnityEngine;
 using System;
 using System.Collections;
 
+using StateMachineMessenger = Messenger<StateMachine<LevelState, LevelStateNotification>.StateChangeData>;
+
 public enum PlayerInteractionNotification
 {
 	PlayerInteracted
@@ -31,18 +33,31 @@ public class PlayerCharacter : MonoBehaviour
 		childLight = transform.Find("PointLight").GetComponent<Light>();
 
 		playerMovement = GetComponent<PlayerMovement>();
-		
-		NotificationCenter<ColourCollisionNotification>.DefaultCenter.AddObserver(this, ColourCollisionNotification.PlayerEnteredColour);
-		NotificationCenter<ColourCollisionNotification>.DefaultCenter.AddObserver(this, ColourCollisionNotification.PlayerExitedColour);
-		
-		NotificationCenter<ColourCollisionNotification>.DefaultCenter.AddObserver(this, ColourCollisionNotification.InteractionTriggerEnter);
-		NotificationCenter<ColourCollisionNotification>.DefaultCenter.AddObserver(this, ColourCollisionNotification.InteractionTriggerExit);
-		
-		NotificationCenter<ColourCollisionNotification>.DefaultCenter.AddObserver(this, ColourCollisionNotification.PlayerChangedColour);
 
-		NotificationCenter<LevelStateNotification>.DefaultCenter.AddObserver(this, LevelStateNotification.LevelStarted);
-		NotificationCenter<LevelStateNotification>.DefaultCenter.AddObserver(this, LevelStateNotification.InGameExit);
-		NotificationCenter<LevelStateNotification>.DefaultCenter.AddObserver(this, LevelStateNotification.InGameEnter);
+		StateMachineMessenger.AddListener(LevelStateNotification.LevelStarted.ToString(), LevelStarted);
+		StateMachineMessenger.AddListener(LevelStateNotification.InGameExit.ToString(), InGameExit);
+		StateMachineMessenger.AddListener(LevelStateNotification.InGameEnter.ToString(), InGameEnter);
+	}
+
+	void OnDestroy()
+	{
+		StateMachineMessenger.RemoveListener(LevelStateNotification.LevelStarted.ToString(), LevelStarted);
+		StateMachineMessenger.RemoveListener(LevelStateNotification.InGameExit.ToString(), InGameExit);
+		StateMachineMessenger.RemoveListener(LevelStateNotification.InGameEnter.ToString(), InGameEnter);
+	}
+
+	public void DisablePhysics()
+	{
+		rigidbody.useGravity = false;
+		rigidbody.isKinematic = true;
+		collider.enabled = false;
+	}
+
+	public void EnablePhysics()
+	{
+		rigidbody.useGravity = true;
+		rigidbody.isKinematic = false;
+		collider.enabled = true;
 	}
 	
 	void Update()
@@ -87,40 +102,20 @@ public class PlayerCharacter : MonoBehaviour
 		}
 	}
 
-	void LevelStarted()
+	void LevelStarted(StateMachine<LevelState, LevelStateNotification>.StateChangeData changeData)
 	{
 		canReset = true;
 	}
 
-	void InGameEnter()
+	void InGameEnter(StateMachine<LevelState, LevelStateNotification>.StateChangeData changeData)
 	{
 		canReset = true;
 	}
 
-	void InGameExit()
+	void InGameExit(StateMachine<LevelState, LevelStateNotification>.StateChangeData changeData)
 	{
 		canReset = false;
 	}
-
-	void PlayerEnteredColour(NotificationCenter<ColourCollisionNotification>.Notification notiData)
-	{
-		//ColourCollisionData hitData = (ColourCollisionData)notiData.data;
-	}
-	
-	void PlayerExitedColour(NotificationCenter<ColourCollisionNotification>.Notification notiData)
-	{
-		//ColourCollisionData hitData = (ColourCollisionData)notiData.data;
-	}
-	
-	void InteractionTriggerEnter(NotificationCenter<ColourCollisionNotification>.Notification notiData)
-	{
-		currentInteractionObject = (InteractiveObject)notiData.data;
-	}
-	
-	void InteractionTriggerExit(NotificationCenter<ColourCollisionNotification>.Notification notiData)
-	{
-		currentInteractionObject = null;
-	}			
 	
 	public void ChangeColour(Colour colourToChangeTo)
 	{
@@ -128,7 +123,7 @@ public class PlayerCharacter : MonoBehaviour
 		var realColor = GetRealColor();
 		gameObject.renderer.material.color = realColor;
 		childLight.color = realColor;
-		NotificationCenter<ColourCollisionNotification>.DefaultCenter.PostNotification(ColourCollisionNotification.PlayerChangedColour, currentColor);
+		Messenger<Colour>.Invoke(ColourCollisionNotification.PlayerChangedColour.ToString(), currentColor);
 	}
 
 	public void SilentlyChangeColour(Colour colourToChangeTo)
@@ -139,33 +134,19 @@ public class PlayerCharacter : MonoBehaviour
 		childLight.color = realColor;
 	}
 	
-	public void RotateColour(bool forward)
+	public void RotateColour()
 	{
 		int currentColourIndex = (int)currentColor;
 		var values = Enum.GetValues(typeof(Colour));
+
+		currentColourIndex++;
 		
-		if(forward)
+		if(currentColourIndex == values.Length)
 		{
-			currentColourIndex++;
-			
-			if(currentColourIndex == values.Length)
-			{
-				currentColourIndex = 1;
-			}
-			
-			ChangeColour((Colour)currentColourIndex);
+			currentColourIndex = 1;
 		}
-		else
-		{
-			currentColourIndex--;
-			
-			if(currentColourIndex == 1)
-			{
-				currentColourIndex = (int)values.GetValue(values.Length);
-			}
-			
-			ChangeColour((Colour)currentColourIndex);
-		}
+		
+		ChangeColour((Colour)currentColourIndex);
 	}
 	
 	public Color GetRealColor()

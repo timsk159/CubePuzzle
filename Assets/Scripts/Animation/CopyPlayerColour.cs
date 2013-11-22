@@ -13,13 +13,16 @@ public class CopyPlayerColour : MonoBehaviour
 	{
 		cachedMat = renderer.material;
 
-		NotificationCenter<ColourCollisionNotification>.DefaultCenter.AddObserver(this, ColourCollisionNotification.PlayerChangedColour);
+		Messenger<Colour>.AddListener(ColourCollisionNotification.PlayerChangedColour.ToString(), PlayerChangedColour);
 	}
 
-	void PlayerChangedColour(NotificationCenter<ColourCollisionNotification>.Notification notiData)
+	void OnDestroy()
 	{
-		var playersNewColour = (Colour)notiData.data;
+		Messenger<Colour>.RemoveListener(ColourCollisionNotification.PlayerChangedColour.ToString(), PlayerChangedColour);
+	}
 
+	void PlayerChangedColour(Colour playersNewColour)
+	{
 		var targetColour = ColorCollisionObject.GetObjectRealColor(playersNewColour);
 
 		if(includeAlpha)

@@ -10,11 +10,11 @@ public class InteractiveObject : ColorCollisionObject
 	
 	protected virtual void TriggererEntered(GameObject go)
 	{
-		NotificationCenter<ColourCollisionNotification>.DefaultCenter.PostNotification(ColourCollisionNotification.InteractionTriggerEnter, this);
+		Messenger<GameObject>.Invoke(ColourCollisionNotification.InteractionTriggerEnter.ToString(), gameObject);
 	}
 	
 	protected virtual void TriggererExited(GameObject go)
 	{
-		NotificationCenter<ColourCollisionNotification>.DefaultCenter.PostNotification(ColourCollisionNotification.InteractionTriggerExit, this);		
+		Messenger<GameObject>.Invoke(ColourCollisionNotification.InteractionTriggerExit.ToString(), gameObject);
 	}
 }

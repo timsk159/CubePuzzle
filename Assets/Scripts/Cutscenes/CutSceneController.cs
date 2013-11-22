@@ -24,7 +24,7 @@ public class CutSceneController : MonoBehaviour
 
 	public void DisplayCutscene(CutSceneObj cutSceneObj)
 	{
-		NotificationCenter<CutSceneNotification>.DefaultCenter.PostNotification(CutSceneNotification.CutSceneStarted, null);
+		Messenger.Invoke(CutSceneNotification.CutSceneStarted.ToString());
 
 		if(cutSceneObj.dialogue.dialogueAsset != null)
 		{
@@ -46,7 +46,7 @@ public class CutSceneController : MonoBehaviour
 			dialogueDisplayer.StopDisplayingText();
 		audio.Stop();
 
-		NotificationCenter<CutSceneNotification>.DefaultCenter.PostNotification(CutSceneNotification.CutSceneFinished, null);
+		Messenger.Invoke(CutSceneNotification.CutSceneStarted.ToString());
 	}
 	
 	IEnumerator CutSceneTimerRoutine(float length, CutSceneObj cutsceneObj)

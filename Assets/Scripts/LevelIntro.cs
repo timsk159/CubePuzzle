@@ -35,7 +35,7 @@ public class LevelIntro : MonoBehaviour
 	//TweenTime = T/animTime
 	public IEnumerator PlayIntroAnimation(GameObject playerObj, CutSceneObj introCutsceneObj = null)
 	{
-		NotificationCenter<LevelIntroNotification>.DefaultCenter.PostNotification(LevelIntroNotification.IntroStarted, null);
+		Messenger.Invoke(LevelIntroNotification.IntroStarted.ToString());
 		if(introCutsceneObj != null && cutSceneController != null)
 		{
 			playingCutsceneObj = introCutsceneObj;
@@ -56,7 +56,7 @@ public class LevelIntro : MonoBehaviour
 
 		foreach(Transform child in mapRoot.transform)
 		{
-			if(!child.name.Contains("Start") && !child.name.Contains("End"))
+			if(!child.name.Contains("Start") && !child.name.Contains("End") && child.tag != "NullCube")
 			{
 				var animCube = new AnimatingCube(child.gameObject, child.position);
 				animatingCubes.Add(animCube);
@@ -85,7 +85,7 @@ public class LevelIntro : MonoBehaviour
 		}
 
 	//	yield return new WaitForSeconds(1.0f);
-		NotificationCenter<LevelIntroNotification>.DefaultCenter.PostNotification(LevelIntroNotification.IntroFinished, null);
+		Messenger.Invoke(LevelIntroNotification.IntroFinished.ToString());
 	}
 
 	void Update()
@@ -116,7 +116,7 @@ public class LevelIntro : MonoBehaviour
 			playingCutsceneObj = null;
 		}
 
-		NotificationCenter<LevelIntroNotification>.DefaultCenter.PostNotification(LevelIntroNotification.IntroInterrupted, null);
+		Messenger.Invoke(LevelIntroNotification.IntroInterrupted.ToString());
 	}
 
 

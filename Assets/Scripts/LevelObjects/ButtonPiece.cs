@@ -31,7 +31,7 @@ public class ButtonPiece : InteractiveObject
 		//Play any animation here.
 	} 
 
-	public override void RotateColour (bool forward)
+	public override void RotateColour ()
 	{
 		int currentColourIndex = (int)buttonSphereColour;
 		var values = Enum.GetValues(typeof(Colour));
@@ -53,14 +53,14 @@ public class ButtonPiece : InteractiveObject
 	{
 		if(!shouldChangePlayer)
 		{
-			NotificationCenter<ColourCollisionNotification>.DefaultCenter.PostNotification(ColourCollisionNotification.ButtonPressed, rotateForward);
+			Messenger.Invoke(ColourCollisionNotification.ButtonPressed.ToString());
 		}	
 	
 		else
 		{
-			LevelController.Instance.playerChar.RotateColour(rotateForward);
+			LevelController.Instance.playerChar.RotateColour();
 		}
-		RotateColour(true);
+		RotateColour();
 		//Play any animations here.
 	}
 }

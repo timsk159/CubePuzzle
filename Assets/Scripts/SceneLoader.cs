@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 
+[DoNotSerializePublic()]
 public class SceneLoader : MonoSingleton<SceneLoader> 
 {
 	public GameObject loadingScreenObjsParent;

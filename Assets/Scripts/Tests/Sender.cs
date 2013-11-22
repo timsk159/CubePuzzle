@@ -46,7 +46,7 @@ public class Sender : MonoBehaviour
 		var sw = new Stopwatch();
 		sw.Start();
 
-		NotificationCenter<EventNotification>.DefaultCenter.PostNotification(EventNotification.OnEvent, null);
+		Messenger.Invoke(EventNotification.OnEvent.ToString());
 
 		sw.Stop();
 		print("Notifications took: " + sw.ElapsedMilliseconds);

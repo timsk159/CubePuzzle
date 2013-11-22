@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CheckpointPiece : InteractiveObject
 {
-	public override void RotateColour (bool forward)
+	public override void RotateColour ()
 	{
 		return;
 	}

@@ -31,6 +31,6 @@ public class DraggableRotatableMapObject : DraggableMapObject
 
 	protected override void OnDestroy()
 	{
-		NotificationCenter<DragAndDropNotification>.DefaultCenter.PostNotification(DragAndDropNotification.MapObjectRemoved, this);
+		Messenger<DraggableMapObject>.Invoke(DragAndDropNotification.MapObjectRemoved.ToString(), this);
 	}
 }

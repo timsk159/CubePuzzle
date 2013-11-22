@@ -27,7 +27,7 @@ public class LevelCreatorUINotifier : MonoBehaviour
 	void OnClick()
 	{
 		if(notiType != LevelCreatorUINotification.GenericInputSubmitted)
-			NotificationCenter<LevelCreatorUINotification>.DefaultCenter.PostNotification(notiType, dataToSend);
+			Messenger.Invoke(notiType.ToString());
 	}
 	
 	void OnSubmit()
@@ -36,8 +36,8 @@ public class LevelCreatorUINotifier : MonoBehaviour
 			inputObj = GetComponent<UIInput>();
 		
 		var notiData = new InputNotificationData(gameObject, inputObj.text);
-		
-		NotificationCenter<LevelCreatorUINotification>.DefaultCenter.PostNotification(notiType, notiData);
+
+		Messenger<InputNotificationData>.Invoke(notiType.ToString(), notiData);
 	}
 }
 

@@ -27,7 +27,7 @@ public class DragAndDropDoorMenuItem : DragAndDropMenuItem
 
 	void HandleColourCycleButtonClick (GameObject go)
 	{
-		doorPiece.RotateColour(true);
+		doorPiece.RotateColour();
 	}
 	
 	protected override void OnPress(bool isPressed)

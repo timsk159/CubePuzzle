@@ -27,11 +27,11 @@ public class DoorPiece : FloorPiece
 		CheckDoor();
 	}
 
-	public override void RotateColour (bool forward)
+	public override void RotateColour ()
 	{
 		useSharedMaterial = false;
 
-		base.RotateColour (forward);
+		base.RotateColour ();
 
 		CheckDoor();
 	}

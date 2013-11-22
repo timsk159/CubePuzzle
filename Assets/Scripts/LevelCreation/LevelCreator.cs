@@ -6,6 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+using StateM = StateMachine<LevelCreatorStates, LevelCreatorStateNotification>;
+
 public class LevelCreator : MonoBehaviour
 {
 	LevelCreatorUIController uiController;
@@ -19,20 +21,20 @@ public class LevelCreator : MonoBehaviour
 	
 	void Start ()
 	{
-		StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateNotificationCenter.AddObserver(this, LevelCreatorStateNotification.LevelCreationEnter);
-		StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateNotificationCenter.AddObserver(this, LevelCreatorStateNotification.LevelCreationExit);
-		StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateNotificationCenter.AddObserver(this, LevelCreatorStateNotification.FrontMenuEnter);
+		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateNotification.LevelCreationEnter.ToString(), LevelCreationEnter);
+		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateNotification.FrontMenuEnter.ToString(), FrontMenuEnter);
+
 		assetManager = GetComponent<LevelAssetManager>();
 		mapRoot = GameObject.Find("MapRoot");
 		uiController = GameObject.Find ("UIController").GetComponent<LevelCreatorUIController> ();
 	}
 
-	void LevelCreationEnter()
+	void LevelCreationEnter(StateM.StateChangeData changeData)
 	{
 		mapRoot = GameObject.Find("MapRoot");
 	}
 
-	void FrontMenuEnter()
+	void FrontMenuEnter(StateM.StateChangeData changeData)
 	{
 		LevelSerializer.Progress -= LevelSerializeProgress;
 		LevelSerializer.Progress += LevelSerializeProgress;
@@ -47,6 +49,8 @@ public class LevelCreator : MonoBehaviour
 	void OnDestroy()
 	{
 		LevelSerializer.Progress -= LevelSerializeProgress;
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateNotification.LevelCreationEnter.ToString(), LevelCreationEnter);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateNotification.FrontMenuEnter.ToString(), FrontMenuEnter);
 	}
 	
 	

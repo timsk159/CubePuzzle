@@ -24,20 +24,27 @@ public class DragAndDropController : MonoBehaviour
 	{
 		levelCreator = GameObject.Find("LevelCreator").GetComponent<LevelCreator>();
 		assetManager = GameObject.Find("LevelCreator").GetComponent<LevelAssetManager>();
-		
-		NotificationCenter<DragAndDropNotification>.DefaultCenter.AddObserver(this, DragAndDropNotification.MenuItemPressed);
-		NotificationCenter<DragAndDropNotification>.DefaultCenter.AddObserver(this, DragAndDropNotification.MapObjectPressed);
-		NotificationCenter<DragAndDropNotification>.DefaultCenter.AddObserver(this, DragAndDropNotification.DoubleClicked);
-		NotificationCenter<DragAndDropNotification>.DefaultCenter.AddObserver(this, DragAndDropNotification.MenuItemRightClicked);
-		NotificationCenter<LevelCreatorStateNotification>.DefaultCenter.AddObserver(this, LevelCreatorStateNotification.TestingMapEnter);
+
+		Messenger<GameObject>.AddListener(DragAndDropNotification.MenuItemPressed.ToString(), MenuItemPressed);
+		Messenger<GameObject>.AddListener(DragAndDropNotification.MapObjectPressed.ToString(), MapObjectPressed);
+		Messenger<Vector3>.AddListener(DragAndDropNotification.DoubleClicked.ToString(), DoubleClicked);
+		Messenger<GameObject>.AddListener(DragAndDropNotification.MenuItemRightClicked.ToString(), MenuItemRightClicked);
+		Messenger<StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData>.AddListener(LevelCreatorStateNotification.TestingMapEnter.ToString(), TestingMapEnter);
+	}
+
+	void OnDestroy()
+	{
+		Messenger<GameObject>.RemoveListener(DragAndDropNotification.MenuItemPressed.ToString(), MenuItemPressed);
+		Messenger<GameObject>.RemoveListener(DragAndDropNotification.MapObjectPressed.ToString(), MapObjectPressed);
+		Messenger<Vector3>.RemoveListener(DragAndDropNotification.DoubleClicked.ToString(), DoubleClicked);
+		Messenger<GameObject>.RemoveListener(DragAndDropNotification.MenuItemRightClicked.ToString(), MenuItemRightClicked);
+		Messenger<StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData>.RemoveListener(LevelCreatorStateNotification.TestingMapEnter.ToString(), TestingMapEnter);
 	}
 	
-	void MenuItemPressed(NotificationCenter<DragAndDropNotification>.Notification notiData)
+	void MenuItemPressed(GameObject prefab)
 	{
 		if(draggingObj != null)
 			Destroy(draggingObj);
-		
-		GameObject prefab = (GameObject)notiData.data;
 		
 		draggingObj = (GameObject)Instantiate(prefab);
 		draggingObj.name = draggingObj.name.Replace("(Clone)","");
@@ -46,8 +53,7 @@ public class DragAndDropController : MonoBehaviour
 		{
 			SetupDoorPiece(draggingObj);
 		}
-
-		else if(draggingObj.name.Contains("PlayerStart"))
+	else if(draggingObj.name.Contains("PlayerStart"))
 		{
 			SetupStartPiece(draggingObj);
 		}
@@ -65,10 +71,8 @@ public class DragAndDropController : MonoBehaviour
 		draggingObj.transform.position = worldPos;
 	}
 
-	void MenuItemRightClicked(NotificationCenter<DragAndDropNotification>.Notification notiData)
+	void MenuItemRightClicked(GameObject prefab)
 	{
-		var prefab = (GameObject)notiData.data;
-
 		if(selectedMenuItemPrefab == prefab)
 		{
 			DeselectMenuItem();
@@ -106,10 +110,8 @@ public class DragAndDropController : MonoBehaviour
 		}
 	}
 
-	void MapObjectPressed(NotificationCenter<DragAndDropNotification>.Notification notiData)
-	{
-		GameObject objPressed = (GameObject)notiData.data;
-		
+	void MapObjectPressed(GameObject objPressed)
+	{		
 		if(draggingObj != null && objPressed != draggingObj)
 		{
 			Destroy(draggingObj);
@@ -120,7 +122,7 @@ public class DragAndDropController : MonoBehaviour
 		draggingObj = objPressed;
 	}
 
-	void TestingMapEnter()
+	void TestingMapEnter(StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData changeData)
 	{
 		DeselectMenuItem();
 	}
@@ -219,7 +221,7 @@ public class DragAndDropController : MonoBehaviour
 				draggingObj.layer = 10;
 				draggingObj.transform.localScale = Vector3.one;
 				draggingObj.transform.parent = levelCreator.mapRoot.transform;
-				NotificationCenter<DragAndDropNotification>.DefaultCenter.PostNotification(DragAndDropNotification.ObjectPlaced, draggingObj.gameObject);
+				Messenger<GameObject>.Invoke(DragAndDropNotification.ObjectPlaced.ToString(), draggingObj);
 				draggingObj = null;
 				Destroy(objToReplace);
 			}
@@ -278,7 +280,7 @@ public class DragAndDropController : MonoBehaviour
 				clone.transform.localScale = Vector3.one;
 				clone.transform.position = hit.collider.transform.position;
 				clone.transform.parent = levelCreator.mapRoot.transform;
-				NotificationCenter<DragAndDropNotification>.DefaultCenter.PostNotification(DragAndDropNotification.ObjectPlaced, clone.gameObject);
+				Messenger<GameObject>.Invoke(DragAndDropNotification.ObjectPlaced.ToString(), clone);
 
 				Destroy(objToReplace);
 			}
@@ -328,10 +330,8 @@ public class DragAndDropController : MonoBehaviour
 		nullPiece.name = nullPiece.name.Replace("(Clone)", "");
 	}
 
-	void DoubleClicked(NotificationCenter<DragAndDropNotification>.Notification notiData)
+	void DoubleClicked(Vector3 pos)
 	{
-		var pos = (Vector3)notiData.data;
-
 		ReplaceFloorPiece (pos);
 	}
 }

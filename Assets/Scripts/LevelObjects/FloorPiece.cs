@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
-using ColourNotiCenter = NotificationCenter<ColourCollisionNotification>;
+
+using StateM = StateMachine<LevelState, LevelStateNotification>;
 
 public class FloorPiece : ColorCollisionObject 
 {
@@ -9,14 +10,18 @@ public class FloorPiece : ColorCollisionObject
 	protected override void Start()
 	{
 		base.Start ();
-		
-		ColourNotiCenter.DefaultCenter.AddObserver(this, ColourCollisionNotification.PlayerChangedColour);
+
+		Messenger<Colour>.AddListener(ColourCollisionNotification.PlayerChangedColour.ToString(), PlayerChangedColour);
 	}
 
-	protected void PlayerChangedColour(NotificationCenter<ColourCollisionNotification>.Notification notiData)
+	protected override void OnDestroy()
 	{
-		var colourToChangeTo = (Colour)notiData.data;
-		
+		base.OnDestroy();
+		Messenger<Colour>.RemoveListener(ColourCollisionNotification.PlayerChangedColour.ToString(), PlayerChangedColour);
+	}
+
+	protected void PlayerChangedColour(Colour colourToChangeTo)
+	{
 		if(colourToChangeTo == objColour)
 		{
 			MakeImpassable();
@@ -44,22 +49,22 @@ public class FloorPiece : ColorCollisionObject
 		}
 	}
 
-	protected override void LevelInitialized()
+	protected override void LevelInitialized(StateM.StateChangeData changeData)
 	{
 		if(sharedMeshForThisPiece == null)
 		{
 			sharedMeshForThisPiece = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));
 		}
-		base.LevelInitialized();
+		base.LevelInitialized(changeData);
 	}
 
-	protected override void LevelStarted()
+	protected override void LevelStarted(StateM.StateChangeData changeData)
 	{
 		if(sharedMeshForThisPiece == null)
 		{
 			sharedMeshForThisPiece = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));
 		}
-		base.LevelStarted();
+		base.LevelStarted(changeData);
 	}
 
 	void MakePassable()
@@ -113,8 +118,6 @@ public class FloorPiece : ColorCollisionObject
 
 	protected override void OnDeserialized()
 	{
-		ColourNotiCenter.DefaultCenter.AddObserver(this, ColourCollisionNotification.PlayerChangedColour);
-
 		if(sharedMeshForThisPiece == null)
 		{
 			sharedMeshForThisPiece = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));

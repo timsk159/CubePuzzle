@@ -17,7 +17,7 @@ public class DragAndDropPlayerStartMenuItem : DragAndDropMenuItem
 
 	void HandleColourCycleButtonClick (GameObject go)
 	{
-		playerStartPiece.RotateColour(true);
+		playerStartPiece.RotateColour();
 		GetComponentInChildren<PlayerCharacter>().SilentlyChangeColour(playerStartPiece.objColour);
 	}
 

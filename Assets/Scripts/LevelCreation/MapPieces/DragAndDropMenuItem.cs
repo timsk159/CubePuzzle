@@ -13,11 +13,11 @@ public class DragAndDropMenuItem : MonoBehaviour
 			{
 				if(UICamera.currentTouchID == -1)
 				{
-					NotificationCenter<DragAndDropNotification>.DefaultCenter.PostNotification(DragAndDropNotification.MenuItemPressed, prefab);
+					Messenger<GameObject>.Invoke(DragAndDropNotification.MenuItemPressed.ToString(), prefab);
 				}
 				else if(UICamera.currentTouchID == -2)
 				{
-					NotificationCenter<DragAndDropNotification>.DefaultCenter.PostNotification(DragAndDropNotification.MenuItemRightClicked, prefab);
+					Messenger<GameObject>.Invoke(DragAndDropNotification.MenuItemRightClicked.ToString(), prefab);
 				}
 			}
 		}

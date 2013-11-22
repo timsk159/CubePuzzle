@@ -3,11 +3,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using ColourNotiCenter = NotificationCenter<ColourCollisionNotification>;
+
+using StateM = StateMachine<LevelState, LevelStateNotification>;
 
 public enum ColourCollisionNotification
 {
-	PlayerEnteredColour, PlayerExitedColour, ObjectEnteredColour, ObjectExitedColour,
+	ObjectEnteredColour, ObjectExitedColour,
 	LeverPulled, ButtonPressed, InteractionTriggerEnter, InteractionTriggerExit,
 	PlayerChangedColour, FloorPiecesChangedColour, PlayerKilled
 };
@@ -20,13 +21,13 @@ public class ColorCollisionObject : MonoBehaviour
 	public Vector3 initialColliderSize;
 	[DoNotSerialize()]
 	public CubeNeighbours cubeNeighbours;
-	public bool meshCanBeOptimized;
+	public bool meshCanBeOptimized; 
 
 	protected bool useSharedMaterial = true;
 	
 	void Awake()
 	{
-		NotificationCenter<ColourCollisionNotification>.DefaultCenter.AddObserver(this, ColourCollisionNotification.ButtonPressed);
+		Messenger.AddListener(ColourCollisionNotification.ButtonPressed.ToString(), ButtonPressed);
 		cubeNeighbours = new CubeNeighbours(gameObject);
 		initialColour = objColour;
 	}
@@ -34,8 +35,16 @@ public class ColorCollisionObject : MonoBehaviour
 	protected virtual void Start()
 	{
 		initialColliderSize = Vector3.one;
-		NotificationCenter<LevelStateNotification>.DefaultCenter.AddObserver(this, LevelStateNotification.LevelInitialized);
-		NotificationCenter<LevelStateNotification>.DefaultCenter.AddObserver(this, LevelStateNotification.LevelStarted);
+
+		Messenger<StateM.StateChangeData>.AddListener(LevelStateNotification.LevelInitialized.ToString(), LevelInitialized);
+		Messenger<StateM.StateChangeData>.AddListener(LevelStateNotification.LevelStarted.ToString(), LevelStarted);
+	}
+
+	protected virtual void OnDestroy()
+	{
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateNotification.LevelInitialized.ToString(), LevelInitialized);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateNotification.LevelStarted.ToString(), LevelStarted);
+		Messenger.RemoveListener(ColourCollisionNotification.ButtonPressed.ToString(), ButtonPressed);
 	}
 
 	protected virtual void OnDisable()
@@ -56,11 +65,11 @@ public class ColorCollisionObject : MonoBehaviour
 			EnsureCollidersAreEnabled();
 	}
 
-	protected virtual void LevelInitialized()
+	protected virtual void LevelInitialized(StateM.StateChangeData changeData)
 	{
 	}
 
-	protected virtual void LevelStarted()
+	protected virtual void LevelStarted(StateM.StateChangeData changeData)
 	{
 		EnsureCollidersAreEnabled();
 		ChangeColour(objColour);
@@ -107,33 +116,19 @@ public class ColorCollisionObject : MonoBehaviour
 		
 	}
 	
-	public virtual void RotateColour(bool forward)
+	public virtual void RotateColour()
 	{
 		int currentColourIndex = (int)objColour;
 		var values = Enum.GetValues(typeof(Colour));
+
+		currentColourIndex++;
 		
-		if(forward)
+		if(currentColourIndex == values.Length)
 		{
-			currentColourIndex++;
-			
-			if(currentColourIndex == values.Length)
-			{
-				currentColourIndex = 1;
-			}
-			
-			ChangeColour((Colour)currentColourIndex);
+			currentColourIndex = 1;
 		}
-		else
-		{
-			currentColourIndex--;
-			
-			if(currentColourIndex == 1)
-			{
-				currentColourIndex = (int)values.GetValue(values.Length);
-			}
-			
-			ChangeColour((Colour)currentColourIndex);
-		}
+		
+		ChangeColour((Colour)currentColourIndex);
 	}
 	
 	public static Color GetObjectRealColor(Colour objectsColour)
@@ -153,11 +148,9 @@ public class ColorCollisionObject : MonoBehaviour
 		}
 	}
 	
-	public void ButtonPressed(NotificationCenter<ColourCollisionNotification>.Notification notiData)
+	public void ButtonPressed()
 	{
-		var forward = (bool)notiData.data;
-		
-		RotateColour(forward);
+		RotateColour();
 	}
 }
 

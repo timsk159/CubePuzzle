@@ -8,6 +8,9 @@ public class FrontMenuUINotifier : MonoBehaviour
 
 	void OnClick()
 	{
-		NotificationCenter<FrontMenuUINotification>.DefaultCenter.PostNotification(notiType, payload);
+		if(string.IsNullOrEmpty(payload))
+			Messenger.Invoke(notiType.ToString());
+		else
+			Messenger<string>.Invoke(notiType.ToString(), payload);
 	}
 }

@@ -12,6 +12,6 @@ public class PauseMenuUINotifier : MonoBehaviour
 	
 	void OnClick()
 	{
-		NotificationCenter<PauseMenuNotification>.DefaultCenter.PostNotification(notiType, null);
+		Messenger.Invoke(notiType.ToString());
 	}
 }

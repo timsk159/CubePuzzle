@@ -34,9 +34,7 @@ public static class StateMachine<State,Noty>
 				this.optionalData = optionalData;
 		}
 	}
-	
-	public static NotificationCenter<Noty> StateNotificationCenter = NotificationCenter<Noty>.DefaultCenter;
-	
+
 	private static Dictionary<State, StateData> states = new Dictionary<State, StateData>();
 	
 	private static State currentState;
@@ -74,19 +72,15 @@ public static class StateMachine<State,Noty>
 	private static void SendExitStateNotification(State changingTo)
 	{
 		var stateData = new StateChangeData(currentState, changingTo, null);
-		
-		NotificationCenter<Noty>.Notification notification = new NotificationCenter<Noty>.Notification(states[currentState].exit, stateData);
-		
-		NotificationCenter<Noty>.DefaultCenter.PostNotification(notification);
+
+		Messenger<StateChangeData>.Invoke(states[currentState].exit.ToString(), stateData);
 	}
 	
 	private static void SendEnterStateNotification(State changingFrom)
 	{
 		var stateData = new StateChangeData(changingFrom, currentState, null);
-		
-		NotificationCenter<Noty>.Notification notification = new NotificationCenter<Noty>.Notification(states[currentState].enter, stateData);
-		
-		NotificationCenter<Noty>.DefaultCenter.PostNotification(notification);
+
+		Messenger<StateChangeData>.Invoke(states[currentState].enter.ToString(), stateData);
 	}
 	
 	//Overloads for sending a data payload with the state change
@@ -105,15 +99,15 @@ public static class StateMachine<State,Noty>
 	private static void SendExitStateNotification(State changingTo, object notiData)
 	{
 		var stateData = new StateChangeData(currentState, changingTo, notiData);
-		
-		NotificationCenter<Noty>.DefaultCenter.PostNotification(states[currentState].exit, stateData);
+
+		Messenger<StateChangeData>.Invoke(states[currentState].exit.ToString(), stateData);
 	}
 	
 	
 	private static void SendEnterStateNotification(State changingFrom, object notiData)
 	{
 		var stateData = new StateChangeData(changingFrom, currentState, notiData);
-		
-		NotificationCenter<Noty>.DefaultCenter.PostNotification(states[currentState].enter, stateData);
+
+		Messenger<StateChangeData>.Invoke(states[currentState].enter.ToString(), stateData);
 	}
 }
