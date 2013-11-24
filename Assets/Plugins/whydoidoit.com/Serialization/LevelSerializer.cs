@@ -1152,17 +1152,11 @@ public static class LevelSerializer
 		var loader = l.AddComponent<LevelLoader>();
 		loader.showGUI = showLoadingGUI;
 
-		Loom.RunAsync(delegate {
-			var ld = UnitySerializer.Deserialize<LevelSerializer.LevelData> (levelData);
-			loader.Data = ld;
-			loader.DontDelete = dontDeleteExistingItems;
-			//Get the loader to do its job
-			Loom.QueueOnMainThread(delegate {
-				loader.StartCoroutine(PerformLoad(loader, complete));
-
-			});
-		});
-
+		var ld = UnitySerializer.Deserialize<LevelSerializer.LevelData> (levelData);
+		loader.Data = ld;
+		loader.DontDelete = dontDeleteExistingItems;
+		//Get the loader to do its job
+		loader.StartCoroutine(PerformLoad(loader, complete));
 	}
 	
 	static IEnumerator PerformLoad(LevelLoader loader, Action<LevelLoader> complete)

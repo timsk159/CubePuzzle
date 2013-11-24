@@ -82,6 +82,11 @@ public class LevelCreatorController : MonoBehaviour
 		Messenger<DraggableMapObject>.RemoveListener(DragAndDropNotification.MapObjectRemoved.ToString(), MapObjectRemoved);
 	}
 
+	void OnDestroy()
+	{
+		DeRegisterStateListeners();
+	}
+
 	void ObjectPlaced(GameObject objectThatWasPlaced)
 	{
 		var mapObj = objectThatWasPlaced.GetComponent<DraggableMapObject>();
@@ -135,10 +140,6 @@ public class LevelCreatorController : MonoBehaviour
 	void TestingMapExit(StateM.StateChangeData changeData)
 	{
 		var saves = LevelSerializer.SavedGames[LevelSerializer.PlayerName];
-		foreach(var save in saves)
-		{
-			print(save.Name);
-		}
 		var restoreData = saves.Where(e => e.Name == "BeforePreviewSave").FirstOrDefault().Data;
 		LevelSerializer.LoadSavedLevel(restoreData);
 		Time.timeScale = 1;
