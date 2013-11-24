@@ -51,28 +51,22 @@ public class FloorPiece : ColorCollisionObject
 
 	protected override void LevelInitialized(StateM.StateChangeData changeData)
 	{
-		if(sharedMeshForThisPiece == null)
-		{
-			sharedMeshForThisPiece = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));
-		}
+		FindSharedMesh();
+
 		base.LevelInitialized(changeData);
 	}
 
 	protected override void LevelStarted(StateM.StateChangeData changeData)
 	{
-		if(sharedMeshForThisPiece == null)
-		{
-			sharedMeshForThisPiece = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));
-		}
+		FindSharedMesh();
+
 		base.LevelStarted(changeData);
 	}
 
 	void MakePassable()
 	{
-		if(sharedMeshForThisPiece == null)
-		{
-			sharedMeshForThisPiece = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));
-		}
+		FindSharedMesh();
+
 		if(collider != null)
 		{
 			var thisCollider = collider as BoxCollider;
@@ -81,23 +75,17 @@ public class FloorPiece : ColorCollisionObject
 			thisCollider.size = newColliderSize;
 		}
 
-		if(sharedMeshForThisPiece != null)
+		if(sharedMeshForThisPiece != null && iTween.Count(sharedMeshForThisPiece) < 1)
 		{
 			//iTween.ScaleTo(sharedMeshForThisPiece, Vector3.one, 0.5f);
 			iTween.MoveTo(sharedMeshForThisPiece, Vector3.zero, 0.5f);
-		}
-		else
-		{
-		//	iTween.ScaleTo(gameObject, Vector3.one, 0.5f);
 		}
 	}
 
 	void MakeImpassable()
 	{
-		if(sharedMeshForThisPiece == null)
-		{
-			sharedMeshForThisPiece = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));
-		}
+		FindSharedMesh();
+
 		if(collider != null)
 		{
 			var thisCollider = collider as BoxCollider;
@@ -105,20 +93,21 @@ public class FloorPiece : ColorCollisionObject
 
 			thisCollider.size = newColliderSize;
 		}
-		if(sharedMeshForThisPiece != null)
+		if (sharedMeshForThisPiece != null && iTween.Count(sharedMeshForThisPiece) < 1)
 		{
 			//iTween.ScaleTo(sharedMeshForThisPiece, newSize, 0.5f);
 			iTween.MoveTo(sharedMeshForThisPiece, new Vector3(0, 0.3f, 0), 0.5f);
-		}
-		else
-		{
-		//	iTween.ScaleTo(gameObject, newSize, 0.5f);
 		}
 	}
 
 	protected override void OnDeserialized()
 	{
-		if(sharedMeshForThisPiece == null)
+		FindSharedMesh();
+	}
+
+	void FindSharedMesh()
+	{
+		if (sharedMeshForThisPiece == null)
 		{
 			sharedMeshForThisPiece = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));
 		}
