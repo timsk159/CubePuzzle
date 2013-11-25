@@ -34,14 +34,14 @@ public class PlayerCharacter : MonoBehaviour
 
 		playerMovement = GetComponent<PlayerMovement>();
 
-		StateMachineMessenger.AddListener(LevelStateNotification.LevelStarted.ToString(), LevelStarted);
+		Messenger.AddListener(LevelIntroNotification.IntroFinished.ToString(), IntroFinished);
 		StateMachineMessenger.AddListener(LevelStateNotification.InGameExit.ToString(), InGameExit);
 		StateMachineMessenger.AddListener(LevelStateNotification.InGameEnter.ToString(), InGameEnter);
 	}
 
 	void OnDestroy()
 	{
-		StateMachineMessenger.RemoveListener(LevelStateNotification.LevelStarted.ToString(), LevelStarted);
+		Messenger.RemoveListener(LevelIntroNotification.IntroFinished.ToString(), IntroFinished);
 		StateMachineMessenger.RemoveListener(LevelStateNotification.InGameExit.ToString(), InGameExit);
 		StateMachineMessenger.RemoveListener(LevelStateNotification.InGameEnter.ToString(), InGameEnter);
 	}
@@ -102,7 +102,7 @@ public class PlayerCharacter : MonoBehaviour
 		}
 	}
 
-	void LevelStarted(StateMachine<LevelState, LevelStateNotification>.StateChangeData changeData)
+	void IntroFinished()
 	{
 		canReset = true;
 	}
