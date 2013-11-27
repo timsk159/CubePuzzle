@@ -8,11 +8,12 @@ public class CutsceneCreator : EditorWindow
 	CutSceneObj cutsceneObj;
 	TextAsset tempDialogueAsset;
 	AudioClip tempAudioClip;
+	AnimationClip tempAnimClip;
 
 	[MenuItem("Window/Cutscene Creator")]
 	static void CreateWindow()
 	{
-		var window = GetWindow<CutsceneCreator>("Cutscene Creator");
+		var window = GetWindowWithRect<CutsceneCreator>(new Rect(150,150,250,300), true, "Cutscene Creator");
 		window.Init();
 	}
 
@@ -30,12 +31,19 @@ public class CutsceneCreator : EditorWindow
 		EditorGUILayout.PrefixLabel("Audio file");
 		tempAudioClip = (AudioClip)EditorGUILayout.ObjectField(tempAudioClip, typeof(AudioClip), false);
 
+		EditorGUILayout.PrefixLabel("Camera animation clip");
+		tempAnimClip = (AnimationClip)EditorGUILayout.ObjectField(tempAnimClip, typeof(AnimationClip), false);
+
+		EditorGUILayout.PrefixLabel("Length in Seconds");
+		cutsceneObj.lengthInSeconds = EditorGUILayout.FloatField(cutsceneObj.lengthInSeconds);
+
 		if(GUILayout.Button("Create"))
 		{
-			if(tempDialogueAsset != null && tempAudioClip != null)
+			if(tempDialogueAsset != null && tempAudioClip != null && tempAnimClip != null)
 			{
 				cutsceneObj.dialogue.dialogueAssetPath = GetResourcesPathForAsset(AssetDatabase.GetAssetPath(tempDialogueAsset));
 				cutsceneObj.audioClipFilePath = GetResourcesPathForAsset(AssetDatabase.GetAssetPath(tempAudioClip));
+				cutsceneObj.cameraAnimFilepath = GetResourcesPathForAsset(AssetDatabase.GetAssetPath(tempAnimClip));
 
 				var filePath = EditorUtility.SaveFilePanelInProject("Save Location", "", "asset", "");
 				var inAssetsFolder = filePath.Contains("Assets");
@@ -54,6 +62,10 @@ public class CutsceneCreator : EditorWindow
 					else if(cutsceneObj.dialogue.dialogueAssetPath == "NOT IN RESOURCES!")
 					{
 						EditorUtility.DisplayDialog("Error", "Dialogue text file must be placed inside the Assets/Resources/ folder. Please move the file and try again", "Ok");
+					}
+					else if(cutsceneObj.cameraAnimFilepath == "NOT IN RESOURCES!")
+					{
+						EditorUtility.DisplayDialog("Error", "Camera animation text file must be placed inside the Assets/Resources folder. Please move the file and try again", "Ok");
 					}
 					else
 					{

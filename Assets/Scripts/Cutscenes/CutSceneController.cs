@@ -9,14 +9,21 @@ public enum CutSceneNotification
 public class CutSceneController : MonoBehaviour 
 {
 	DialogueDisplayer dialogueDisplayer;
+	CutsceneCamera cutsceneCamera;
 
 	void Awake()
 	{
+	}
+
+	void Start()
+	{
 		dialogueDisplayer = (DialogueDisplayer)FindObjectOfType(typeof(DialogueDisplayer));
+		cutsceneCamera = GameObject.Find("CutsceneCamera").GetComponent<CutsceneCamera>();
 	}
 
 	void TriggererEntered(CutSceneObj cutSceneObj)
 	{
+
 		StartCoroutine(CutSceneTimerRoutine(cutSceneObj.lengthInSeconds, cutSceneObj));
 
 		DisplayCutscene(cutSceneObj);
@@ -38,6 +45,10 @@ public class CutSceneController : MonoBehaviour
 			audio.clip = cutSceneObj.audioClip;
 			audio.Play();
 		}
+		if(cutSceneObj.cameraAnimation != null)
+		{
+			cutsceneCamera.PlayAnimation(cutSceneObj.cameraAnimation);
+		}
 	}
 
 	public void StopCutScene()
@@ -45,6 +56,7 @@ public class CutSceneController : MonoBehaviour
 		if(dialogueDisplayer != null)
 			dialogueDisplayer.StopDisplayingText();
 		audio.Stop();
+		cutsceneCamera.FinishAnimation();
 
 		Messenger.Invoke(CutSceneNotification.CutSceneStarted.ToString());
 	}
@@ -55,5 +67,6 @@ public class CutSceneController : MonoBehaviour
 		StopCutScene();
 		cutsceneObj.UnloadAudio();
 		cutsceneObj.dialogue.UnloadDialogue();
+		cutsceneObj.UnloadCameraAnim();
 	}
 }
