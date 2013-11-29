@@ -16,6 +16,7 @@ public class CameraControls : MonoBehaviour
 		var xInput = Input.GetAxis("Horizontal");
 		var yInput = Input.GetAxis("Vertical");
 		var scrollInput = Input.GetAxis("Mouse ScrollWheel");
+		var boost = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 		
 		
 		if(Input.GetMouseButtonDown(2))
@@ -34,6 +35,11 @@ public class CameraControls : MonoBehaviour
 		//WASD movement
 		if(yInput != 0 || xInput != 0)
 		{
+			if(boost)
+			{
+				yInput *= 2.0f;
+				xInput *= 2.0f;
+			}
 			Vector3 move = new Vector3((xInput * movementSensitivity) * Time.deltaTime, (yInput * movementSensitivity) * Time.deltaTime, 0);
 			transform.Translate(move, Space.Self);
 		}
