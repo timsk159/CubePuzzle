@@ -289,12 +289,14 @@ public class DragAndDropController : MonoBehaviour
 
 	void SetupDoorPiece(GameObject doorGo)
 	{
-		var doorMenuPiece = GameObject.Find("DoorCube");
+		var doorMenuPieceGo = GameObject.Find("DoorCube");
 
-		var doorPiece = doorMenuPiece.GetComponent<DoorPiece>();
+		var doorMenuPiece = doorMenuPieceGo.GetComponent<DoorPiece>();
+		var doorPiece = doorGo.GetComponent<DoorPiece>();
 
-		doorGo.GetComponent<DoorPiece>().SetDoorColour(doorPiece.theDoor.objColour);
-		doorGo.GetComponent<DoorPiece>().ChangeColour(doorPiece.objColour);
+		doorPiece.SetDoorColour(doorMenuPiece.theDoor.objColour);
+		doorPiece.theDoor.initialColour = doorMenuPiece.theDoor.objColour;
+		doorPiece.ChangeColour(doorMenuPiece.objColour);
 		doorGo.AddComponent<DraggableRotatableMapObject>();
 	}
 

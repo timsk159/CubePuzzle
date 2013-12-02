@@ -126,8 +126,8 @@ public class StoreMaterials : MonoBehaviour
 	Color transparent = new Color(0,0,0,0);
 	public List<MaterialProperty> GetShaderProperties(Material material)
 	{
-		if(cache.ContainsKey(material.shader.name))
-			return cache[material.shader.name];
+	//	if(cache.ContainsKey(material.shader.name))
+		//	return cache[material.shader.name];
 		
 		var list = new List<MaterialProperty>();
 		foreach(var m in MaterialProperties)

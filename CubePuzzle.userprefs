@@ -1,8 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\LevelObjects\FloorPiece.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Packages\CharacterFX\Shaders\disintegrate_nmp.shader">
     <Files>
-      <File FileName="Assets\Scripts\LevelObjects\FloorPiece.cs" Line="78" Column="112" />
+      <File FileName="Assets\Scripts\LevelObjects\FloorPiece.cs" Line="78" Column="81" />
+      <File FileName="Assets\Packages\CharacterFX\Shaders\disintegrate.shader" Line="18" Column="29" />
+      <File FileName="Assets\Packages\CharacterFX\Shaders\StatueBmp.shader" Line="35" Column="4" />
+      <File FileName="Assets\Packages\CharacterFX\Shaders\disintegrate_nmp.shader" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
