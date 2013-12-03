@@ -131,6 +131,11 @@ public class DragAndDropController : MonoBehaviour
 	{
 		if(draggingObj != null)
 		{
+			if(Input.GetMouseButtonUp(0))
+			{
+				FinishDragging();
+				return;
+			}
 			if(Input.GetMouseButton(0))
 			{
 				if(lastMousePos != Vector3.zero)
@@ -138,13 +143,8 @@ public class DragAndDropController : MonoBehaviour
 					var delta = Input.mousePosition - lastMousePos;
 					DoDragging(delta);
 				}
-				
-				lastMousePos = Input.mousePosition;
 			}
-			if(Input.GetMouseButtonUp(0))
-			{
-				FinishDragging();
-			}
+			lastMousePos = Input.mousePosition;
 		}
 		if(selectedMenuItemPrefab != null)
 		{
@@ -196,8 +196,8 @@ public class DragAndDropController : MonoBehaviour
 	void FinishDragging()
 	{
 		RaycastHit hit;
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		
+		Ray ray = Camera.main.ScreenPointToRay(lastMousePos);
+
 		int layerMask = 1 << 10;
 		
 		if(Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
