@@ -54,7 +54,9 @@ public static class StateMachine<State,Noty>
 		{
 			Debug.LogError ("-+ Told to change to a state without a SetInitialState being called at some point, this is likely to be wrong!");
 		}
-		
+
+		Debug.Log("Changing from state: " + currentState + " To state: " + stateToChangeTo);
+
 		SendExitStateNotification(stateToChangeTo);
 		
 		var previousState = currentState;

@@ -253,12 +253,12 @@ public class LevelCreator : MonoBehaviour
 		return true;
 	}
 	
-	public void LoadMap(string filePath)
+	public void LoadMapInCreator(string filePath)
 	{
-		StartCoroutine (LoadMapFrameWait (filePath));
+		StartCoroutine (LoadMapInCreatorAfterFrameWait (filePath));
 	}
 
-	IEnumerator LoadMapFrameWait(string filePath)
+	IEnumerator LoadMapInCreatorAfterFrameWait(string filePath)
 	{
 		LevelSerializer.Progress -= LevelSerializeProgress;
 		LevelSerializer.Progress += LevelSerializeProgress;
@@ -282,7 +282,7 @@ public class LevelCreator : MonoBehaviour
 				playerCube.transform.parent = startObj.transform;
 				playerCube.transform.localPosition = new Vector3(0, 1.01f, 0);
 
-				playerCube.GetComponent<PlayerCharacter>().ChangeColour(startObj.GetComponent<ColorCollisionObject>().objColour);
+				playerCube.GetComponent<PlayerCharacter>().SilentlyChangeColour(startObj.GetComponent<ColorCollisionObject>().objColour);
 				playerCube.layer = 10;
 				playerCube.GetComponent<PlayerCharacter>().playerMovement.canMove = false;
 				playerCube.rigidbody.useGravity = false;

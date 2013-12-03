@@ -35,10 +35,13 @@ public class LevelCreatorController : MonoBehaviour
 
 	void Start()
 	{
-		if (!LevelCreatorUIController.cameFromPreview)
+		if(!LevelCreatorUIController.cameFromPreview)
 			StateM.SetInitialState(LevelCreatorStates.FrontMenu);
 		else
+		{
 			StateM.SetInitialState(LevelCreatorStates.LevelCreation);
+			LevelCreatorUIController.cameFromPreview = false;
+		}
 	}
 
 	void EnsureMapDirectoryExists()

@@ -56,6 +56,7 @@ public class LevelCreatorUIController : MonoBehaviour
 		TurnOffLoadingBar();
 		NGUITools.SetActive(frontMenuPanel, false);
 		NGUITools.SetActive(levelAssetMenuPanel, true);
+		print("ON DESERIALIZED!");
 	}
 	
 	#region State Changes
@@ -102,6 +103,8 @@ public class LevelCreatorUIController : MonoBehaviour
 		{
 			NGUITools.SetActive(frontMenuPanel, true);
 		}
+		NGUITools.SetActive(levelAssetMenuPanel, false);
+
 		if(fileMenu.items.Contains("Save"))
 			fileMenu.items.Remove("Save");
 		if(fileMenu.items.Contains("TestMap"))
@@ -330,7 +333,7 @@ public class LevelCreatorUIController : MonoBehaviour
 	{
 		if(!string.IsNullOrEmpty(selectedFileName))
 		{
-			levelCreator.LoadMap(selectedFileName);
+			levelCreator.LoadMapInCreator(selectedFileName);
 			selectedFileName = "";
 		}
 	}

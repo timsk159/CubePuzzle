@@ -1,11 +1,14 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Packages\CharacterFX\Shaders\disintegrate_nmp.shader">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Packages\CharacterFX\Shaders\disintegrate.shader">
     <Files>
       <File FileName="Assets\Scripts\LevelObjects\FloorPiece.cs" Line="78" Column="81" />
-      <File FileName="Assets\Packages\CharacterFX\Shaders\disintegrate.shader" Line="18" Column="29" />
-      <File FileName="Assets\Packages\CharacterFX\Shaders\StatueBmp.shader" Line="35" Column="4" />
-      <File FileName="Assets\Packages\CharacterFX\Shaders\disintegrate_nmp.shader" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\LevelObjects\Door.cs" Line="5" Column="2" />
+      <File FileName="Assets\Scripts\LevelObjects\DoorPiece.cs" Line="37" Column="3" />
+      <File FileName="Assets\Scripts\LevelCreation\MapPieces\DragAndDropDoorMenuItem.cs" Line="39" Column="3" />
+      <File FileName="Assets\Scripts\LevelObjects\ColorCollisionObject.cs" Line="16" Column="1" />
+      <File FileName="Assets\Scripts\LevelCreation\DragAndDropController.cs" Line="271" Column="7" />
+      <File FileName="Assets\Packages\CharacterFX\Shaders\disintegrate.shader" Line="10" Column="18" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
