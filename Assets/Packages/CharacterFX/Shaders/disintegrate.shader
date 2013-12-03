@@ -13,7 +13,7 @@
       Tags { "RenderType" = "Opaque" }
       CGPROGRAM
       
-      #pragma surface surf Lambert addshadow nolightmap
+      #pragma surface surf BlinnPhong addshadow nolightmap
       struct Input {
           float2 uv_MainTex;
       };

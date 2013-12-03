@@ -56,7 +56,6 @@ public class LevelCreatorUIController : MonoBehaviour
 		TurnOffLoadingBar();
 		NGUITools.SetActive(frontMenuPanel, false);
 		NGUITools.SetActive(levelAssetMenuPanel, true);
-		print("ON DESERIALIZED!");
 	}
 	
 	#region State Changes

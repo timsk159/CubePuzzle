@@ -28,9 +28,6 @@ public class StoreMesh : MonoBehaviour {
 	void Awake()
 	{
 		filter = GetComponent<MeshFilter>();
-		Debug.Log("Got filter on object: " + name);
-		if(filter != null)
-			Debug.Log("Filter was not null!");
 		skinnedMeshRenderer = GetComponent<SkinnedMeshRenderer>();
 		if(filter==null && skinnedMeshRenderer == null)
 			Destroy(this);
@@ -38,7 +35,6 @@ public class StoreMesh : MonoBehaviour {
 	
 	void OnSerializing()
 	{
-		Debug.Log("Serializing: " + name);
 		Mesh mesh;
 
 		if(filter != null)

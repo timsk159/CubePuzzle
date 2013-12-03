@@ -1,5 +1,6 @@
   Shader "Character/Disintegrate Bumped Diffuse" {
     Properties {
+      _Color ("Main Color", Color) = (1,1,1,1)
       _MainTex ("Texture (RGB)", 2D) = "white" {}
       _BumpMap ("Texture (RGB)", 2D) = "bump" {}
       _NoiseTex ("Effect Map (RGB)", 2D) = "white" {}
@@ -13,11 +14,12 @@
       Tags { "RenderType" = "Opaque" }
       CGPROGRAM
       #pragma target 3.0
-      #pragma surface surf Lambert addshadow nolightmap
+      #pragma surface surf BlinnPhong addshadow nolightmap
       struct Input {
           float2 uv_MainTex;
           float2 uv_BumpMap;
       };
+      fixed4 _Color;
       sampler2D _MainTex;
       sampler2D _BumpMap;
       sampler2D _NoiseTex;
@@ -41,7 +43,8 @@
           }
           else
           {
-              o.Albedo = tex2D (_MainTex, IN.uv_MainTex).rgb;
+          	  float texCol = tex2D(_MainTex, IN.uv_MainTex).rgb;
+              o.Albedo = texCol * _Color.rgb;
           }     
           float4 nrm =  tex2D (_BumpMap,IN.uv_BumpMap);    
           o.Normal = UnpackNormal(nrm);       
