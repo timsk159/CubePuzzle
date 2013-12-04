@@ -17,7 +17,7 @@ public class DragAndDropDoorMenuItem : DragAndDropMenuItem
 		cycleDoorColourButton = transform.Find("CycleDoorColourButton").gameObject;
 		UIEventListener.Get(cycleDoorColourButton).onClick = HandleDoorColourCycleButtonClick;
 		
-		doorPiece = transform.Find("DoorCube").GetComponent<DoorPiece>();
+		doorPiece = transform.Find("DoorCubeMenuObj").GetComponent<DoorPiece>();
 	}
 
 	void HandleDoorColourCycleButtonClick (GameObject go)

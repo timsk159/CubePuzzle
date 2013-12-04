@@ -289,7 +289,7 @@ public class DragAndDropController : MonoBehaviour
 
 	void SetupDoorPiece(GameObject doorGo)
 	{
-		var doorMenuPieceGo = GameObject.Find("DoorCube");
+		var doorMenuPieceGo = GameObject.Find("DoorCubeMenuObj");
 
 		var doorMenuPiece = doorMenuPieceGo.GetComponent<DoorPiece>();
 		var doorPiece = doorGo.GetComponent<DoorPiece>();

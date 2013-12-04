@@ -20,6 +20,32 @@ public class CameraFollow : MonoBehaviour
 
 	}
 
+	public void PutCameraBehindPlayer()
+	{
+		if(dotCamToPlayer == 0)
+		{
+			var forward = transform.TransformDirection(Vector3.forward);
+			var toOther = target.position - transform.position;
+			dotCamToPlayer = Vector3.Dot(forward, toOther);
+		}
+		var newPos = Vector3.zero;
+		newPos.x = target.position.x;
+		newPos.y = target.position.y + height;
+		if(dotCamToPlayer > 0)
+		{
+			newPos.z = target.position.z - distance;
+		}
+		else
+		{
+			newPos.z = target.position.z + distance;
+		}
+		newPos += offset;
+
+		transform.position = Vector3.Lerp(transform.position, newPos, 1.0f);
+
+		transform.LookAt(target, Vector3.up);
+	}
+
 	void FixedUpdate () 
 	{
 		if(target != null)

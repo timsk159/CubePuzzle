@@ -168,7 +168,7 @@ public class LevelController : MonoSingleton<LevelController>
 	{
 		Messenger.AddListener(LevelIntroNotification.IntroFinished.ToString(), IntroFinished);
 		Messenger.AddListener(LevelIntroNotification.IntroInterrupted.ToString(), IntroInterrupted);
-
+		Camera.main.GetComponent<CameraFollow>().PutCameraBehindPlayer();
 		playerChar.playerMovement.canMove = false;
 		playerChar.rigidbody.useGravity = false;
 		Camera.main.GetComponent<CameraFollow>().enabled = false;
