@@ -17,6 +17,11 @@ public class ColorCollisionObject : MonoBehaviour
 {
 	public Colour initialColour;
 	public Colour objColour;
+
+	Color red = new Color(1, 0, 0);
+	Color green = new Color(0, 1, 0);
+	Color blue = new Color(0, 0, 1);
+
 	[DoNotSerialize()]
 	public Vector3 initialColliderSize;
 	[DoNotSerialize()]
@@ -54,7 +59,7 @@ public class ColorCollisionObject : MonoBehaviour
 			//Start cube uses neutral cube mat. buttons are yellow.
 			if(!gameObject.name.Contains("StartCube"))
 			{
-				this.renderer.sharedMaterial.color = ColorCollisionObject.GetObjectRealColor(initialColour);
+				this.renderer.sharedMaterial.color = ColorManager.GetObjectRealColor(initialColour);
 			}
 		}
 	}
@@ -106,11 +111,11 @@ public class ColorCollisionObject : MonoBehaviour
 			objColour = colorToChangeTo;
 			if(useSharedMaterial)
 			{
-				gameObject.renderer.sharedMaterial.color = ColorCollisionObject.GetObjectRealColor(objColour);
+				gameObject.renderer.sharedMaterial.color = ColorManager.GetObjectRealColor(objColour);
 			}
 			else
 			{
-				gameObject.renderer.material.color = ColorCollisionObject.GetObjectRealColor(objColour);
+				gameObject.renderer.material.color = ColorManager.GetObjectRealColor(objColour);
 			}
 		}
 		
@@ -130,24 +135,7 @@ public class ColorCollisionObject : MonoBehaviour
 		
 		ChangeColour((Colour)currentColourIndex);
 	}
-	
-	public static Color GetObjectRealColor(Colour objectsColour)
-	{
-		switch(objectsColour)
-		{
-			case Colour.Red:
-				return Color.red;
-			case Colour.Green:
-				return Color.green;
-			case Colour.Blue:
-				return Color.blue;
-			case Colour.None:
-				return Color.white;
-			default:
-				return Color.white;
-		}
-	}
-	
+
 	public void ButtonPressed()
 	{
 		RotateColour();

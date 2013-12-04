@@ -120,7 +120,7 @@ public class PlayerCharacter : MonoBehaviour
 	public void ChangeColour(Colour colourToChangeTo)
 	{
 		currentColor = colourToChangeTo;
-		var realColor = GetRealColor();
+		var realColor = ColorManager.GetObjectRealColor(currentColor);
 		gameObject.renderer.material.color = realColor;
 		childLight.color = realColor;
 		Messenger<Colour>.Invoke(ColourCollisionNotification.PlayerChangedColour.ToString(), currentColor);
@@ -129,7 +129,7 @@ public class PlayerCharacter : MonoBehaviour
 	public void SilentlyChangeColour(Colour colourToChangeTo)
 	{
 		currentColor = colourToChangeTo;
-		var realColor = GetRealColor();
+		var realColor = ColorManager.GetObjectRealColor(currentColor);
 		gameObject.renderer.material.color = realColor;
 		childLight.color = realColor;
 	}
@@ -148,20 +148,4 @@ public class PlayerCharacter : MonoBehaviour
 		
 		ChangeColour((Colour)currentColourIndex);
 	}
-	
-	public Color GetRealColor()
-	{
-		switch(currentColor)
-		{
-			case Colour.Red:
-				return Color.red;
-			case Colour.Green:
-				return Color.green;
-			case Colour.Blue:
-				return Color.blue;
-			default:
-				return Color.white;
-		}
-	}
-
 }

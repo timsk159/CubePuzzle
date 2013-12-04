@@ -23,7 +23,7 @@ public class CopyPlayerColour : MonoBehaviour
 
 	void PlayerChangedColour(Colour playersNewColour)
 	{
-		var targetColour = ColorCollisionObject.GetObjectRealColor(playersNewColour);
+		var targetColour = ColorManager.GetObjectRealColor(playersNewColour);
 
 		if(includeAlpha)
 		{
