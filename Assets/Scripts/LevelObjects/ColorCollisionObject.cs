@@ -9,7 +9,7 @@ using StateM = StateMachine<LevelState, LevelStateNotification>;
 public enum ColourCollisionNotification
 {
 	ObjectEnteredColour, ObjectExitedColour,
-	LeverPulled, ButtonPressed, InteractionTriggerEnter, InteractionTriggerExit,
+	LeverPulled, ButtonPressed, TriggerEntered, TriggerExited,
 	PlayerChangedColour, FloorPiecesChangedColour, PlayerKilled
 };
 
@@ -18,10 +18,6 @@ public class ColorCollisionObject : MonoBehaviour
 	public Colour initialColour;
 	public Colour objColour;
 
-	Color red = new Color(1, 0, 0);
-	Color green = new Color(0, 1, 0);
-	Color blue = new Color(0, 0, 1);
-
 	[DoNotSerialize()]
 	public Vector3 initialColliderSize;
 	[DoNotSerialize()]
@@ -29,9 +25,12 @@ public class ColorCollisionObject : MonoBehaviour
 	public bool meshCanBeOptimized; 
 
 	protected bool useSharedMaterial = true;
-	
+	protected Array cachedEnumValues;
+
 	void Awake()
 	{
+		cachedEnumValues = Enum.GetValues(typeof(Colour));
+
 		Messenger.AddListener(ColourCollisionNotification.ButtonPressed.ToString(), ButtonPressed);
 		cubeNeighbours = new CubeNeighbours(gameObject);
 		initialColour = objColour;
@@ -56,11 +55,7 @@ public class ColorCollisionObject : MonoBehaviour
 	{
 		if(useSharedMaterial && renderer != null)
 		{
-			//Start cube uses neutral cube mat. buttons are yellow.
-			if(!gameObject.name.Contains("StartCube"))
-			{
-				this.renderer.sharedMaterial.color = ColorManager.GetObjectRealColor(initialColour);
-			}
+			this.renderer.sharedMaterial.color = ColorManager.GetObjectRealColor(initialColour);
 		}
 	}
 
@@ -124,11 +119,11 @@ public class ColorCollisionObject : MonoBehaviour
 	public virtual void RotateColour()
 	{
 		int currentColourIndex = (int)objColour;
-		var values = Enum.GetValues(typeof(Colour));
+		//var values = Enum.GetValues(typeof(Colour));
 
 		currentColourIndex++;
 		
-		if(currentColourIndex == values.Length)
+		if(currentColourIndex == cachedEnumValues.Length)
 		{
 			currentColourIndex = 1;
 		}
@@ -208,20 +203,6 @@ public class CubeNeighbours
 		}
 
 		return neighbourList.ToArray();
-	}
-}
-
-
-
-public struct ColourCollisionData
-{
-	public GameObject go;
-	public Colour objColour;
-	
-	public ColourCollisionData(GameObject go, Colour objColour)
-	{
-		this.go = go;
-		this.objColour = objColour;
 	}
 }
 

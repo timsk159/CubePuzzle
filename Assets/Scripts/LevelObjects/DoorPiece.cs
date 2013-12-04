@@ -39,11 +39,11 @@ public class DoorPiece : FloorPiece
 	public void RotateDoorColour()
 	{
 		int currentColourIndex = (int)theDoor.objColour;
-		var values = Enum.GetValues(typeof(Colour));
+		//var values = Enum.GetValues(typeof(Colour));
 
 		currentColourIndex++;
 			
-		if(currentColourIndex == values.Length)
+		if(currentColourIndex == cachedEnumValues.Length)
 		{
 			currentColourIndex = 1;
 		}

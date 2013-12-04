@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 
-public class ButtonPiece : InteractiveObject
+public class ButtonPiece : TriggerObject
 {
 	public bool rotateForward = true;
 	public bool shouldChangePlayer;
@@ -34,11 +34,11 @@ public class ButtonPiece : InteractiveObject
 	public override void RotateColour ()
 	{
 		int currentColourIndex = (int)buttonSphereColour;
-		var values = Enum.GetValues(typeof(Colour));
+		//var values = Enum.GetValues(typeof(Colour));
+
 		currentColourIndex++;
 
-
-		if(currentColourIndex == values.Length)
+		if(currentColourIndex == cachedEnumValues.Length)
 		{
 			currentColourIndex = 1;
 		}

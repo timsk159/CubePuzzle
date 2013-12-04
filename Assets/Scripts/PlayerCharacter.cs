@@ -17,8 +17,6 @@ public class PlayerCharacter : MonoBehaviour
 	ParticleSystem smokeParticles;
 	Light childLight;
 
-	//The current interaction object that the player is stood in
-	InteractiveObject currentInteractionObject;
 	[SerializeThis()][SerializeField()]
 	bool canReset;
 	
@@ -82,6 +80,7 @@ public class PlayerCharacter : MonoBehaviour
 			{
 				smokeParticles.Stop();
 			}
+			/*
 			if(Input.GetKeyDown(KeyCode.E))
 			{
 				if(currentInteractionObject != null)
@@ -89,6 +88,7 @@ public class PlayerCharacter : MonoBehaviour
 					currentInteractionObject.PlayerInteracted();
 				}
 			}
+			*/
 			if(canReset && !LevelSerializer.IsDeserializing)
 			{
 				if(Input.GetKeyDown(KeyCode.Space))

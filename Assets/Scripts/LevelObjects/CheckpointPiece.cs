@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class CheckpointPiece : InteractiveObject
+public class CheckpointPiece : TriggerObject
 {
 	public override void RotateColour ()
 	{

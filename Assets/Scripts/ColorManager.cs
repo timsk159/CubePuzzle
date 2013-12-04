@@ -6,10 +6,13 @@ public enum ColorBlindMode
 	None
 };
 
+//Created as a central place for converting the Colour enum into a Colour object
+//Also handy for colour blind corrections
 public class ColorManager
 {
 	public static ColorBlindMode currentColorBlindMode;
 
+	//Return a bright pink if something went wrong.
 	public static Color errorColor = new Color(1, 0.24f, 0.83f);
 
 	public static Color GetObjectRealColor(Colour objColour)
