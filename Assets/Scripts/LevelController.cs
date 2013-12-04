@@ -155,6 +155,7 @@ public class LevelController : MonoSingleton<LevelController>
 
 		if(playIntro)
 		{
+			levelIntro.InitIntro();
 			StartGameAfterIntro(introCutsceneObj);
 		}
 		else

@@ -22,6 +22,8 @@ public class CameraFollow : MonoBehaviour
 
 	public void PutCameraBehindPlayer()
 	{
+		//Double distance as this is used to setup the camera for intros and cutscenes
+		var doubleDistance = distance * 2.0f;
 		if(dotCamToPlayer == 0)
 		{
 			var forward = transform.TransformDirection(Vector3.forward);
@@ -33,13 +35,14 @@ public class CameraFollow : MonoBehaviour
 		newPos.y = target.position.y + height;
 		if(dotCamToPlayer > 0)
 		{
-			newPos.z = target.position.z - distance;
+			newPos.z = target.position.z - doubleDistance;
 		}
 		else
 		{
-			newPos.z = target.position.z + distance;
+			newPos.z = target.position.z + doubleDistance;
 		}
 		newPos += offset;
+
 
 		transform.position = Vector3.Lerp(transform.position, newPos, 1.0f);
 

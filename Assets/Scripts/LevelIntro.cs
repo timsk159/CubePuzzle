@@ -20,13 +20,27 @@ public class LevelIntro : MonoBehaviour
 
 	void Awake()
 	{
-		mapRoot = GameObject.Find("MapRoot");
 		cutSceneController = (CutSceneController)FindObjectOfType(typeof(CutSceneController));
 	}
 
-	void OnLevelWasLoaded(int levelId)
+	public void InitIntro()
 	{
-		Awake();
+		mapRoot = GameObject.Find("MapRoot");
+		animatingCubes = new List<AnimatingCube>(mapRoot.transform.childCount);
+		InitTweens();
+	}
+
+	void InitTweens()
+	{
+		foreach(Transform child in mapRoot.transform)
+		{
+			if(!child.name.Contains("Start") && !child.name.Contains("End") && child.tag != "NullCube")
+			{
+				var animCube = new AnimatingCube(child.gameObject, child.position);
+				animatingCubes.Add(animCube);
+				iTween.Init(child.gameObject);
+			}
+		}
 	}
 
 	//T = 0.0 - 1.0 defines progress of animation.
@@ -51,17 +65,10 @@ public class LevelIntro : MonoBehaviour
 		mapRoot = GameObject.Find("MapRoot"); 
 		playingIntro = true;
 		var movePos = mapRoot.transform.up * 20;
-
-		animatingCubes = new List<AnimatingCube>(mapRoot.transform.childCount);
-
-		foreach(Transform child in mapRoot.transform)
+	
+		foreach(var cube in animatingCubes)
 		{
-			if(!child.name.Contains("Start") && !child.name.Contains("End") && child.tag != "NullCube")
-			{
-				var animCube = new AnimatingCube(child.gameObject, child.position);
-				animatingCubes.Add(animCube);
-				animCube.MoveFromSkyToEndPos(movePos);
-			}
+			cube.MoveFromSkyToEndPos(movePos);
 		}
 
 		//Calculate the angle we need to get the camera behind the player, then animate so that we end up at that pos after animTime seconds.
@@ -72,6 +79,7 @@ public class LevelIntro : MonoBehaviour
 		camForward.y = 0;
 		playerForward.y = 0;
 		var angle = Vector3.Angle(camForward, playerForward);
+		//Stop just before we get behind to smooth the transition when CameraFollow gets turned on.
 		angle += 350f;
 		var rotAmount = angle / introAnimTime;
 
@@ -84,7 +92,6 @@ public class LevelIntro : MonoBehaviour
 			yield return new WaitForEndOfFrame();
 		}
 
-	//	yield return new WaitForSeconds(1.0f);
 		Messenger.Invoke(LevelIntroNotification.IntroFinished.ToString());
 	}
 
@@ -108,6 +115,7 @@ public class LevelIntro : MonoBehaviour
 		{
 			cube.InterruptAnimation();
 		}
+		//Have to wait for a frame due to removing components (iTweens)
 		yield return new WaitForEndOfFrame();
 
 		if(playingCutsceneObj)
@@ -134,7 +142,7 @@ public class LevelIntro : MonoBehaviour
 		public void MoveFromSkyToEndPos(Vector3 movePos)
 		{
 			endPos = theCube.transform.position;
-			iTween.MoveFrom(theCube, iTween.Hash("position", movePos, "time", 0.5f, "delay", UnityEngine.Random.Range(0.5f, 4.0f)));
+			iTween.MoveFrom(theCube, iTween.Hash("position", movePos, "time", 0.7f, "delay", UnityEngine.Random.Range(0.5f, 4.0f), "easetype", iTween.EaseType.easeOutExpo));
 		}
 
 		public void InterruptAnimation()
@@ -142,7 +150,7 @@ public class LevelIntro : MonoBehaviour
 			if(theCube.transform.position != endPos)
 			{
 				iTween.Stop(theCube);
-				iTween.MoveTo(theCube, iTween.Hash("position", endPos, "time", 0.5f));
+				iTween.MoveTo(theCube, iTween.Hash("position", endPos, "time", 0.5f, "easetype", iTween.EaseType.easeInOutSine));
 			}
 		}
 	}
