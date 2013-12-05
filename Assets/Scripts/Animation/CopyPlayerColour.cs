@@ -13,12 +13,12 @@ public class CopyPlayerColour : MonoBehaviour
 	{
 		cachedMat = renderer.material;
 
-		Messenger<Colour>.AddListener(ColourCollisionNotification.PlayerChangedColour.ToString(), PlayerChangedColour);
+		Messenger<Colour>.AddListener(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerChangedColour);
 	}
 
 	void OnDestroy()
 	{
-		Messenger<Colour>.RemoveListener(ColourCollisionNotification.PlayerChangedColour.ToString(), PlayerChangedColour);
+		Messenger<Colour>.RemoveListener(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerChangedColour);
 	}
 
 	void PlayerChangedColour(Colour playersNewColour)

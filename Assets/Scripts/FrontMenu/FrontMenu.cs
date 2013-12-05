@@ -4,7 +4,7 @@ using System.IO;
 using System.Collections;
 using System.Linq;
 
-public enum FrontMenuUINotification
+public enum FrontMenuUIMessage
 {
 	StoryModeButtonPressed, UserLevelsButtonPressed, LevelCreatorButtonPressed, QuitButtonPressed,
 	PlayUserLevelButtonPressed, CancelUserLevelMenuPressed,
@@ -28,16 +28,16 @@ public class FrontMenu : MonoBehaviour
 	
 	void Start ()
 	{
-		Messenger.AddListener(FrontMenuUINotification.StoryModeButtonPressed.ToString(), StoryModeButtonPressed);
-		Messenger.AddListener(FrontMenuUINotification.QuitButtonPressed.ToString(), QuitButtonPressed);
-		Messenger.AddListener(FrontMenuUINotification.LevelCreatorButtonPressed.ToString(), LevelCreatorButtonPressed);
-		Messenger.AddListener(FrontMenuUINotification.UserLevelsButtonPressed.ToString(), UserLevelsButtonPressed);
-		Messenger.AddListener(FrontMenuUINotification.PlayUserLevelButtonPressed.ToString(), PlayUserLevelButtonPressed);
-		Messenger.AddListener(FrontMenuUINotification.CancelUserLevelMenuPressed.ToString(), CancelUserLevelMenuPressed);
-		Messenger.AddListener(FrontMenuUINotification.StoryModeContinueButtonPressed.ToString(), StoryModeContinueButtonPressed);
-		Messenger.AddListener(FrontMenuUINotification.StoryModeCancelButtonPressed.ToString(), StoryModeCancelButtonPressed);
+		Messenger.AddListener(FrontMenuUIMessage.StoryModeButtonPressed.ToString(), StoryModeButtonPressed);
+		Messenger.AddListener(FrontMenuUIMessage.QuitButtonPressed.ToString(), QuitButtonPressed);
+		Messenger.AddListener(FrontMenuUIMessage.LevelCreatorButtonPressed.ToString(), LevelCreatorButtonPressed);
+		Messenger.AddListener(FrontMenuUIMessage.UserLevelsButtonPressed.ToString(), UserLevelsButtonPressed);
+		Messenger.AddListener(FrontMenuUIMessage.PlayUserLevelButtonPressed.ToString(), PlayUserLevelButtonPressed);
+		Messenger.AddListener(FrontMenuUIMessage.CancelUserLevelMenuPressed.ToString(), CancelUserLevelMenuPressed);
+		Messenger.AddListener(FrontMenuUIMessage.StoryModeContinueButtonPressed.ToString(), StoryModeContinueButtonPressed);
+		Messenger.AddListener(FrontMenuUIMessage.StoryModeCancelButtonPressed.ToString(), StoryModeCancelButtonPressed);
 
-		Messenger<string>.AddListener(FrontMenuUINotification.StoryModeLevelButtonPressed.ToString(), StoryModeLevelButtonPressed);
+		Messenger<string>.AddListener(FrontMenuUIMessage.StoryModeLevelButtonPressed.ToString(), StoryModeLevelButtonPressed);
 
 		if(firstLoad)
 		{
@@ -49,16 +49,16 @@ public class FrontMenu : MonoBehaviour
 
 	void OnDestroy()
 	{
-		Messenger.RemoveListener(FrontMenuUINotification.StoryModeButtonPressed.ToString(), StoryModeButtonPressed);
-		Messenger.RemoveListener(FrontMenuUINotification.QuitButtonPressed.ToString(), QuitButtonPressed);
-		Messenger.RemoveListener(FrontMenuUINotification.LevelCreatorButtonPressed.ToString(), LevelCreatorButtonPressed);
-		Messenger.RemoveListener(FrontMenuUINotification.UserLevelsButtonPressed.ToString(), UserLevelsButtonPressed);
-		Messenger.RemoveListener(FrontMenuUINotification.PlayUserLevelButtonPressed.ToString(), PlayUserLevelButtonPressed);
-		Messenger.RemoveListener(FrontMenuUINotification.CancelUserLevelMenuPressed.ToString(), CancelUserLevelMenuPressed);
-		Messenger.RemoveListener(FrontMenuUINotification.StoryModeContinueButtonPressed.ToString(), StoryModeContinueButtonPressed);
-		Messenger.RemoveListener(FrontMenuUINotification.StoryModeCancelButtonPressed.ToString(), StoryModeCancelButtonPressed);
+		Messenger.RemoveListener(FrontMenuUIMessage.StoryModeButtonPressed.ToString(), StoryModeButtonPressed);
+		Messenger.RemoveListener(FrontMenuUIMessage.QuitButtonPressed.ToString(), QuitButtonPressed);
+		Messenger.RemoveListener(FrontMenuUIMessage.LevelCreatorButtonPressed.ToString(), LevelCreatorButtonPressed);
+		Messenger.RemoveListener(FrontMenuUIMessage.UserLevelsButtonPressed.ToString(), UserLevelsButtonPressed);
+		Messenger.RemoveListener(FrontMenuUIMessage.PlayUserLevelButtonPressed.ToString(), PlayUserLevelButtonPressed);
+		Messenger.RemoveListener(FrontMenuUIMessage.CancelUserLevelMenuPressed.ToString(), CancelUserLevelMenuPressed);
+		Messenger.RemoveListener(FrontMenuUIMessage.StoryModeContinueButtonPressed.ToString(), StoryModeContinueButtonPressed);
+		Messenger.RemoveListener(FrontMenuUIMessage.StoryModeCancelButtonPressed.ToString(), StoryModeCancelButtonPressed);
 
-		Messenger<string>.RemoveListener(FrontMenuUINotification.StoryModeLevelButtonPressed.ToString(), StoryModeLevelButtonPressed);
+		Messenger<string>.RemoveListener(FrontMenuUIMessage.StoryModeLevelButtonPressed.ToString(), StoryModeLevelButtonPressed);
 	}
 	
 	void StoryModeButtonPressed()

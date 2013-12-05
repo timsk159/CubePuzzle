@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-using StateM = StateMachine<LevelCreatorStates, LevelCreatorStateNotification>;
+using StateM = StateMachine<LevelCreatorStates, LevelCreatorStateMessage>;
 
 public class LevelCreator : MonoBehaviour
 {
@@ -21,8 +21,8 @@ public class LevelCreator : MonoBehaviour
 	
 	void Start ()
 	{
-		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateNotification.LevelCreationEnter.ToString(), LevelCreationEnter);
-		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateNotification.FrontMenuEnter.ToString(), FrontMenuEnter);
+		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateMessage.LevelCreationEnter.ToString(), LevelCreationEnter);
+		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateMessage.FrontMenuEnter.ToString(), FrontMenuEnter);
 
 		assetManager = GetComponent<LevelAssetManager>();
 		mapRoot = GameObject.Find("MapRoot");
@@ -49,8 +49,8 @@ public class LevelCreator : MonoBehaviour
 	void OnDestroy()
 	{
 		LevelSerializer.Progress -= LevelSerializeProgress;
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateNotification.LevelCreationEnter.ToString(), LevelCreationEnter);
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateNotification.FrontMenuEnter.ToString(), FrontMenuEnter);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateMessage.LevelCreationEnter.ToString(), LevelCreationEnter);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateMessage.FrontMenuEnter.ToString(), FrontMenuEnter);
 	}
 	
 	
@@ -269,7 +269,7 @@ public class LevelCreator : MonoBehaviour
 		Action<LevelLoader> loadedComplete = (LevelLoader) => 
 		{
 			uiController.TurnOffLoadingBar();
-			StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState(LevelCreatorStates.LevelCreation, null); 
+			StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.ChangeState(LevelCreatorStates.LevelCreation, null); 
 			mapRoot = GameObject.Find("MapRoot");
 
 			var startObj = GameObject.Find("PlayerStartCube");

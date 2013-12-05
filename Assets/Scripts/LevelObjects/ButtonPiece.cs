@@ -53,7 +53,7 @@ public class ButtonPiece : TriggerObject
 	{
 		if(!shouldChangePlayer)
 		{
-			Messenger.Invoke(ColourCollisionNotification.ButtonPressed.ToString());
+			Messenger.Invoke(ColourCollisionMessage.ButtonPressed.ToString());
 		}	
 	
 		else

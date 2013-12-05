@@ -4,9 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-using StateM = StateMachine<LevelState, LevelStateNotification>;
+using StateM = StateMachine<LevelState, LevelStateMessage>;
 
-public enum ColourCollisionNotification
+public enum ColourCollisionMessage
 {
 	ObjectEnteredColour, ObjectExitedColour,
 	LeverPulled, ButtonPressed, TriggerEntered, TriggerExited,
@@ -31,7 +31,7 @@ public class ColorCollisionObject : MonoBehaviour
 	{
 		cachedEnumValues = Enum.GetValues(typeof(Colour));
 
-		Messenger.AddListener(ColourCollisionNotification.ButtonPressed.ToString(), ButtonPressed);
+		Messenger.AddListener(ColourCollisionMessage.ButtonPressed.ToString(), ButtonPressed);
 		cubeNeighbours = new CubeNeighbours(gameObject);
 		initialColour = objColour;
 	}
@@ -40,15 +40,15 @@ public class ColorCollisionObject : MonoBehaviour
 	{
 		initialColliderSize = Vector3.one;
 
-		Messenger<StateM.StateChangeData>.AddListener(LevelStateNotification.LevelInitialized.ToString(), LevelInitialized);
-		Messenger<StateM.StateChangeData>.AddListener(LevelStateNotification.LevelStarted.ToString(), LevelStarted);
+		Messenger<StateM.StateChangeData>.AddListener(LevelStateMessage.LevelInitialized.ToString(), LevelInitialized);
+		Messenger<StateM.StateChangeData>.AddListener(LevelStateMessage.LevelStarted.ToString(), LevelStarted);
 	}
 
 	protected virtual void OnDestroy()
 	{
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateNotification.LevelInitialized.ToString(), LevelInitialized);
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateNotification.LevelStarted.ToString(), LevelStarted);
-		Messenger.RemoveListener(ColourCollisionNotification.ButtonPressed.ToString(), ButtonPressed);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateMessage.LevelInitialized.ToString(), LevelInitialized);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateMessage.LevelStarted.ToString(), LevelStarted);
+		Messenger.RemoveListener(ColourCollisionMessage.ButtonPressed.ToString(), ButtonPressed);
 	}
 
 	protected virtual void OnDisable()

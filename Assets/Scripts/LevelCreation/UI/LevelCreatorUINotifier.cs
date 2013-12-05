@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public enum LevelCreatorUINotification
+public enum LevelCreatorUIMessage
 {
 	GenericInputSubmitted, CreateButtonClicked,
 	LoadMenuLoadClicked, LoadMenuCancelClicked,
@@ -10,7 +10,7 @@ public enum LevelCreatorUINotification
 
 public class LevelCreatorUINotifier : MonoBehaviour 
 {
-	public LevelCreatorUINotification notiType;
+	public LevelCreatorUIMessage notiType;
 	
 	public string dataToSend;
 	
@@ -18,7 +18,7 @@ public class LevelCreatorUINotifier : MonoBehaviour
 	
 	void Start()
 	{
-		if(notiType == LevelCreatorUINotification.GenericInputSubmitted)
+		if(notiType == LevelCreatorUIMessage.GenericInputSubmitted)
 		{
 			inputObj = GetComponent<UIInput>();
 		}
@@ -26,7 +26,7 @@ public class LevelCreatorUINotifier : MonoBehaviour
 	
 	void OnClick()
 	{
-		if(notiType != LevelCreatorUINotification.GenericInputSubmitted)
+		if(notiType != LevelCreatorUIMessage.GenericInputSubmitted)
 			Messenger.Invoke(notiType.ToString());
 	}
 	
@@ -35,18 +35,18 @@ public class LevelCreatorUINotifier : MonoBehaviour
 		if(inputObj == null)
 			inputObj = GetComponent<UIInput>();
 		
-		var notiData = new InputNotificationData(gameObject, inputObj.text);
+		var notiData = new InputMessageData(gameObject, inputObj.text);
 
-		Messenger<InputNotificationData>.Invoke(notiType.ToString(), notiData);
+		Messenger<InputMessageData>.Invoke(notiType.ToString(), notiData);
 	}
 }
 
-public struct InputNotificationData
+public struct InputMessageData
 {
 	public GameObject go;
 	public string theInput;
 	
-	public InputNotificationData(GameObject go, string theInput)
+	public InputMessageData(GameObject go, string theInput)
 	{
 		this.go = go;
 		this.theInput = theInput;

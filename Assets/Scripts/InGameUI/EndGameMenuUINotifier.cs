@@ -1,14 +1,14 @@
 using UnityEngine;
 using System.Collections;
 
-public enum EndGameMenuNotification
+public enum EndGameMenuMessage
 {
 	NextLevelPressed, QuitPressed
 }
 
 public class EndGameMenuUINotifier : MonoBehaviour 
 {
-	public EndGameMenuNotification notiType;
+	public EndGameMenuMessage notiType;
 	
 	void OnClick()
 	{

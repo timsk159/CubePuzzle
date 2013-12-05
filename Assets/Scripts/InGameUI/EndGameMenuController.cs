@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-using StateMachineMessenger = Messenger<StateMachine<LevelState, LevelStateNotification>.StateChangeData>;
+using StateMachineMessenger = Messenger<StateMachine<LevelState, LevelStateMessage>.StateChangeData>;
 
 public class EndGameMenuController : MonoBehaviour 
 {
@@ -9,21 +9,21 @@ public class EndGameMenuController : MonoBehaviour
 	
 	void Start()
 	{ 
-		StateMachineMessenger.AddListener(LevelStateNotification.EndGameEnter.ToString(), EndGameEnter);
+		StateMachineMessenger.AddListener(LevelStateMessage.EndGameEnter.ToString(), EndGameEnter);
 
-		Messenger.AddListener(EndGameMenuNotification.NextLevelPressed.ToString(), NextLevelPressed);
-		Messenger.AddListener(EndGameMenuNotification.QuitPressed.ToString(), QuitPressed);
+		Messenger.AddListener(EndGameMenuMessage.NextLevelPressed.ToString(), NextLevelPressed);
+		Messenger.AddListener(EndGameMenuMessage.QuitPressed.ToString(), QuitPressed);
 	}
 
 	void OnDestroy()
 	{
-		StateMachineMessenger.RemoveListener(LevelStateNotification.EndGameEnter.ToString(), EndGameEnter);
+		StateMachineMessenger.RemoveListener(LevelStateMessage.EndGameEnter.ToString(), EndGameEnter);
 
-		Messenger.RemoveListener(EndGameMenuNotification.NextLevelPressed.ToString(), NextLevelPressed);
-		Messenger.RemoveListener(EndGameMenuNotification.QuitPressed.ToString(), QuitPressed);
+		Messenger.RemoveListener(EndGameMenuMessage.NextLevelPressed.ToString(), NextLevelPressed);
+		Messenger.RemoveListener(EndGameMenuMessage.QuitPressed.ToString(), QuitPressed);
 	}
 	
-	void EndGameEnter(StateMachine<LevelState, LevelStateNotification>.StateChangeData stateChangeData)
+	void EndGameEnter(StateMachine<LevelState, LevelStateMessage>.StateChangeData stateChangeData)
 	{
 		NGUITools.SetActive(endGameMenuPanel, true);
 		

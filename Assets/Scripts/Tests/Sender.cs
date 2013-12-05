@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Diagnostics;
 
-public enum EventNotification
+public enum EventMessage
 {
 	OnEvent
 };
@@ -46,7 +46,7 @@ public class Sender : MonoBehaviour
 		var sw = new Stopwatch();
 		sw.Start();
 
-		Messenger.Invoke(EventNotification.OnEvent.ToString());
+		Messenger.Invoke(EventMessage.OnEvent.ToString());
 
 		sw.Stop();
 		print("Notifications took: " + sw.ElapsedMilliseconds);

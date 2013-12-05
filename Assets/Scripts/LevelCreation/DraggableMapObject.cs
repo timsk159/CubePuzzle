@@ -24,12 +24,12 @@ public class DraggableMapObject : MonoBehaviour
 	{
 		if(UICamera.currentTouchID == -1 && isPressed)
 		{
-			Messenger<GameObject>.Invoke(DragAndDropNotification.MapObjectPressed.ToString(), gameObject);
+			Messenger<GameObject>.Invoke(DragAndDropMessage.MapObjectPressed.ToString(), gameObject);
 		}
 	}
 
 	protected virtual void OnDestroy()
 	{
-		Messenger<DraggableMapObject>.Invoke(DragAndDropNotification.MapObjectRemoved.ToString(), this);
+		Messenger<DraggableMapObject>.Invoke(DragAndDropMessage.MapObjectRemoved.ToString(), this);
 	}
 }

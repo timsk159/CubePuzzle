@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-enum DragAndDropNotification
+enum DragAndDropMessage
 {
 	MenuItemPressed, MapObjectPressed, ObjectPlaced, DoubleClicked, MapObjectRemoved, MenuItemRightClicked
 };
@@ -25,20 +25,20 @@ public class DragAndDropController : MonoBehaviour
 		levelCreator = GameObject.Find("LevelCreator").GetComponent<LevelCreator>();
 		assetManager = GameObject.Find("LevelCreator").GetComponent<LevelAssetManager>();
 
-		Messenger<GameObject>.AddListener(DragAndDropNotification.MenuItemPressed.ToString(), MenuItemPressed);
-		Messenger<GameObject>.AddListener(DragAndDropNotification.MapObjectPressed.ToString(), MapObjectPressed);
-		Messenger<Vector3>.AddListener(DragAndDropNotification.DoubleClicked.ToString(), DoubleClicked);
-		Messenger<GameObject>.AddListener(DragAndDropNotification.MenuItemRightClicked.ToString(), MenuItemRightClicked);
-		Messenger<StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData>.AddListener(LevelCreatorStateNotification.TestingMapEnter.ToString(), TestingMapEnter);
+		Messenger<GameObject>.AddListener(DragAndDropMessage.MenuItemPressed.ToString(), MenuItemPressed);
+		Messenger<GameObject>.AddListener(DragAndDropMessage.MapObjectPressed.ToString(), MapObjectPressed);
+		Messenger<Vector3>.AddListener(DragAndDropMessage.DoubleClicked.ToString(), DoubleClicked);
+		Messenger<GameObject>.AddListener(DragAndDropMessage.MenuItemRightClicked.ToString(), MenuItemRightClicked);
+		Messenger<StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData>.AddListener(LevelCreatorStateMessage.TestingMapEnter.ToString(), TestingMapEnter);
 	}
 
 	void OnDestroy()
 	{
-		Messenger<GameObject>.RemoveListener(DragAndDropNotification.MenuItemPressed.ToString(), MenuItemPressed);
-		Messenger<GameObject>.RemoveListener(DragAndDropNotification.MapObjectPressed.ToString(), MapObjectPressed);
-		Messenger<Vector3>.RemoveListener(DragAndDropNotification.DoubleClicked.ToString(), DoubleClicked);
-		Messenger<GameObject>.RemoveListener(DragAndDropNotification.MenuItemRightClicked.ToString(), MenuItemRightClicked);
-		Messenger<StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData>.RemoveListener(LevelCreatorStateNotification.TestingMapEnter.ToString(), TestingMapEnter);
+		Messenger<GameObject>.RemoveListener(DragAndDropMessage.MenuItemPressed.ToString(), MenuItemPressed);
+		Messenger<GameObject>.RemoveListener(DragAndDropMessage.MapObjectPressed.ToString(), MapObjectPressed);
+		Messenger<Vector3>.RemoveListener(DragAndDropMessage.DoubleClicked.ToString(), DoubleClicked);
+		Messenger<GameObject>.RemoveListener(DragAndDropMessage.MenuItemRightClicked.ToString(), MenuItemRightClicked);
+		Messenger<StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData>.RemoveListener(LevelCreatorStateMessage.TestingMapEnter.ToString(), TestingMapEnter);
 	}
 	
 	void MenuItemPressed(GameObject prefab)
@@ -122,7 +122,7 @@ public class DragAndDropController : MonoBehaviour
 		draggingObj = objPressed;
 	}
 
-	void TestingMapEnter(StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData changeData)
+	void TestingMapEnter(StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData changeData)
 	{
 		DeselectMenuItem();
 	}
@@ -221,7 +221,7 @@ public class DragAndDropController : MonoBehaviour
 				draggingObj.layer = 10;
 				draggingObj.transform.localScale = Vector3.one;
 				draggingObj.transform.parent = levelCreator.mapRoot.transform;
-				Messenger<GameObject>.Invoke(DragAndDropNotification.ObjectPlaced.ToString(), draggingObj);
+				Messenger<GameObject>.Invoke(DragAndDropMessage.ObjectPlaced.ToString(), draggingObj);
 				draggingObj = null;
 				Destroy(objToReplace);
 			}
@@ -280,7 +280,7 @@ public class DragAndDropController : MonoBehaviour
 				clone.transform.localScale = Vector3.one;
 				clone.transform.position = hit.collider.transform.position;
 				clone.transform.parent = levelCreator.mapRoot.transform;
-				Messenger<GameObject>.Invoke(DragAndDropNotification.ObjectPlaced.ToString(), clone);
+				Messenger<GameObject>.Invoke(DragAndDropMessage.ObjectPlaced.ToString(), clone);
 
 				Destroy(objToReplace);
 			}

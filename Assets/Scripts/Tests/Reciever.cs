@@ -5,7 +5,7 @@ public class Reciever : MonoBehaviour
 {
 	void Start()
 	{
-		Messenger.AddListener(EventNotification.OnEvent.ToString(), OnEvent);
+		Messenger.AddListener(EventMessage.OnEvent.ToString(), OnEvent);
 		Sender.onEvent += DelegateResponse;
 	}
 

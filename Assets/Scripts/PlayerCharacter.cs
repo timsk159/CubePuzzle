@@ -2,9 +2,9 @@ using UnityEngine;
 using System;
 using System.Collections;
 
-using StateMachineMessenger = Messenger<StateMachine<LevelState, LevelStateNotification>.StateChangeData>;
+using StateMachineMessenger = Messenger<StateMachine<LevelState, LevelStateMessage>.StateChangeData>;
 
-public enum PlayerInteractionNotification
+public enum PlayerInteractionMessage
 {
 	PlayerInteracted
 };
@@ -32,16 +32,16 @@ public class PlayerCharacter : MonoBehaviour
 
 		playerMovement = GetComponent<PlayerMovement>();
 
-		Messenger.AddListener(LevelIntroNotification.IntroFinished.ToString(), IntroFinished);
-		StateMachineMessenger.AddListener(LevelStateNotification.InGameExit.ToString(), InGameExit);
-		StateMachineMessenger.AddListener(LevelStateNotification.InGameEnter.ToString(), InGameEnter);
+		Messenger.AddListener(LevelIntroMessage.IntroFinished.ToString(), IntroFinished);
+		StateMachineMessenger.AddListener(LevelStateMessage.InGameExit.ToString(), InGameExit);
+		StateMachineMessenger.AddListener(LevelStateMessage.InGameEnter.ToString(), InGameEnter);
 	}
 
 	void OnDestroy()
 	{
-		Messenger.RemoveListener(LevelIntroNotification.IntroFinished.ToString(), IntroFinished);
-		StateMachineMessenger.RemoveListener(LevelStateNotification.InGameExit.ToString(), InGameExit);
-		StateMachineMessenger.RemoveListener(LevelStateNotification.InGameEnter.ToString(), InGameEnter);
+		Messenger.RemoveListener(LevelIntroMessage.IntroFinished.ToString(), IntroFinished);
+		StateMachineMessenger.RemoveListener(LevelStateMessage.InGameExit.ToString(), InGameExit);
+		StateMachineMessenger.RemoveListener(LevelStateMessage.InGameEnter.ToString(), InGameEnter);
 	}
 
 	public void DisablePhysics()
@@ -107,12 +107,12 @@ public class PlayerCharacter : MonoBehaviour
 		canReset = true;
 	}
 
-	void InGameEnter(StateMachine<LevelState, LevelStateNotification>.StateChangeData changeData)
+	void InGameEnter(StateMachine<LevelState, LevelStateMessage>.StateChangeData changeData)
 	{
 		canReset = true;
 	}
 
-	void InGameExit(StateMachine<LevelState, LevelStateNotification>.StateChangeData changeData)
+	void InGameExit(StateMachine<LevelState, LevelStateMessage>.StateChangeData changeData)
 	{
 		canReset = false;
 	}
@@ -123,7 +123,7 @@ public class PlayerCharacter : MonoBehaviour
 		var realColor = ColorManager.GetObjectRealColor(currentColor);
 		gameObject.renderer.material.color = realColor;
 		childLight.color = realColor;
-		Messenger<Colour>.Invoke(ColourCollisionNotification.PlayerChangedColour.ToString(), currentColor);
+		Messenger<Colour>.Invoke(ColourCollisionMessage.PlayerChangedColour.ToString(), currentColor);
 	}
 
 	public void SilentlyChangeColour(Colour colourToChangeTo)

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-using StateM = StateMachine<LevelState, LevelStateNotification>;
+using StateM = StateMachine<LevelState, LevelStateMessage>;
 
 public class FloorPiece : ColorCollisionObject 
 {
@@ -11,13 +11,13 @@ public class FloorPiece : ColorCollisionObject
 	{
 		base.Start ();
 
-		Messenger<Colour>.AddListener(ColourCollisionNotification.PlayerChangedColour.ToString(), PlayerChangedColour);
+		Messenger<Colour>.AddListener(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerChangedColour);
 	}
 
 	protected override void OnDestroy()
 	{
 		base.OnDestroy();
-		Messenger<Colour>.RemoveListener(ColourCollisionNotification.PlayerChangedColour.ToString(), PlayerChangedColour);
+		Messenger<Colour>.RemoveListener(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerChangedColour);
 	}
 
 	protected void PlayerChangedColour(Colour colourToChangeTo)

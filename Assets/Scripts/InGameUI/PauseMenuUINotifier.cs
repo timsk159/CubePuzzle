@@ -1,14 +1,14 @@
 using UnityEngine;
 using System.Collections;
 
-public enum PauseMenuNotification
+public enum PauseMenuMessage
 {
 	ResumeButtonClicked, QuitButtonClicked, RestartButtonClicked, ReloadCheckpointClicked
 };
 
 public class PauseMenuUINotifier : MonoBehaviour 
 {
-	public PauseMenuNotification notiType;
+	public PauseMenuMessage notiType;
 	
 	void OnClick()
 	{

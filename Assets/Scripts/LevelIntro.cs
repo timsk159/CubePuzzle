@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public enum LevelIntroNotification
+public enum LevelIntroMessage
 {
 	IntroStarted, IntroInterrupted, IntroFinished
 };
@@ -49,7 +49,7 @@ public class LevelIntro : MonoBehaviour
 	//TweenTime = T/animTime
 	public IEnumerator PlayIntroAnimation(GameObject playerObj, CutSceneObj introCutsceneObj = null)
 	{
-		Messenger.Invoke(LevelIntroNotification.IntroStarted.ToString());
+		Messenger.Invoke(LevelIntroMessage.IntroStarted.ToString());
 		if(introCutsceneObj != null && cutSceneController != null)
 		{
 			playingCutsceneObj = introCutsceneObj;
@@ -92,7 +92,7 @@ public class LevelIntro : MonoBehaviour
 			yield return new WaitForEndOfFrame();
 		}
 
-		Messenger.Invoke(LevelIntroNotification.IntroFinished.ToString());
+		Messenger.Invoke(LevelIntroMessage.IntroFinished.ToString());
 	}
 
 	void Update()
@@ -124,7 +124,7 @@ public class LevelIntro : MonoBehaviour
 			playingCutsceneObj = null;
 		}
 
-		Messenger.Invoke(LevelIntroNotification.IntroInterrupted.ToString());
+		Messenger.Invoke(LevelIntroMessage.IntroInterrupted.ToString());
 	}
 
 

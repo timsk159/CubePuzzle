@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public enum CutSceneNotification
+public enum CutSceneMessage
 {
 	CutSceneStarted, CutSceneFinished
 };
@@ -31,7 +31,7 @@ public class CutSceneController : MonoBehaviour
 
 	public void DisplayCutscene(CutSceneObj cutSceneObj)
 	{
-		Messenger.Invoke(CutSceneNotification.CutSceneStarted.ToString());
+		Messenger.Invoke(CutSceneMessage.CutSceneStarted.ToString());
 
 		if(cutSceneObj.dialogue.dialogueAsset != null)
 		{
@@ -58,7 +58,7 @@ public class CutSceneController : MonoBehaviour
 		audio.Stop();
 		cutsceneCamera.FinishAnimation();
 
-		Messenger.Invoke(CutSceneNotification.CutSceneStarted.ToString());
+		Messenger.Invoke(CutSceneMessage.CutSceneStarted.ToString());
 	}
 	
 	IEnumerator CutSceneTimerRoutine(float length, CutSceneObj cutsceneObj)

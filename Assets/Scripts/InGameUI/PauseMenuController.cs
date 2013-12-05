@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-using StateMachineMessenger = Messenger<StateMachine<LevelState, LevelStateNotification>.StateChangeData>;
+using StateMachineMessenger = Messenger<StateMachine<LevelState, LevelStateMessage>.StateChangeData>;
 
 public class PauseMenuController : MonoBehaviour 
 {
@@ -9,39 +9,39 @@ public class PauseMenuController : MonoBehaviour
 	
 	void Start()
 	{
-		StateMachineMessenger.AddListener(LevelStateNotification.PauseEnter.ToString(), PauseEnter);
-		StateMachineMessenger.AddListener(LevelStateNotification.PauseExit.ToString(), PauseExit);
+		StateMachineMessenger.AddListener(LevelStateMessage.PauseEnter.ToString(), PauseEnter);
+		StateMachineMessenger.AddListener(LevelStateMessage.PauseExit.ToString(), PauseExit);
 
-		Messenger.AddListener(PauseMenuNotification.ResumeButtonClicked.ToString(), ResumeButtonClicked);
-		Messenger.AddListener(PauseMenuNotification.QuitButtonClicked.ToString(), QuitButtonClicked);
-		Messenger.AddListener(PauseMenuNotification.RestartButtonClicked.ToString(), RestartButtonClicked);
-		Messenger.AddListener(PauseMenuNotification.ReloadCheckpointClicked.ToString(), ReloadCheckpointClicked);
+		Messenger.AddListener(PauseMenuMessage.ResumeButtonClicked.ToString(), ResumeButtonClicked);
+		Messenger.AddListener(PauseMenuMessage.QuitButtonClicked.ToString(), QuitButtonClicked);
+		Messenger.AddListener(PauseMenuMessage.RestartButtonClicked.ToString(), RestartButtonClicked);
+		Messenger.AddListener(PauseMenuMessage.ReloadCheckpointClicked.ToString(), ReloadCheckpointClicked);
 	}
 
 	void OnDestroy()
 	{
-		StateMachineMessenger.RemoveListener(LevelStateNotification.PauseEnter.ToString(), PauseEnter);
-		StateMachineMessenger.RemoveListener(LevelStateNotification.PauseExit.ToString(), PauseExit);
+		StateMachineMessenger.RemoveListener(LevelStateMessage.PauseEnter.ToString(), PauseEnter);
+		StateMachineMessenger.RemoveListener(LevelStateMessage.PauseExit.ToString(), PauseExit);
 
-		Messenger.RemoveListener(PauseMenuNotification.ResumeButtonClicked.ToString(), ResumeButtonClicked);
-		Messenger.RemoveListener(PauseMenuNotification.QuitButtonClicked.ToString(), QuitButtonClicked);
-		Messenger.RemoveListener(PauseMenuNotification.RestartButtonClicked.ToString(), RestartButtonClicked);
-		Messenger.RemoveListener(PauseMenuNotification.ReloadCheckpointClicked.ToString(), ReloadCheckpointClicked);
+		Messenger.RemoveListener(PauseMenuMessage.ResumeButtonClicked.ToString(), ResumeButtonClicked);
+		Messenger.RemoveListener(PauseMenuMessage.QuitButtonClicked.ToString(), QuitButtonClicked);
+		Messenger.RemoveListener(PauseMenuMessage.RestartButtonClicked.ToString(), RestartButtonClicked);
+		Messenger.RemoveListener(PauseMenuMessage.ReloadCheckpointClicked.ToString(), ReloadCheckpointClicked);
 	}
 	
-	void PauseEnter(StateMachine<LevelState, LevelStateNotification>.StateChangeData stateChangeData)
+	void PauseEnter(StateMachine<LevelState, LevelStateMessage>.StateChangeData stateChangeData)
 	{
 		NGUITools.SetActive(pauseMenuPanel, true);
 	}
 	
-	void PauseExit(StateMachine<LevelState, LevelStateNotification>.StateChangeData stateChangeData)
+	void PauseExit(StateMachine<LevelState, LevelStateMessage>.StateChangeData stateChangeData)
 	{
 		NGUITools.SetActive(pauseMenuPanel, false);
 	}
 	
 	void ResumeButtonClicked()
 	{
-		StateMachine<LevelState, LevelStateNotification>.ChangeState(LevelState.InGame);
+		StateMachine<LevelState, LevelStateMessage>.ChangeState(LevelState.InGame);
 	}
 
 	void RestartButtonClicked()

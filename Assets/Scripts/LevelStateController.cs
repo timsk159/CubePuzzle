@@ -16,13 +16,6 @@ public class LevelStateController : MonoSingleton<LevelStateController>
 
 	public void LoadInitialState()
 	{
-		/*
-		var savedGames = LevelSerializer.SavedGames[LevelSerializer.PlayerName];
-		var initialSaveData = savedGames.Where(e => e.Name == "InitialState").FirstOrDefault().Data;
-
-		LevelSerializer.LoadSavedLevelIfSameScene(initialSaveData, onComplete);
-		StateMachine<LevelState, LevelStateNotification>.ChangeState(LevelState.InGame) ;
-		*/
 		if(LevelController.Instance.isStoryMode)
 		{
 			SceneLoader.Instance.LoadLevel(Application.loadedLevelName, delegate {
@@ -41,6 +34,6 @@ public class LevelStateController : MonoSingleton<LevelStateController>
 	public void LoadCheckpoint(Action<GameObject, List<GameObject>> onComplete = null)
 	{
 		LevelSerializer.Resume(onComplete);
-		StateMachine<LevelState, LevelStateNotification>.ChangeState(LevelState.InGame);
+		StateMachine<LevelState, LevelStateMessage>.ChangeState(LevelState.InGame);
 	}
 }

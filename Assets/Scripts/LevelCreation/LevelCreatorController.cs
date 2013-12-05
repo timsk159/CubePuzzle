@@ -2,14 +2,14 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using StateM = StateMachine<LevelCreatorStates, LevelCreatorStateNotification>;
+using StateM = StateMachine<LevelCreatorStates, LevelCreatorStateMessage>;
 
 public enum LevelCreatorStates
 {
 	FrontMenu, LevelCreation, SavingMap, LoadingMap, TestingMap
 };
 
-public enum LevelCreatorStateNotification
+public enum LevelCreatorStateMessage
 {
 	FrontMenuEnter, FrontMenuExit,
 	LevelCreationEnter, LevelCreationExit,
@@ -52,37 +52,37 @@ public class LevelCreatorController : MonoBehaviour
 	
 	void RegisterStates()
 	{
-		StateM.RegisterState(LevelCreatorStates.FrontMenu, LevelCreatorStateNotification.FrontMenuEnter, LevelCreatorStateNotification.FrontMenuExit);
-		StateM.RegisterState(LevelCreatorStates.LevelCreation, LevelCreatorStateNotification.LevelCreationEnter, LevelCreatorStateNotification.LevelCreationExit);
-		StateM.RegisterState(LevelCreatorStates.SavingMap, LevelCreatorStateNotification.SavingMapEnter, LevelCreatorStateNotification.SavingMapExit);
-		StateM.RegisterState(LevelCreatorStates.LoadingMap, LevelCreatorStateNotification.LoadingMapEnter, LevelCreatorStateNotification.LoadingMapExit);
-		StateM.RegisterState(LevelCreatorStates.TestingMap, LevelCreatorStateNotification.TestingMapEnter, LevelCreatorStateNotification.TestingMapExit);
+		StateM.RegisterState(LevelCreatorStates.FrontMenu, LevelCreatorStateMessage.FrontMenuEnter, LevelCreatorStateMessage.FrontMenuExit);
+		StateM.RegisterState(LevelCreatorStates.LevelCreation, LevelCreatorStateMessage.LevelCreationEnter, LevelCreatorStateMessage.LevelCreationExit);
+		StateM.RegisterState(LevelCreatorStates.SavingMap, LevelCreatorStateMessage.SavingMapEnter, LevelCreatorStateMessage.SavingMapExit);
+		StateM.RegisterState(LevelCreatorStates.LoadingMap, LevelCreatorStateMessage.LoadingMapEnter, LevelCreatorStateMessage.LoadingMapExit);
+		StateM.RegisterState(LevelCreatorStates.TestingMap, LevelCreatorStateMessage.TestingMapEnter, LevelCreatorStateMessage.TestingMapExit);
 
-		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateNotification.FrontMenuEnter.ToString(), FrontMenuEnter);
-		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateNotification.LevelCreationEnter.ToString(), LevelCreationEnter);
-		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateNotification.LevelCreationExit.ToString(), LevelCreationExit);
-		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateNotification.SavingMapEnter.ToString(), SavingMapEnter);
-		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateNotification.LoadingMapEnter.ToString(), LoadingMapEnter);
-		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateNotification.TestingMapEnter.ToString(), TestingMapEnter);
-		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateNotification.TestingMapExit.ToString(), TestingMapExit);
+		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateMessage.FrontMenuEnter.ToString(), FrontMenuEnter);
+		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateMessage.LevelCreationEnter.ToString(), LevelCreationEnter);
+		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateMessage.LevelCreationExit.ToString(), LevelCreationExit);
+		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateMessage.SavingMapEnter.ToString(), SavingMapEnter);
+		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateMessage.LoadingMapEnter.ToString(), LoadingMapEnter);
+		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateMessage.TestingMapEnter.ToString(), TestingMapEnter);
+		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateMessage.TestingMapExit.ToString(), TestingMapExit);
 
-		Messenger<GameObject>.AddListener(DragAndDropNotification.ObjectPlaced.ToString(), ObjectPlaced);
-		Messenger<DraggableMapObject>.AddListener(DragAndDropNotification.MapObjectRemoved.ToString(), MapObjectRemoved);
+		Messenger<GameObject>.AddListener(DragAndDropMessage.ObjectPlaced.ToString(), ObjectPlaced);
+		Messenger<DraggableMapObject>.AddListener(DragAndDropMessage.MapObjectRemoved.ToString(), MapObjectRemoved);
 
 	}
 
 	void DeRegisterStateListeners()
 	{
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateNotification.FrontMenuEnter.ToString(), FrontMenuEnter);
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateNotification.LevelCreationEnter.ToString(), LevelCreationEnter);
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateNotification.LevelCreationExit.ToString(), LevelCreationExit);
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateNotification.SavingMapEnter.ToString(), SavingMapEnter);
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateNotification.LoadingMapEnter.ToString(), LoadingMapEnter);
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateNotification.TestingMapEnter.ToString(), TestingMapEnter);
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateNotification.TestingMapExit.ToString(), TestingMapExit);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateMessage.FrontMenuEnter.ToString(), FrontMenuEnter);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateMessage.LevelCreationEnter.ToString(), LevelCreationEnter);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateMessage.LevelCreationExit.ToString(), LevelCreationExit);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateMessage.SavingMapEnter.ToString(), SavingMapEnter);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateMessage.LoadingMapEnter.ToString(), LoadingMapEnter);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateMessage.TestingMapEnter.ToString(), TestingMapEnter);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateMessage.TestingMapExit.ToString(), TestingMapExit);
 
-		Messenger<GameObject>.RemoveListener(DragAndDropNotification.ObjectPlaced.ToString(), ObjectPlaced);
-		Messenger<DraggableMapObject>.RemoveListener(DragAndDropNotification.MapObjectRemoved.ToString(), MapObjectRemoved);
+		Messenger<GameObject>.RemoveListener(DragAndDropMessage.ObjectPlaced.ToString(), ObjectPlaced);
+		Messenger<DraggableMapObject>.RemoveListener(DragAndDropMessage.MapObjectRemoved.ToString(), MapObjectRemoved);
 	}
 
 	void OnDestroy()
@@ -162,7 +162,7 @@ public class LevelCreatorController : MonoBehaviour
 			{
 				if(hit.collider.GetComponent<DraggableMapObject>())
 				{
-					Messenger<Vector3>.Invoke(DragAndDropNotification.DoubleClicked.ToString(), hit.collider.transform.position);
+					Messenger<Vector3>.Invoke(DragAndDropMessage.DoubleClicked.ToString(), hit.collider.transform.position);
 
 					Destroy(hit.collider.gameObject);
 				}

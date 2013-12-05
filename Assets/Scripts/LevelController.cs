@@ -4,14 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-using StateM = StateMachine<LevelState, LevelStateNotification>;
+using StateM = StateMachine<LevelState, LevelStateMessage>;
 
 public enum LevelState
 {
 	InGame, Pause, EndGame, CutScene, ExitingLevel
 };
 
-public enum LevelStateNotification
+public enum LevelStateMessage
 {
 	InGameEnter, InGameExit, PauseEnter, PauseExit, EndGameEnter, EndGameExit, CutSceneEnter, CutSceneExit, ExitingLevelEnter, ExitingLevelExit, LevelInitialized, LevelStarted
 };
@@ -73,54 +73,54 @@ public class LevelController : MonoSingleton<LevelController>
 	
 	void RegisterStates()
 	{
-		StateMachine<LevelState, LevelStateNotification>.RegisterState(LevelState.InGame, LevelStateNotification.InGameEnter, LevelStateNotification.InGameExit); 
-		StateMachine<LevelState, LevelStateNotification>.RegisterState(LevelState.Pause, LevelStateNotification.PauseEnter, LevelStateNotification.PauseExit); 
-		StateMachine<LevelState, LevelStateNotification>.RegisterState(LevelState.EndGame, LevelStateNotification.EndGameEnter, LevelStateNotification.EndGameExit);
-		StateMachine<LevelState, LevelStateNotification>.RegisterState(LevelState.CutScene, LevelStateNotification.CutSceneEnter, LevelStateNotification.CutSceneExit);
+		StateMachine<LevelState, LevelStateMessage>.RegisterState(LevelState.InGame, LevelStateMessage.InGameEnter, LevelStateMessage.InGameExit); 
+		StateMachine<LevelState, LevelStateMessage>.RegisterState(LevelState.Pause, LevelStateMessage.PauseEnter, LevelStateMessage.PauseExit); 
+		StateMachine<LevelState, LevelStateMessage>.RegisterState(LevelState.EndGame, LevelStateMessage.EndGameEnter, LevelStateMessage.EndGameExit);
+		StateMachine<LevelState, LevelStateMessage>.RegisterState(LevelState.CutScene, LevelStateMessage.CutSceneEnter, LevelStateMessage.CutSceneExit);
 
-		Messenger<StateM.StateChangeData>.AddListener(LevelStateNotification.InGameEnter.ToString(), InGameEnter);
-		Messenger<StateM.StateChangeData>.AddListener(LevelStateNotification.InGameExit.ToString(), InGameExit);
+		Messenger<StateM.StateChangeData>.AddListener(LevelStateMessage.InGameEnter.ToString(), InGameEnter);
+		Messenger<StateM.StateChangeData>.AddListener(LevelStateMessage.InGameExit.ToString(), InGameExit);
 
-		Messenger<StateM.StateChangeData>.AddListener(LevelStateNotification.PauseEnter.ToString(), PauseEnter);
-		Messenger<StateM.StateChangeData>.AddListener(LevelStateNotification.PauseExit.ToString(), PauseExit);
+		Messenger<StateM.StateChangeData>.AddListener(LevelStateMessage.PauseEnter.ToString(), PauseEnter);
+		Messenger<StateM.StateChangeData>.AddListener(LevelStateMessage.PauseExit.ToString(), PauseExit);
 
-		Messenger<StateM.StateChangeData>.AddListener(LevelStateNotification.EndGameEnter.ToString(), EndGameEnter);
-		Messenger<StateM.StateChangeData>.AddListener(LevelStateNotification.EndGameExit.ToString(), EndGameExit);
+		Messenger<StateM.StateChangeData>.AddListener(LevelStateMessage.EndGameEnter.ToString(), EndGameEnter);
+		Messenger<StateM.StateChangeData>.AddListener(LevelStateMessage.EndGameExit.ToString(), EndGameExit);
 
-		Messenger<StateM.StateChangeData>.AddListener(LevelStateNotification.CutSceneEnter.ToString(), CutSceneEnter);
-		Messenger<StateM.StateChangeData>.AddListener(LevelStateNotification.CutSceneExit.ToString(), CutSceneExit);
+		Messenger<StateM.StateChangeData>.AddListener(LevelStateMessage.CutSceneEnter.ToString(), CutSceneEnter);
+		Messenger<StateM.StateChangeData>.AddListener(LevelStateMessage.CutSceneExit.ToString(), CutSceneExit);
 		
-		StateMachine<LevelState, LevelStateNotification>.SetInitialState(LevelState.InGame);
+		StateMachine<LevelState, LevelStateMessage>.SetInitialState(LevelState.InGame);
 	}
 
 	void Start()
 	{
 		if(isStoryMode)
 		{
-			Messenger.AddListener(CutSceneNotification.CutSceneStarted.ToString(), CutSceneStarted);
-			Messenger.AddListener(CutSceneNotification.CutSceneFinished.ToString(), CutSceneFinished);
+			Messenger.AddListener(CutSceneMessage.CutSceneStarted.ToString(), CutSceneStarted);
+			Messenger.AddListener(CutSceneMessage.CutSceneFinished.ToString(), CutSceneFinished);
 		}
 	}
 
 	void OnDestroy()
 	{
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateNotification.InGameEnter.ToString(), InGameEnter);
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateNotification.InGameExit.ToString(), InGameExit);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateMessage.InGameEnter.ToString(), InGameEnter);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateMessage.InGameExit.ToString(), InGameExit);
 
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateNotification.PauseEnter.ToString(), PauseEnter);
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateNotification.PauseExit.ToString(), PauseExit);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateMessage.PauseEnter.ToString(), PauseEnter);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateMessage.PauseExit.ToString(), PauseExit);
 
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateNotification.EndGameEnter.ToString(), EndGameEnter);
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateNotification.EndGameExit.ToString(), EndGameExit);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateMessage.EndGameEnter.ToString(), EndGameEnter);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateMessage.EndGameExit.ToString(), EndGameExit);
 
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateNotification.CutSceneEnter.ToString(), CutSceneEnter);
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateNotification.CutSceneExit.ToString(), CutSceneExit);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateMessage.CutSceneEnter.ToString(), CutSceneEnter);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateMessage.CutSceneExit.ToString(), CutSceneExit);
 
-		Messenger.RemoveListener(CutSceneNotification.CutSceneStarted.ToString(), CutSceneStarted);
-		Messenger.RemoveListener(CutSceneNotification.CutSceneFinished.ToString(), CutSceneFinished);
+		Messenger.RemoveListener(CutSceneMessage.CutSceneStarted.ToString(), CutSceneStarted);
+		Messenger.RemoveListener(CutSceneMessage.CutSceneFinished.ToString(), CutSceneFinished);
 
-		Messenger.RemoveListener(LevelIntroNotification.IntroFinished.ToString(), IntroFinished);
-		Messenger.RemoveListener(LevelIntroNotification.IntroInterrupted.ToString(), IntroInterrupted);
+		Messenger.RemoveListener(LevelIntroMessage.IntroFinished.ToString(), IntroFinished);
+		Messenger.RemoveListener(LevelIntroMessage.IntroInterrupted.ToString(), IntroInterrupted);
 	}
 	
 	public void InitLevel(bool playIntro, CutSceneObj introCutsceneObj = null)
@@ -151,7 +151,7 @@ public class LevelController : MonoSingleton<LevelController>
 			go.renderer.enabled = false;
 		}
 
-		Messenger.Invoke(LevelStateNotification.LevelInitialized.ToString());
+		Messenger.Invoke(LevelStateMessage.LevelInitialized.ToString());
 
 		if(playIntro)
 		{
@@ -167,8 +167,8 @@ public class LevelController : MonoSingleton<LevelController>
 
 	void StartGameAfterIntro(CutSceneObj introCutsceneObj = null)
 	{
-		Messenger.AddListener(LevelIntroNotification.IntroFinished.ToString(), IntroFinished);
-		Messenger.AddListener(LevelIntroNotification.IntroInterrupted.ToString(), IntroInterrupted);
+		Messenger.AddListener(LevelIntroMessage.IntroFinished.ToString(), IntroFinished);
+		Messenger.AddListener(LevelIntroMessage.IntroInterrupted.ToString(), IntroInterrupted);
 		Camera.main.GetComponent<CameraFollow>().PutCameraBehindPlayer();
 		playerChar.playerMovement.canMove = false;
 		playerChar.rigidbody.useGravity = false;
@@ -195,7 +195,7 @@ public class LevelController : MonoSingleton<LevelController>
 				piece.renderer.enabled = false;
 		}
 
-		Messenger.Invoke(LevelStateNotification.LevelStarted.ToString());
+		Messenger.Invoke(LevelStateMessage.LevelStarted.ToString());
 
 		playerChar.playerMovement.canMove = true;
 		playerChar.EnablePhysics();
@@ -214,7 +214,7 @@ public class LevelController : MonoSingleton<LevelController>
 	public void SetInitialFloorColliders()
 	{
 		//Make sure all the triggers and such are turned on, then tell all the cubes to setup their colliders based on the players colour.
-		Messenger<Colour>.Invoke(ColourCollisionNotification.PlayerChangedColour.ToString(), PlayerColour);
+		Messenger<Colour>.Invoke(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerColour);
 	}
 
 	void SetupNullCube(GameObject nullCube)
@@ -341,16 +341,16 @@ public class LevelController : MonoSingleton<LevelController>
 			if(canPause)
 			{
 				if(isPaused)
-					StateMachine<LevelState, LevelStateNotification>.ChangeState(LevelState.InGame);
+					StateMachine<LevelState, LevelStateMessage>.ChangeState(LevelState.InGame);
 				else
-					StateMachine<LevelState, LevelStateNotification>.ChangeState(LevelState.Pause);
+					StateMachine<LevelState, LevelStateMessage>.ChangeState(LevelState.Pause);
 			}
 		}
 	}
 	
 	public void FinishLevel()
 	{
-		StateMachine<LevelState, LevelStateNotification>.ChangeState(LevelState.EndGame);
+		StateMachine<LevelState, LevelStateMessage>.ChangeState(LevelState.EndGame);
 	}
 
 	public void ResetLevel()
@@ -361,7 +361,7 @@ public class LevelController : MonoSingleton<LevelController>
 		Destroy(playerChar.gameObject);
 		Destroy(mapRoot);
 		LevelStateController.Instance.LoadInitialState();
-		StateMachine<LevelState, LevelStateNotification>.ChangeState(LevelState.InGame);
+		StateMachine<LevelState, LevelStateMessage>.ChangeState(LevelState.InGame);
 	}
 
 	public void SetCheckpoint()

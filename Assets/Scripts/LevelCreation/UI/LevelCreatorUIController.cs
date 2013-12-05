@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using StateMachineMessenger = Messenger<StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData>;
+using StateMachineMessenger = Messenger<StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData>;
 
 [DoNotSerializePublic()]
 public class LevelCreatorUIController : MonoBehaviour 
@@ -61,41 +61,41 @@ public class LevelCreatorUIController : MonoBehaviour
 	#region State Changes
 	void RegisterStateListeners()
 	{
-		StateMachineMessenger.AddListener(LevelCreatorStateNotification.FrontMenuEnter.ToString(), FrontMenuEnter);
-		StateMachineMessenger.AddListener(LevelCreatorStateNotification.FrontMenuExit.ToString(), FrontMenuExit);
+		StateMachineMessenger.AddListener(LevelCreatorStateMessage.FrontMenuEnter.ToString(), FrontMenuEnter);
+		StateMachineMessenger.AddListener(LevelCreatorStateMessage.FrontMenuExit.ToString(), FrontMenuExit);
 
-		StateMachineMessenger.AddListener(LevelCreatorStateNotification.LevelCreationEnter.ToString(), LevelCreationEnter);
-		StateMachineMessenger.AddListener(LevelCreatorStateNotification.LevelCreationExit.ToString(), LevelCreationExit);
+		StateMachineMessenger.AddListener(LevelCreatorStateMessage.LevelCreationEnter.ToString(), LevelCreationEnter);
+		StateMachineMessenger.AddListener(LevelCreatorStateMessage.LevelCreationExit.ToString(), LevelCreationExit);
 
-		StateMachineMessenger.AddListener(LevelCreatorStateNotification.SavingMapEnter.ToString(), SavingMapEnter);
-		StateMachineMessenger.AddListener(LevelCreatorStateNotification.SavingMapExit.ToString(), SavingMapExit);
+		StateMachineMessenger.AddListener(LevelCreatorStateMessage.SavingMapEnter.ToString(), SavingMapEnter);
+		StateMachineMessenger.AddListener(LevelCreatorStateMessage.SavingMapExit.ToString(), SavingMapExit);
 
-		StateMachineMessenger.AddListener(LevelCreatorStateNotification.LoadingMapEnter.ToString(), LoadingMapEnter);
-		StateMachineMessenger.AddListener(LevelCreatorStateNotification.LoadingMapExit.ToString(), LoadingMapExit);
+		StateMachineMessenger.AddListener(LevelCreatorStateMessage.LoadingMapEnter.ToString(), LoadingMapEnter);
+		StateMachineMessenger.AddListener(LevelCreatorStateMessage.LoadingMapExit.ToString(), LoadingMapExit);
 
-		StateMachineMessenger.AddListener(LevelCreatorStateNotification.TestingMapEnter.ToString(), TestingMapEnter);
-		StateMachineMessenger.AddListener(LevelCreatorStateNotification.TestingMapExit.ToString(), TestingMapExit);
+		StateMachineMessenger.AddListener(LevelCreatorStateMessage.TestingMapEnter.ToString(), TestingMapEnter);
+		StateMachineMessenger.AddListener(LevelCreatorStateMessage.TestingMapExit.ToString(), TestingMapExit);
 	}
 
 	void DeRegisterStateListeners()
 	{
-		StateMachineMessenger.RemoveListener(LevelCreatorStateNotification.FrontMenuEnter.ToString(), FrontMenuEnter);
-		StateMachineMessenger.RemoveListener(LevelCreatorStateNotification.FrontMenuExit.ToString(), FrontMenuExit);
+		StateMachineMessenger.RemoveListener(LevelCreatorStateMessage.FrontMenuEnter.ToString(), FrontMenuEnter);
+		StateMachineMessenger.RemoveListener(LevelCreatorStateMessage.FrontMenuExit.ToString(), FrontMenuExit);
 
-		StateMachineMessenger.RemoveListener(LevelCreatorStateNotification.LevelCreationEnter.ToString(), LevelCreationEnter);
-		StateMachineMessenger.RemoveListener(LevelCreatorStateNotification.LevelCreationExit.ToString(), LevelCreationExit);
+		StateMachineMessenger.RemoveListener(LevelCreatorStateMessage.LevelCreationEnter.ToString(), LevelCreationEnter);
+		StateMachineMessenger.RemoveListener(LevelCreatorStateMessage.LevelCreationExit.ToString(), LevelCreationExit);
 
-		StateMachineMessenger.RemoveListener(LevelCreatorStateNotification.SavingMapEnter.ToString(), SavingMapEnter);
-		StateMachineMessenger.RemoveListener(LevelCreatorStateNotification.SavingMapExit.ToString(), SavingMapExit);
+		StateMachineMessenger.RemoveListener(LevelCreatorStateMessage.SavingMapEnter.ToString(), SavingMapEnter);
+		StateMachineMessenger.RemoveListener(LevelCreatorStateMessage.SavingMapExit.ToString(), SavingMapExit);
 
-		StateMachineMessenger.RemoveListener(LevelCreatorStateNotification.LoadingMapEnter.ToString(), LoadingMapEnter);
-		StateMachineMessenger.RemoveListener(LevelCreatorStateNotification.LoadingMapExit.ToString(), LoadingMapExit);
+		StateMachineMessenger.RemoveListener(LevelCreatorStateMessage.LoadingMapEnter.ToString(), LoadingMapEnter);
+		StateMachineMessenger.RemoveListener(LevelCreatorStateMessage.LoadingMapExit.ToString(), LoadingMapExit);
 
-		StateMachineMessenger.RemoveListener(LevelCreatorStateNotification.TestingMapEnter.ToString(), TestingMapEnter);
-		StateMachineMessenger.RemoveListener(LevelCreatorStateNotification.TestingMapExit.ToString(), TestingMapExit);
+		StateMachineMessenger.RemoveListener(LevelCreatorStateMessage.TestingMapEnter.ToString(), TestingMapEnter);
+		StateMachineMessenger.RemoveListener(LevelCreatorStateMessage.TestingMapExit.ToString(), TestingMapExit);
 	}
 	
-	void FrontMenuEnter(StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData stateChangeData)
+	void FrontMenuEnter(StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData stateChangeData)
 	{
 		isInFrontMenu = true;
 		if(!frontMenuPanel.activeSelf)
@@ -110,7 +110,7 @@ public class LevelCreatorUIController : MonoBehaviour
 			fileMenu.items.Remove("TestMap");
 	}
 	
-	void FrontMenuExit(StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData stateChangeData)
+	void FrontMenuExit(StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData stateChangeData)
 	{
 		if(frontMenuPanel.activeSelf)
 		{
@@ -118,7 +118,7 @@ public class LevelCreatorUIController : MonoBehaviour
 		}
 	}
 	
-	void LevelCreationEnter(StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData stateChangeData)
+	void LevelCreationEnter(StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData stateChangeData)
 	{
 		fileMenu = GameObject.Find("FileMenu").GetComponent<UIPopupList>();
 		levelCreator = GameObject.Find("LevelCreator").GetComponent<LevelCreator>();
@@ -133,7 +133,7 @@ public class LevelCreatorUIController : MonoBehaviour
 			fileMenu.items.Insert(2, "TestMap");
 	}
 
-	void LevelCreationExit(StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData stateChangeData)
+	void LevelCreationExit(StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData stateChangeData)
 	{
 		if(fileMenu.items.Contains("Save"))
 			fileMenu.items.Remove("Save");
@@ -143,7 +143,7 @@ public class LevelCreatorUIController : MonoBehaviour
 		NGUITools.SetActive(levelAssetMenuPanel, false);
 	}
 	
-	void SavingMapEnter(StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData stateChangeData)
+	void SavingMapEnter(StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData stateChangeData)
 	{
 		NGUITools.SetActive(savingMapPanel, true);
 		isSavingMap = true;
@@ -151,26 +151,26 @@ public class LevelCreatorUIController : MonoBehaviour
 		StartCoroutine(PopulateFileMenu(fileMenuGrid));
 	}
 	
-	void SavingMapExit(StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData stateChangeData)
+	void SavingMapExit(StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData stateChangeData)
 	{
 		isSavingMap = false;
 		TurnOffLoadingBar ();
 		NGUITools.SetActive(savingMapPanel, false);	
 	}
 	
-	void LoadingMapEnter(StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData stateChangeData)
+	void LoadingMapEnter(StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData stateChangeData)
 	{
 		NGUITools.SetActive(loadingMapPanel, true);
 		var fileMenuGrid = loadingMapPanel.transform.Find("FileListScrollablePanel/FileListGrid").gameObject;
 		StartCoroutine(PopulateFileMenu(fileMenuGrid));
 	}
 	
-	void LoadingMapExit(StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData stateChangeData)
+	void LoadingMapExit(StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData stateChangeData)
 	{
 		NGUITools.SetActive(loadingMapPanel, false);
 	}
 
-	void TestingMapEnter(StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData stateChangeData)
+	void TestingMapEnter(StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData stateChangeData)
 	{
 		cameFromPreview = true;
 		var fileMenuList = fileMenu.GetComponent<UIPopupList>();
@@ -182,7 +182,7 @@ public class LevelCreatorUIController : MonoBehaviour
 		}
 	}
 
-	void TestingMapExit(StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.StateChangeData stateChangeData)
+	void TestingMapExit(StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData stateChangeData)
 	{
 		fileMenu.items.Clear();
 		fileMenu.items.Insert(0, "Open");
@@ -197,24 +197,24 @@ public class LevelCreatorUIController : MonoBehaviour
 	
 	void RegisterUIListeners()
 	{
-		Messenger.AddListener(LevelCreatorUINotification.CreateButtonClicked.ToString(), CreateButtonClicked);
-		Messenger.AddListener(LevelCreatorUINotification.LoadMenuCancelClicked.ToString(), LoadMenuCancelClicked);
-		Messenger.AddListener(LevelCreatorUINotification.LoadMenuLoadClicked.ToString(), LoadMenuLoadClicked);
-		Messenger.AddListener(LevelCreatorUINotification.SaveMenuCancelClicked.ToString(), SaveMenuCancelClicked);
-		Messenger.AddListener(LevelCreatorUINotification.SaveMenuSaveClicked.ToString(), SaveMenuSaveClicked);
-		Messenger<InputNotificationData>.AddListener(LevelCreatorUINotification.GenericInputSubmitted.ToString(), GenericInputSubmitted);
+		Messenger.AddListener(LevelCreatorUIMessage.CreateButtonClicked.ToString(), CreateButtonClicked);
+		Messenger.AddListener(LevelCreatorUIMessage.LoadMenuCancelClicked.ToString(), LoadMenuCancelClicked);
+		Messenger.AddListener(LevelCreatorUIMessage.LoadMenuLoadClicked.ToString(), LoadMenuLoadClicked);
+		Messenger.AddListener(LevelCreatorUIMessage.SaveMenuCancelClicked.ToString(), SaveMenuCancelClicked);
+		Messenger.AddListener(LevelCreatorUIMessage.SaveMenuSaveClicked.ToString(), SaveMenuSaveClicked);
+		Messenger<InputMessageData>.AddListener(LevelCreatorUIMessage.GenericInputSubmitted.ToString(), GenericInputSubmitted);
 
 		fileMenu.GetComponent<UIPopupList>().onSelectionChange = FileMenuSelectionChanged;
 	}
 
 	void DeRegisterUIListeners()
 	{
-		Messenger.RemoveListener(LevelCreatorUINotification.CreateButtonClicked.ToString(), CreateButtonClicked);
-		Messenger.RemoveListener(LevelCreatorUINotification.LoadMenuCancelClicked.ToString(), LoadMenuCancelClicked);
-		Messenger.RemoveListener(LevelCreatorUINotification.LoadMenuLoadClicked.ToString(), LoadMenuLoadClicked);
-		Messenger.RemoveListener(LevelCreatorUINotification.SaveMenuCancelClicked.ToString(), SaveMenuCancelClicked);
-		Messenger.RemoveListener(LevelCreatorUINotification.SaveMenuSaveClicked.ToString(), SaveMenuSaveClicked);
-		Messenger<InputNotificationData>.RemoveListener(LevelCreatorUINotification.GenericInputSubmitted.ToString(), GenericInputSubmitted);
+		Messenger.RemoveListener(LevelCreatorUIMessage.CreateButtonClicked.ToString(), CreateButtonClicked);
+		Messenger.RemoveListener(LevelCreatorUIMessage.LoadMenuCancelClicked.ToString(), LoadMenuCancelClicked);
+		Messenger.RemoveListener(LevelCreatorUIMessage.LoadMenuLoadClicked.ToString(), LoadMenuLoadClicked);
+		Messenger.RemoveListener(LevelCreatorUIMessage.SaveMenuCancelClicked.ToString(), SaveMenuCancelClicked);
+		Messenger.RemoveListener(LevelCreatorUIMessage.SaveMenuSaveClicked.ToString(), SaveMenuSaveClicked);
+		Messenger<InputMessageData>.RemoveListener(LevelCreatorUIMessage.GenericInputSubmitted.ToString(), GenericInputSubmitted);
 	}
 
 	void HandleProgress (string arg1, float arg2)
@@ -243,11 +243,11 @@ public class LevelCreatorUIController : MonoBehaviour
 				
 				}
 			}
-			StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState (LevelCreatorStates.LevelCreation);
+			StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.ChangeState (LevelCreatorStates.LevelCreation);
 		}
 	}
 	
-	void GenericInputSubmitted(InputNotificationData inputData)
+	void GenericInputSubmitted(InputMessageData inputData)
 	{
 		if(inputData.go.name == "MapHeight-Input")
 		{
@@ -274,7 +274,7 @@ public class LevelCreatorUIController : MonoBehaviour
 		switch(item)
 		{
 			case "Open":
-				StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState(LevelCreatorStates.LoadingMap);
+				StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.ChangeState(LevelCreatorStates.LoadingMap);
 				break;
 			case "TestMap":
 				var errorMessage = "";
@@ -289,7 +289,7 @@ public class LevelCreatorUIController : MonoBehaviour
 
 					LevelSerializer.SaveGame("BeforePreviewSave");
 
-					StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState(LevelCreatorStates.TestingMap);
+					StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.ChangeState(LevelCreatorStates.TestingMap);
 				}
 				else
 				{
@@ -297,10 +297,10 @@ public class LevelCreatorUIController : MonoBehaviour
 				}
 				break;
 			case "StopTesting":
-				StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState(LevelCreatorStates.LevelCreation);
+				StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.ChangeState(LevelCreatorStates.LevelCreation);
 				break;
 			case "Save":
-				StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState(LevelCreatorStates.SavingMap);
+				StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.ChangeState(LevelCreatorStates.SavingMap);
 				break;
 			case "Help":
 				Debug.LogError("Help screen not implemented!");
@@ -308,7 +308,7 @@ public class LevelCreatorUIController : MonoBehaviour
 			case "Exit":
 				if(fileMenu.GetComponent<UIPopupList>().items.Contains("Save"))
 				{
-					StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState(LevelCreatorStates.FrontMenu);
+					StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.ChangeState(LevelCreatorStates.FrontMenu);
 				}
 				else
 				{
@@ -323,9 +323,9 @@ public class LevelCreatorUIController : MonoBehaviour
 	void LoadMenuCancelClicked()
 	{
 		if(isInFrontMenu)
-			StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState(LevelCreatorStates.FrontMenu);
+			StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.ChangeState(LevelCreatorStates.FrontMenu);
 		else
-			StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState(LevelCreatorStates.LevelCreation);
+			StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.ChangeState(LevelCreatorStates.LevelCreation);
 	}
 	
 	void LoadMenuLoadClicked()
@@ -340,9 +340,9 @@ public class LevelCreatorUIController : MonoBehaviour
 	void SaveMenuCancelClicked()
 	{
 		if(isInFrontMenu)
-			StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState(LevelCreatorStates.FrontMenu);
+			StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.ChangeState(LevelCreatorStates.FrontMenu);
 		else
-			StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState(LevelCreatorStates.LevelCreation);
+			StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.ChangeState(LevelCreatorStates.LevelCreation);
 	}
 	
 	void SaveMenuSaveClicked()
@@ -368,7 +368,7 @@ public class LevelCreatorUIController : MonoBehaviour
 			else
 			{
 				selectedFileName = null;
-				StateMachine<LevelCreatorStates, LevelCreatorStateNotification>.ChangeState (LevelCreatorStates.LevelCreation);
+				StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.ChangeState (LevelCreatorStates.LevelCreation);
 			}
 		}
 	}
