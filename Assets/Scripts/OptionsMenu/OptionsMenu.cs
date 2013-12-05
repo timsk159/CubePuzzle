@@ -21,8 +21,11 @@ public class OptionsMenu : MonoBehaviour
 	{
 		Messenger.AddListener(OptionsMenuMessage.Back.ToString(), Back);
 		Messenger.AddListener(OptionsMenuMessage.Apply.ToString(), Apply);
+		ApplyChangesToUI();
+	}
 
-
+	void ApplyChangesToUI()
+	{
 		fullScreenToggle.isChecked = currentOptions.fullscreen;
 		qualityLevelSelectionList.selection = currentOptions.qualityLevel;
 		colorBlindSelectionList.selection = currentOptions.colorBlindMode.ToString();
@@ -45,6 +48,8 @@ public class OptionsMenu : MonoBehaviour
 		ApplyChanges(newOptions);
 
 		SaveOptions();
+
+		ApplyChangesToUI();
 	}
 
 	void ApplyChanges(Options newOptions)
