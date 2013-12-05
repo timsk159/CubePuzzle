@@ -3,7 +3,7 @@ using System.Collections;
 
 public enum OptionsMenuMessage
 {
-	BackPressed
+	Back, Apply
 };
 
 public class OptionsMenuUINotifier : MonoBehaviour 

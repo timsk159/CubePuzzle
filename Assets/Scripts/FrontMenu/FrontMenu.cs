@@ -8,7 +8,8 @@ public enum FrontMenuUIMessage
 {
 	StoryModeButtonPressed, UserLevelsButtonPressed, LevelCreatorButtonPressed, QuitButtonPressed,
 	PlayUserLevelButtonPressed, CancelUserLevelMenuPressed,
-	StoryModeContinueButtonPressed, StoryModeLevelButtonPressed, StoryModeCancelButtonPressed
+	StoryModeContinueButtonPressed, StoryModeLevelButtonPressed, StoryModeCancelButtonPressed,
+	OptionsMenuPressed
 };
 
 public class FrontMenu : MonoBehaviour 
@@ -18,6 +19,7 @@ public class FrontMenu : MonoBehaviour
 	public GameObject frontMenuPanel;
 	public GameObject loadMapPanel;
 	public GameObject storyModePanel;
+	public GameObject optionsMenuPanel;
 	
 	public GameObject fileMenuEntryPrefab;
 
@@ -25,6 +27,7 @@ public class FrontMenu : MonoBehaviour
 
 	public string selectedFileName;
 	private GameObject storyModeContinueButton;
+	OptionsMenu optionsMenu;
 	
 	void Start ()
 	{
@@ -36,11 +39,15 @@ public class FrontMenu : MonoBehaviour
 		Messenger.AddListener(FrontMenuUIMessage.CancelUserLevelMenuPressed.ToString(), CancelUserLevelMenuPressed);
 		Messenger.AddListener(FrontMenuUIMessage.StoryModeContinueButtonPressed.ToString(), StoryModeContinueButtonPressed);
 		Messenger.AddListener(FrontMenuUIMessage.StoryModeCancelButtonPressed.ToString(), StoryModeCancelButtonPressed);
+		Messenger.AddListener(FrontMenuUIMessage.OptionsMenuPressed.ToString(), OptionsMenuPressed);
+		Messenger.AddListener(OptionsMenuMessage.Back.ToString(), OptionsMenuBack);
 
 		Messenger<string>.AddListener(FrontMenuUIMessage.StoryModeLevelButtonPressed.ToString(), StoryModeLevelButtonPressed);
 
 		if(firstLoad)
 		{
+			optionsMenu = GetComponent<OptionsMenu>();
+			optionsMenu.LoadOptions();
 			EnsureDirectoriesExist();
 			RegisterPrefabPaths ();
 			firstLoad = false;
@@ -160,6 +167,18 @@ public class FrontMenu : MonoBehaviour
 		NGUITools.SetActive(frontMenuPanel, true);
 		NGUITools.SetActive(loadMapPanel, false);
 		selectedFileName = "";
+	}
+
+	void OptionsMenuPressed()
+	{
+		NGUITools.SetActive(optionsMenuPanel, true);
+		NGUITools.SetActive(frontMenuPanel, false);
+	}
+
+	void OptionsMenuBack()
+	{
+		NGUITools.SetActive(optionsMenuPanel, false);
+		NGUITools.SetActive(frontMenuPanel, true);
 	}
 
 	void QuitButtonPressed()
