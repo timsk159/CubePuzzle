@@ -53,7 +53,7 @@ public class DragAndDropController : MonoBehaviour
 		{
 			SetupDoorPiece(draggingObj);
 		}
-	else if(draggingObj.name.Contains("PlayerStart"))
+		else if(draggingObj.name.Contains("PlayerStart"))
 		{
 			SetupStartPiece(draggingObj);
 		}
@@ -66,8 +66,11 @@ public class DragAndDropController : MonoBehaviour
 					child.collider.enabled = false;
 			}
 		}
-		var worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		worldPos.z = 2.5f;
+		var mousePos = Input.mousePosition;
+		mousePos.z = 8;
+		var worldPos = Camera.main.ScreenToWorldPoint(mousePos);
+	//	worldPos.z = 0.0f;
+		print("Objects starting position: " + worldPos);
 		draggingObj.transform.position = worldPos;
 	}
 
@@ -294,7 +297,7 @@ public class DragAndDropController : MonoBehaviour
 		var doorMenuPiece = doorMenuPieceGo.GetComponent<DoorPiece>();
 		var doorPiece = doorGo.GetComponent<DoorPiece>();
 
-		doorPiece.SetDoorColour(doorMenuPiece.theDoor.objColour);
+		doorPiece.SetDoorColour(doorMenuPiece.theDoor.objColour, true);
 		doorPiece.theDoor.initialColour = doorMenuPiece.theDoor.objColour;
 		doorPiece.ChangeColour(doorMenuPiece.objColour);
 		doorGo.AddComponent<DraggableRotatableMapObject>();

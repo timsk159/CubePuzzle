@@ -15,7 +15,7 @@ public class DoorPiece : FloorPiece
 
 		theDoor = GetComponentInChildren<Door>();
 
-		SetDoorColour(theDoor.objColour);
+		SetDoorColour(theDoor.objColour, true);
 	}
 	
 	public override void ChangeColour(Colour colorToChangeTo)
@@ -27,6 +27,16 @@ public class DoorPiece : FloorPiece
 		CheckDoor();
 	}
 
+	public void ChangeColour(Colour colorToChangeTo, bool checkDoor)
+	{
+		useSharedMaterial = false;
+
+		base.ChangeColour(colorToChangeTo);
+
+		if(checkDoor)
+			CheckDoor();
+	}
+
 	public override void RotateColour ()
 	{
 		useSharedMaterial = false;
@@ -35,8 +45,25 @@ public class DoorPiece : FloorPiece
 
 		CheckDoor();
 	}
-	
-	public void RotateDoorColour()
+
+	public void RotateColour(bool checkDoor)
+	{
+		useSharedMaterial = false;
+
+		int currentColourIndex = (int)objColour;
+		//var values = Enum.GetValues(typeof(Colour));
+
+		currentColourIndex++;
+
+		if(currentColourIndex == cachedEnumValues.Length)
+		{
+			currentColourIndex = 1;
+		}
+
+		ChangeColour((Colour)currentColourIndex, checkDoor);
+	}
+
+	public void RotateDoorColour(bool checkDoor)
 	{
 		int currentColourIndex = (int)theDoor.objColour;
 		//var values = Enum.GetValues(typeof(Colour));
@@ -47,15 +74,16 @@ public class DoorPiece : FloorPiece
 		{
 			currentColourIndex = 1;
 		}
-		SetDoorColour((Colour)currentColourIndex);
+		SetDoorColour((Colour)currentColourIndex, checkDoor);
 	}
 	
-	public void SetDoorColour(Colour colourToSet)
+	public void SetDoorColour(Colour colourToSet, bool checkDoor)
 	{		
 		theDoor.objColour = colourToSet;
 		theDoor.renderer.material.color = ColorManager.GetObjectRealColor(theDoor.objColour);
-		
-		CheckDoor();
+
+		if(checkDoor)
+			CheckDoor();
 	}
 	
 	void CheckDoor()

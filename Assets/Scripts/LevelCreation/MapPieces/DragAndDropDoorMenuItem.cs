@@ -22,12 +22,12 @@ public class DragAndDropDoorMenuItem : DragAndDropMenuItem
 
 	void HandleDoorColourCycleButtonClick (GameObject go)
 	{
-		doorPiece.RotateDoorColour();
+		doorPiece.RotateDoorColour(false);
 	}
 
 	void HandleColourCycleButtonClick (GameObject go)
 	{
-		doorPiece.RotateColour();
+		doorPiece.RotateColour(false);
 	}
 	
 	protected override void OnPress(bool isPressed)
