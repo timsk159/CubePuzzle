@@ -66,11 +66,13 @@ public class DragAndDropController : MonoBehaviour
 					child.collider.enabled = false;
 			}
 		}
+	
 		var mousePos = Input.mousePosition;
-		mousePos.z = 8;
+
+		mousePos.z = 8.5f;
+
 		var worldPos = Camera.main.ScreenToWorldPoint(mousePos);
-	//	worldPos.z = 0.0f;
-		print("Objects starting position: " + worldPos);
+
 		draggingObj.transform.position = worldPos;
 	}
 
@@ -114,15 +116,17 @@ public class DragAndDropController : MonoBehaviour
 	}
 
 	void MapObjectPressed(GameObject objPressed)
-	{		
+	{
+		//If we are already dragging something, and it's not this object. Delete it (Something likely went wrong).
 		if(draggingObj != null && objPressed != draggingObj)
 		{
+			Debug.LogError("Tried dragging an object when one was already dragging, this is bad!");
 			Destroy(draggingObj);
 		}
 
 		ReplaceFloorPiece(objPressed.transform.position);
-		
 		draggingObj = objPressed;
+		DoDragging(Vector3.up);
 	}
 
 	void TestingMapEnter(StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData changeData)
@@ -137,17 +141,18 @@ public class DragAndDropController : MonoBehaviour
 			if(Input.GetMouseButtonUp(0))
 			{
 				FinishDragging();
-				return;
+				lastMousePos = Input.mousePosition;
+				//return;
 			}
 			if(Input.GetMouseButton(0))
 			{
 				if(lastMousePos != Vector3.zero)
 				{
 					var delta = Input.mousePosition - lastMousePos;
-					DoDragging(delta);
+					if(delta != Vector3.zero)
+						DoDragging(delta);
 				}
 			}
-			lastMousePos = Input.mousePosition;
 		}
 		if(selectedMenuItemPrefab != null)
 		{
@@ -159,6 +164,7 @@ public class DragAndDropController : MonoBehaviour
 				}
 			}
 		}
+		lastMousePos = Input.mousePosition;
 	}
 	
 	void DoDragging(Vector3 delta)
@@ -195,7 +201,7 @@ public class DragAndDropController : MonoBehaviour
 			}
 		}
 	}
-	
+
 	void FinishDragging()
 	{
 		RaycastHit hit;
@@ -232,6 +238,7 @@ public class DragAndDropController : MonoBehaviour
 		else
 		{
 			Destroy(draggingObj);
+			draggingObj = null;
 		}
 	}
 
@@ -327,7 +334,7 @@ public class DragAndDropController : MonoBehaviour
 	{
 
 	}
-	
+
 	void ReplaceFloorPiece(Vector3 pos)
 	{
 		GameObject nullPiece = (GameObject)Instantiate(assetManager.nullCubePrefab, pos, Quaternion.identity);
