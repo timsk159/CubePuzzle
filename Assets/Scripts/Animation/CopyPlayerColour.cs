@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class CopyPlayerColour : MonoBehaviour 
 {
@@ -23,7 +24,13 @@ public class CopyPlayerColour : MonoBehaviour
 
 	void PlayerChangedColour(Colour playersNewColour)
 	{
-		var targetColour = ColorManager.GetObjectRealColor(playersNewColour);
+		var currentColourIndex = (int)playersNewColour;
+		currentColourIndex++;
+		if(currentColourIndex == Enum.GetValues(typeof(Colour)).Length)
+		{
+			currentColourIndex = 1;
+		}
+		var targetColour = ColorManager.GetObjectRealColor((Colour)currentColourIndex);
 
 		if(includeAlpha)
 		{

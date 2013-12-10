@@ -19,9 +19,15 @@ public class DragAndDropController : MonoBehaviour
 	GameObject selectedMenuItem;
 	GameObject selectedMenuItemPrefab;
 	GameObject selectedMenuItemHighlight;
+
+	int layerMask = 0;
 	
 	void Start()
 	{
+		var levelCreationLayer = 1 << 10;
+		var nullLayer = 1 << 12;
+		layerMask = levelCreationLayer | nullLayer;
+
 		levelCreator = GameObject.Find("LevelCreator").GetComponent<LevelCreator>();
 		assetManager = GameObject.Find("LevelCreator").GetComponent<LevelAssetManager>();
 
@@ -172,8 +178,6 @@ public class DragAndDropController : MonoBehaviour
 		RaycastHit hit;
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		
-		int layerMask = 1 << 10;
-		
 		if(draggingObj != null)
 		{
 			if(draggingObj.transform.localScale.x < 1.1f)
@@ -206,9 +210,7 @@ public class DragAndDropController : MonoBehaviour
 	{
 		RaycastHit hit;
 		Ray ray = Camera.main.ScreenPointToRay(lastMousePos);
-
-		int layerMask = 1 << 10;
-		
+	
 		if(Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
 		{
 			if(hit.collider != null)
@@ -247,7 +249,7 @@ public class DragAndDropController : MonoBehaviour
 		RaycastHit hit;
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-		if(Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << 10))
+		if(Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
 		{
 			if(hit.collider != null)
 			{
