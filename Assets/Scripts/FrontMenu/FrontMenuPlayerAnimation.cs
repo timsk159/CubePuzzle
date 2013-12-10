@@ -20,15 +20,7 @@ public class FrontMenuPlayerAnimation : MonoBehaviour
 	{
 		//Apply force for a random amount of time.
 		//random timer between movements
-		//Constrain to mesh.
-
-		/*
-		var randomDirection = new Vector3(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f));
-
-		randomDirection.Normalize();
-
-		var randomForce = randomDirection * Random.Range(0.0f, 50.0f);
-		*/
+		//Wall avoidance.
 
 		if(Time.time > timer)
 		{
@@ -43,8 +35,6 @@ public class FrontMenuPlayerAnimation : MonoBehaviour
 
 			force = hit.normal * oldForce.magnitude;
 		}
-		Debug.DrawRay(player.transform.position, force.normalized);
-
 		player.rigidbody.AddForce(force);
 	}
 }
