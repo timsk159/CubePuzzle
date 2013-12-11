@@ -8,7 +8,12 @@ public class FrontMenuPlayerAnimation : MonoBehaviour
 	public float maxTimeBetween;
 	float timer;
 
+	float currentCountdown;
+
+	Vector3 previousForce;
 	Vector3 force;
+
+	float forceT = 0;
 
 	void Start()
 	{
@@ -24,8 +29,10 @@ public class FrontMenuPlayerAnimation : MonoBehaviour
 
 		if(Time.time > timer)
 		{
-			timer = Time.time + Random.Range(minTimeBetween, maxTimeBetween);
+			currentCountdown = Random.Range(minTimeBetween, maxTimeBetween);
+			timer = Time.time + currentCountdown;
 			force = new Vector3(Random.Range(-50.0f, 50.0f), 0, Random.Range(-50.0f, 50.0f));
+			forceT = 0;
 		}
 		RaycastHit hit;
 
@@ -35,6 +42,17 @@ public class FrontMenuPlayerAnimation : MonoBehaviour
 
 			force = hit.normal * oldForce.magnitude;
 		}
-		player.rigidbody.AddForce(force);
+		//Added: Lerp to new force over time (smooths the direction changes).
+		if(previousForce != null)
+		{
+			forceT += Time.deltaTime / (currentCountdown / 3);
+			var smoothedForce = Vector3.Lerp(previousForce, force, forceT);
+			player.rigidbody.AddForce(smoothedForce);
+
+		}
+		else
+		{
+			player.rigidbody.AddForce(force);
+		}
 	}
 }
