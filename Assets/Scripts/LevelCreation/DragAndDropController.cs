@@ -231,8 +231,12 @@ public class DragAndDropController : MonoBehaviour
 				}
 				draggingObj.layer = 10;
 				draggingObj.transform.localScale = Vector3.one;
+				//Before moving the object, double check that it's position is correct.
+				draggingObj.transform.position = objToReplace.transform.position;
+
 				draggingObj.transform.parent = levelCreator.mapRoot.transform;
 				Messenger<GameObject>.Invoke(DragAndDropMessage.ObjectPlaced.ToString(), draggingObj);
+				print("Drag finished, replacing object: " + objToReplace.name + " With object: " + draggingObj.name);
 				draggingObj = null;
 				Destroy(objToReplace);
 			}
