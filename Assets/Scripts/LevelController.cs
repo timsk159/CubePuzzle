@@ -45,7 +45,7 @@ public class LevelController : MonoSingleton<LevelController>
 	{
 		get
 		{
-			if(Application.loadedLevelName == "UserLevelScene")
+			if(Application.loadedLevelName == "UserLevelScene" || Application.loadedLevelName == "LevelCreator")
 				_isStoryMode = false;
 			else
 				_isStoryMode = true;
@@ -234,7 +234,7 @@ public class LevelController : MonoSingleton<LevelController>
 		}
 	}
 
-	GameObject[] OptimiseLevelMesh()
+	public GameObject[] OptimiseLevelMesh()
 	{
 		List<GameObject> combinedMeshes = new List<GameObject>();
 		var mapObjects = GameObject.Find("MapRoot").GetComponentsInChildren<ColorCollisionObject>().ToList();
@@ -367,7 +367,13 @@ public class LevelController : MonoSingleton<LevelController>
 	public void SetCheckpoint()
 	{
 		hasCheckpoint = true;
-		LevelStateController.Instance.SetCheckPoint();
+		if(Application.loadedLevelName == "LevelCreator")
+		{
+			LevelTestStateController.Instance.SetCheckpoint();
+		}
+		else
+			LevelStateController.Instance.SetCheckPoint();
+
 		if(isStoryMode)
 		{
 			StoryProgressController.Instance.SetStoryProgressSave();
@@ -376,10 +382,23 @@ public class LevelController : MonoSingleton<LevelController>
 
 	public void LoadCheckpoint()
 	{
-		LevelStateController.Instance.LoadCheckpoint(delegate(GameObject arg1, List<GameObject> arg2) {
-			InitLevel(false);
-			hasCheckpoint = true;
-	});
+		if(Application.loadedLevelName == "LevelCreator")
+		{
+			LevelTestStateController.Instance.LoadCheckpoint();
+		}
+		else
+		{
+			LevelStateController.Instance.LoadCheckpoint(delegate(GameObject arg1, List<GameObject> arg2)
+			{
+				InitLevel(false);
+				hasCheckpoint = true;
+			});
+		}
+	}
+
+	public void SetCheckpointLevelTest()
+	{
+
 	}
 
 	void PlayerKilled()

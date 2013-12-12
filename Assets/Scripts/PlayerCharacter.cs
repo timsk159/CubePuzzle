@@ -35,6 +35,8 @@ public class PlayerCharacter : MonoBehaviour
 		Messenger.AddListener(LevelIntroMessage.IntroFinished.ToString(), IntroFinished);
 		StateMachineMessenger.AddListener(LevelStateMessage.InGameExit.ToString(), InGameExit);
 		StateMachineMessenger.AddListener(LevelStateMessage.InGameEnter.ToString(), InGameEnter);
+		Messenger<StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData>.AddListener(LevelCreatorStateMessage.TestingMapEnter.ToString(), TestingMapEnter);
+		Messenger<StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData>.AddListener(LevelCreatorStateMessage.TestingMapExit.ToString(), TestingMapExit);
 	}
 
 	void OnDestroy()
@@ -42,6 +44,8 @@ public class PlayerCharacter : MonoBehaviour
 		Messenger.RemoveListener(LevelIntroMessage.IntroFinished.ToString(), IntroFinished);
 		StateMachineMessenger.RemoveListener(LevelStateMessage.InGameExit.ToString(), InGameExit);
 		StateMachineMessenger.RemoveListener(LevelStateMessage.InGameEnter.ToString(), InGameEnter);
+		Messenger<StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData>.RemoveListener(LevelCreatorStateMessage.TestingMapEnter.ToString(), TestingMapEnter);
+		Messenger<StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData>.RemoveListener(LevelCreatorStateMessage.TestingMapExit.ToString(), TestingMapExit);
 	}
 
 	public void DisablePhysics()
@@ -60,7 +64,7 @@ public class PlayerCharacter : MonoBehaviour
 	
 	void Update()
 	{
-		if(Application.loadedLevelName != "LevelCreator")
+		if(smokeParticles != null)
 		{
 			if(smokeParticles.isPlaying)
 			{
@@ -80,24 +84,24 @@ public class PlayerCharacter : MonoBehaviour
 			{
 				smokeParticles.Stop();
 			}
-			/*
-			if(Input.GetKeyDown(KeyCode.E))
+		}
+		/*
+		if(Input.GetKeyDown(KeyCode.E))
+		{
+			if(currentInteractionObject != null)
 			{
-				if(currentInteractionObject != null)
-				{
-					currentInteractionObject.PlayerInteracted();
-				}
+				currentInteractionObject.PlayerInteracted();
 			}
-			*/
-			if(canReset && !LevelSerializer.IsDeserializing)
+		}
+		*/
+		if(canReset && !LevelSerializer.IsDeserializing)
+		{
+			if(Input.GetKeyDown(KeyCode.Space))
 			{
-				if(Input.GetKeyDown(KeyCode.Space))
-				{
-					if(LevelController.Instance.hasCheckpoint)
-						LevelController.Instance.LoadCheckpoint();
-					else
-						LevelController.Instance.ResetLevel();
-				}
+				if(LevelController.Instance.hasCheckpoint)
+					LevelController.Instance.LoadCheckpoint();
+				else
+					LevelController.Instance.ResetLevel();
 			}
 		}
 	}
@@ -147,5 +151,15 @@ public class PlayerCharacter : MonoBehaviour
 		}
 		
 		ChangeColour((Colour)currentColourIndex);
+	}
+
+	void TestingMapEnter(StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData changeData)
+	{
+		canReset = true;
+	}
+
+	void TestingMapExit(StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData changeData)
+	{
+		canReset = false;
 	}
 }

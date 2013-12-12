@@ -182,8 +182,7 @@ public class FrontMenu : MonoBehaviour
 	}
 
 	void QuitButtonPressed()
-	{
-		PlayerPrefs.DeleteAll(); 
+	{ 
 		Application.Quit();
 	}
 
