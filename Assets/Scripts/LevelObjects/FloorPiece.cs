@@ -77,7 +77,6 @@ public class FloorPiece : ColorCollisionObject
 
 		if(sharedMeshForThisPiece != null && iTween.Count(sharedMeshForThisPiece) < 1)
 		{
-			//iTween.ScaleTo(sharedMeshForThisPiece, Vector3.one, 0.5f);
 			iTween.MoveTo(sharedMeshForThisPiece, Vector3.zero, 0.5f);
 		}
 	}
@@ -95,7 +94,6 @@ public class FloorPiece : ColorCollisionObject
 		}
 		if (sharedMeshForThisPiece != null && iTween.Count(sharedMeshForThisPiece) < 1)
 		{
-			//iTween.ScaleTo(sharedMeshForThisPiece, newSize, 0.5f);
 			iTween.MoveTo(sharedMeshForThisPiece, new Vector3(0, 0.3f, 0), 0.5f);
 		}
 	}

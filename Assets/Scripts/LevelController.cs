@@ -355,13 +355,20 @@ public class LevelController : MonoSingleton<LevelController>
 
 	public void ResetLevel()
 	{
-		//LevelSerializer has some odd behavior when your trying to load in objects that already exist
-		//We have to do some tidy up before we reset the level.
-		DestroyCombinedMeshes();
-		Destroy(playerChar.gameObject);
-		Destroy(mapRoot);
-		LevelStateController.Instance.LoadInitialState();
-		StateMachine<LevelState, LevelStateMessage>.ChangeState(LevelState.InGame);
+		if(Application.loadedLevelName == "LevelCreator")
+		{
+			LevelTestStateController.Instance.LoadCheckpoint();
+		}
+		else
+		{
+			//LevelSerializer has some odd behavior when your trying to load in objects that already exist
+			//We have to do some tidy up before we reset the level.
+			DestroyCombinedMeshes();
+			Destroy(playerChar.gameObject);
+			Destroy(mapRoot);
+			LevelStateController.Instance.LoadInitialState();
+			StateMachine<LevelState, LevelStateMessage>.ChangeState(LevelState.InGame);
+		}
 	}
 
 	public void SetCheckpoint()

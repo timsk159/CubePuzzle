@@ -24,13 +24,28 @@ public class LevelTestStateController : MonoSingleton<LevelTestStateController>
 		var player = GameObject.FindGameObjectWithTag("Player");
 		LevelSerializer.LoadObjectTree(checkpoint, delegate
 		{
-			DestroyOldCombinedMeshes();
-			player.transform.position = playerObjSave.pos;
-			LevelController.Instance.OptimiseLevelMesh();
-			player.GetComponent<PlayerCharacter>().ChangeColour(playerObjSave.colour);
+			StartCoroutine(SetupMap(player));
 		});
+	}
 
+	IEnumerator SetupMap(GameObject player)
+	{	
+		DestroyOldCombinedMeshes();
+		player.transform.position = playerObjSave.pos;
+		LevelController.Instance.OptimiseLevelMesh();
+		yield return new WaitForEndOfFrame();
+		InitMapObjects();
+		player.GetComponent<PlayerCharacter>().ChangeColour(playerObjSave.colour);
+	}
 
+	void InitMapObjects()
+	{
+		var colourObjs = (ColorCollisionObject[])FindObjectsOfType(typeof(ColorCollisionObject));
+
+		foreach(var obj in colourObjs)
+		{
+			obj.ChangeColour(obj.objColour);
+		}
 	}
 
 	void DestroyOldCombinedMeshes()
