@@ -138,14 +138,7 @@ public class LevelCreatorController : MonoBehaviour
 	void TestingMapEnter(StateM.StateChangeData changeData)
 	{
 		InitMapForPreview();
-		StartCoroutine(TestRoutine());
-	}
-
-	IEnumerator TestRoutine()
-	{
-		yield return new WaitForEndOfFrame();
 		LevelTestStateController.Instance.SetCheckpoint();
-
 	}
 
 	void TestingMapExit(StateM.StateChangeData changeData)
