@@ -64,6 +64,8 @@ public class FrontMenu : MonoBehaviour
 		Messenger.RemoveListener(FrontMenuUIMessage.CancelUserLevelMenuPressed.ToString(), CancelUserLevelMenuPressed);
 		Messenger.RemoveListener(FrontMenuUIMessage.StoryModeContinueButtonPressed.ToString(), StoryModeContinueButtonPressed);
 		Messenger.RemoveListener(FrontMenuUIMessage.StoryModeCancelButtonPressed.ToString(), StoryModeCancelButtonPressed);
+		Messenger.RemoveListener(FrontMenuUIMessage.OptionsMenuPressed.ToString(), OptionsMenuPressed);
+		Messenger.RemoveListener(OptionsMenuMessage.Back.ToString(), OptionsMenuBack);
 
 		Messenger<string>.RemoveListener(FrontMenuUIMessage.StoryModeLevelButtonPressed.ToString(), StoryModeLevelButtonPressed);
 	}
