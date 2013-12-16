@@ -22,29 +22,35 @@ public class FloorPiece : ColorCollisionObject
 
 	protected void PlayerChangedColour(Colour colourToChangeTo)
 	{
-		if(colourToChangeTo == objColour)
+		if(enabled && gameObject.activeInHierarchy && gameObject.activeSelf)
 		{
-			MakeImpassable();
-		}
-		else
-		{
-			MakePassable();
+			if(colourToChangeTo == objColour)
+			{
+				MakeImpassable();
+			}
+			else
+			{
+				MakePassable();
+			}
 		}
 	}
 	
 	public override void ChangeColour(Colour colorToChangeTo)
 	{
-		base.ChangeColour (colorToChangeTo);
-
-		if(LevelController.Instance != null)
+		if(enabled && gameObject.activeInHierarchy && gameObject.activeSelf)
 		{
-			if(LevelController.Instance.PlayerColour == objColour)
+			base.ChangeColour(colorToChangeTo);
+
+			if(LevelController.Instance != null)
 			{
-				MakeImpassable();
-			}
-			else
-			{			
-				MakePassable();
+				if(LevelController.Instance.PlayerColour == objColour)
+				{
+					MakeImpassable();
+				}
+				else
+				{			
+					MakePassable();
+				}
 			}
 		}
 	}

@@ -34,9 +34,9 @@ public class LevelTestStateController : MonoSingleton<LevelTestStateController>
 		player.transform.position = playerObjSave.pos;
 		LevelController.Instance.OptimiseLevelMesh();
 		yield return new WaitForEndOfFrame();
-		InitMapObjects();
-		yield return new WaitForEndOfFrame();
 		player.GetComponent<PlayerCharacter>().ChangeColour(playerObjSave.colour);
+		yield return new WaitForEndOfFrame();
+		InitMapObjects();
 	}
 
 	void InitMapObjects()
