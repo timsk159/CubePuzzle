@@ -71,7 +71,6 @@ public class FloorPiece : ColorCollisionObject
 
 	void MakePassable()
 	{
-		FindSharedMesh();
 
 		if(collider != null)
 		{
@@ -81,9 +80,14 @@ public class FloorPiece : ColorCollisionObject
 			thisCollider.size = newColliderSize;
 		}
 
-		if(sharedMeshForThisPiece.IsUp)
+		if(useSharedMaterial)
 		{
-			sharedMeshForThisPiece.MoveDown();
+			FindSharedMesh();
+
+			if(sharedMeshForThisPiece.IsUp)
+			{
+				sharedMeshForThisPiece.MoveDown();
+			}
 		}
 
 		/*
@@ -96,7 +100,6 @@ public class FloorPiece : ColorCollisionObject
 
 	void MakeImpassable()
 	{
-		FindSharedMesh();
 
 		if(collider != null)
 		{
@@ -106,9 +109,14 @@ public class FloorPiece : ColorCollisionObject
 			thisCollider.size = newColliderSize;
 		}
 
-		if(!sharedMeshForThisPiece.IsUp)
+		if(useSharedMaterial)
 		{
-			sharedMeshForThisPiece.MoveUp();
+			FindSharedMesh();
+
+			if(!sharedMeshForThisPiece.IsUp)
+			{
+				sharedMeshForThisPiece.MoveUp();
+			}
 		}
 
 		/*
@@ -119,24 +127,22 @@ public class FloorPiece : ColorCollisionObject
 		*/
 	}
 
-	protected override void OnDeserialized()
-	{
-		FindSharedMesh();
-	}
-
 	void FindSharedMesh()
 	{
-		if (sharedMeshForThisPiece == null)
+		if(useSharedMaterial)
 		{
-			var meshGO = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));
-			if(meshGO == null)
+			if (sharedMeshForThisPiece == null)
 			{
-				Debug.LogError("Could not find shared mesh for piece: " + gameObject.name);
-				return;
+				var meshGO = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));
+				if(meshGO == null)
+				{
+					Debug.LogError("Could not find shared mesh for piece: " + gameObject.name);
+					return;
+				}
+				sharedMeshForThisPiece = meshGO.GetComponent<SharedMesh>();
+				if(sharedMeshForThisPiece == null)
+					sharedMeshForThisPiece = meshGO.AddComponent<SharedMesh>();
 			}
-			sharedMeshForThisPiece = meshGO.GetComponent<SharedMesh>();
-			if(sharedMeshForThisPiece == null)
-				sharedMeshForThisPiece = meshGO.AddComponent<SharedMesh>();
 		}
 	}
 }
