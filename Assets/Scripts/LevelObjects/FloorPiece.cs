@@ -5,7 +5,7 @@ using StateM = StateMachine<LevelState, LevelStateMessage>;
 
 public class FloorPiece : ColorCollisionObject 
 {
-	GameObject sharedMeshForThisPiece;
+	SharedMesh sharedMeshForThisPiece;
 
 	protected override void Start()
 	{
@@ -75,10 +75,17 @@ public class FloorPiece : ColorCollisionObject
 			thisCollider.size = newColliderSize;
 		}
 
+		if(sharedMeshForThisPiece.IsUp)
+		{
+			sharedMeshForThisPiece.MoveDown();
+		}
+
+		/*
 		if(sharedMeshForThisPiece != null && iTween.Count(sharedMeshForThisPiece) < 1)
 		{
 			iTween.MoveTo(sharedMeshForThisPiece, Vector3.zero, 0.5f);
 		}
+		*/
 	}
 
 	void MakeImpassable()
@@ -92,10 +99,18 @@ public class FloorPiece : ColorCollisionObject
 
 			thisCollider.size = newColliderSize;
 		}
+
+		if(!sharedMeshForThisPiece.IsUp)
+		{
+			sharedMeshForThisPiece.MoveUp();
+		}
+
+		/*
 		if (sharedMeshForThisPiece != null && iTween.Count(sharedMeshForThisPiece) < 1)
 		{
 			iTween.MoveTo(sharedMeshForThisPiece, new Vector3(0, 0.3f, 0), 0.5f);
 		}
+		*/
 	}
 
 	protected override void OnDeserialized()
@@ -107,7 +122,15 @@ public class FloorPiece : ColorCollisionObject
 	{
 		if (sharedMeshForThisPiece == null)
 		{
-			sharedMeshForThisPiece = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));
+			var meshGO = GameObject.Find("CombinedMesh: " + renderer.sharedMaterial.name.Replace("(Instance)", ""));
+			if(meshGO == null)
+			{
+				Debug.LogError("Could not find shared mesh for piece: " + gameObject.name);
+				return;
+			}
+			sharedMeshForThisPiece = meshGO.GetComponent<SharedMesh>();
+			if(sharedMeshForThisPiece == null)
+				sharedMeshForThisPiece = meshGO.AddComponent<SharedMesh>();
 		}
 	}
 }
