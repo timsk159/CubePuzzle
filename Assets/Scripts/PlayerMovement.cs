@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
 {
 	MovementType[] allMoveTypes;
 
-	MovementType moveType = MovementType.Smooth;
+	MovementType moveType;
 
 	public bool canMove = true;
 	public bool isMoving;
@@ -156,7 +156,6 @@ public class PlayerMovement : MonoBehaviour
 		//Used for animation control:
 		var direction = input.normalized;
 		var speed = input.magnitude;
-
 
 		transform.Translate(input * Time.deltaTime);
 	}
