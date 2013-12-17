@@ -78,6 +78,7 @@ public class FloorPiece : ColorCollisionObject
 			var newColliderSize = new Vector3(thisCollider.size.x, initialColliderSize.y, thisCollider.size.z);
 
 			thisCollider.size = newColliderSize;
+			thisCollider.sharedMaterial = passablePMat;
 		}
 
 		if(useSharedMaterial)
@@ -100,13 +101,13 @@ public class FloorPiece : ColorCollisionObject
 
 	void MakeImpassable()
 	{
-
 		if(collider != null)
 		{
 			var thisCollider = collider as BoxCollider;
 			var newColliderSize = new Vector3(thisCollider.size.x, 10, thisCollider.size.z);
 
 			thisCollider.size = newColliderSize;
+			thisCollider.sharedMaterial = impassablePMat;
 		}
 
 		if(useSharedMaterial)

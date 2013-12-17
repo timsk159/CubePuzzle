@@ -15,6 +15,9 @@ public enum ColourCollisionMessage
 
 public class ColorCollisionObject : MonoBehaviour 
 {
+	protected static PhysicMaterial impassablePMat;
+	protected static PhysicMaterial passablePMat;
+
 	public Colour initialColour;
 	public Colour objColour;
 
@@ -29,6 +32,11 @@ public class ColorCollisionObject : MonoBehaviour
 
 	void Awake()
 	{
+		if(impassablePMat == null)
+			impassablePMat = (PhysicMaterial)Resources.Load("ImpassablePMat");
+		if(passablePMat == null)
+			passablePMat = (PhysicMaterial)Resources.Load("PassablePMat");
+
 		cachedEnumValues = Enum.GetValues(typeof(Colour));
 
 		Messenger.AddListener(ColourCollisionMessage.ButtonPressed.ToString(), ButtonPressed);
