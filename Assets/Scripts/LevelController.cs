@@ -60,6 +60,8 @@ public class LevelController : MonoSingleton<LevelController>
 	bool isPaused;
 	GameObject mapRoot;
 	LevelIntro levelIntro;
+
+	Material[] skyboxes;
 	
 	void Awake()
 	{
@@ -89,12 +91,19 @@ public class LevelController : MonoSingleton<LevelController>
 
 		Messenger<StateM.StateChangeData>.AddListener(LevelStateMessage.CutSceneEnter.ToString(), CutSceneEnter);
 		Messenger<StateM.StateChangeData>.AddListener(LevelStateMessage.CutSceneExit.ToString(), CutSceneExit);
-		
+
+		Messenger<Colour>.AddListener(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerChangedColour);
+
 		StateMachine<LevelState, LevelStateMessage>.SetInitialState(LevelState.InGame);
 	}
 
 	void Start()
 	{
+		skyboxes = new Material[3];
+		skyboxes[0] = (Material)Resources.Load("Skyboxes/SkyboxRed");
+		skyboxes[1] = (Material)Resources.Load("Skyboxes/SkyboxGreen");
+		skyboxes[2] = (Material)Resources.Load("Skyboxes/SkyboxBlue");
+
 		if(isStoryMode)
 		{
 			Messenger.AddListener(CutSceneMessage.CutSceneStarted.ToString(), CutSceneStarted);
@@ -115,6 +124,8 @@ public class LevelController : MonoSingleton<LevelController>
 
 		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateMessage.CutSceneEnter.ToString(), CutSceneEnter);
 		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateMessage.CutSceneExit.ToString(), CutSceneExit);
+
+		Messenger<Colour>.RemoveListener(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerChangedColour);
 
 		Messenger.RemoveListener(CutSceneMessage.CutSceneStarted.ToString(), CutSceneStarted);
 		Messenger.RemoveListener(CutSceneMessage.CutSceneFinished.ToString(), CutSceneFinished);
@@ -406,6 +417,22 @@ public class LevelController : MonoSingleton<LevelController>
 	public void SetCheckpointLevelTest()
 	{
 
+	}
+
+	void PlayerChangedColour(Colour colour)
+	{
+		var allColours = Enum.GetValues(typeof(Colour));
+		var colourIndex = (int)colour;
+
+		colourIndex++;
+
+		if (colourIndex > allColours.Length)
+			colourIndex = 1;
+
+		if (colourIndex == 0)
+			colourIndex = 1;
+
+		RenderSettings.skybox = skyboxes[colourIndex - 2];
 	}
 
 	void PlayerKilled()
