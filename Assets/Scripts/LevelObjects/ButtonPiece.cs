@@ -7,10 +7,12 @@ public class ButtonPiece : TriggerObject
 	public bool rotateForward = true;
 	public bool shouldChangePlayer;
 	public Colour buttonSphereColour;
+	HoloBeam beam;
 	
 	protected override void Start()
 	{
 		objColour = Colour.None;
+		beam = GetComponentInChildren<HoloBeam>();
 		base.Start();
 	}
 	
@@ -28,7 +30,7 @@ public class ButtonPiece : TriggerObject
 	protected override void TriggererExited(GameObject go)
 	{
 		base.TriggererExited(go);
-		//Play any animation here.
+		PlayerLeftButton();
 	} 
 
 	public override void RotateColour ()
@@ -62,5 +64,20 @@ public class ButtonPiece : TriggerObject
 		}
 		RotateColour();
 		//Play any animations here.
+		GameObject animTarget;
+		if(shouldChangePlayer)
+			animTarget = transform.Find("Sphere").gameObject;
+		else
+			animTarget = transform.Find("Box002").gameObject;
+
+		beam.IntensifyRimAndBrightness();
+		iTween.PunchScale(animTarget, iTween.Hash("amount", new Vector3(0.5f, 0.5f, 0.5f), "time", 0.5f, "easetype", iTween.EaseType.easeInOutSine));
+	}
+
+	void PlayerLeftButton()
+	{
+		//Play any animation here.
+
+
 	}
 }

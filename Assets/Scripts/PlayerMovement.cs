@@ -153,7 +153,11 @@ public class PlayerMovement : MonoBehaviour
 
 	void DoSmoothMovement(Vector3 input)
 	{
+		//Used for animation control:
+		var direction = input.normalized;
+		var speed = input.magnitude;
 
+		transform.Translate(input * Time.deltaTime);
 	}
 
 	void MoveComplete()
