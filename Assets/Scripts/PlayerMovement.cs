@@ -124,7 +124,7 @@ public class PlayerMovement : MonoBehaviour
 
 	void DoPhysicsMovement(Vector3 input)
 	{
-		if(rigidbody.velocity.magnitude < maxSpeed)
+		//if(rigidbody.velocity.magnitude < maxSpeed)
 			rigidbody.AddForce(input, ForceMode.Acceleration);
 	}
 
