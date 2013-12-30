@@ -48,14 +48,14 @@ public class ColorCollisionObject : MonoBehaviour
 	{
 		initialColliderSize = Vector3.one;
 
-		Messenger<StateM.StateChangeData>.AddListener(LevelStateMessage.LevelInitialized.ToString(), LevelInitialized);
-		Messenger<StateM.StateChangeData>.AddListener(LevelStateMessage.LevelStarted.ToString(), LevelStarted);
+		Messenger.AddListener(LevelStateMessage.LevelInitialized.ToString(), LevelInitialized);
+		Messenger.AddListener(LevelStateMessage.LevelStarted.ToString(), LevelStarted);
 	}
 
 	protected virtual void OnDestroy()
 	{
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateMessage.LevelInitialized.ToString(), LevelInitialized);
-		Messenger<StateM.StateChangeData>.RemoveListener(LevelStateMessage.LevelStarted.ToString(), LevelStarted);
+		Messenger.RemoveListener(LevelStateMessage.LevelInitialized.ToString(), LevelInitialized);
+		Messenger.RemoveListener(LevelStateMessage.LevelStarted.ToString(), LevelStarted);
 		Messenger.RemoveListener(ColourCollisionMessage.ButtonPressed.ToString(), ButtonPressed);
 	}
 
@@ -73,11 +73,11 @@ public class ColorCollisionObject : MonoBehaviour
 			EnsureCollidersAreEnabled();
 	}
 
-	protected virtual void LevelInitialized(StateM.StateChangeData changeData)
+	protected virtual void LevelInitialized()
 	{
 	}
 
-	protected virtual void LevelStarted(StateM.StateChangeData changeData)
+	protected virtual void LevelStarted()
 	{
 		EnsureCollidersAreEnabled();
 		ChangeColour(objColour);

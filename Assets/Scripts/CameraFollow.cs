@@ -24,7 +24,7 @@ public class CameraFollow : MonoBehaviour
 	{
 		//Double distance as this is used to setup the camera for intros and cutscenes
 		var doubleDistance = distance * 2.0f;
-		if(dotCamToPlayer == 0)
+		if(dotCamToPlayer > 0.1f || dotCamToPlayer < 0.1f)
 		{
 			var forward = transform.TransformDirection(Vector3.forward);
 			var toOther = target.position - transform.position;
@@ -53,7 +53,7 @@ public class CameraFollow : MonoBehaviour
 	{
 		if(target != null)
 		{
-			if(dotCamToPlayer == 0)
+			if(dotCamToPlayer > 0.1f || dotCamToPlayer < 0.1f)
 			{
 				var forward = transform.TransformDirection(Vector3.forward);
 				var toOther = target.position - transform.position;

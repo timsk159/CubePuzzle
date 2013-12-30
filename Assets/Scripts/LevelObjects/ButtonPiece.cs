@@ -15,12 +15,7 @@ public class ButtonPiece : TriggerObject
 		beam = GetComponentInChildren<HoloBeam>();
 		base.Start();
 	}
-	
-	public override void PlayerInteracted()
-	{
-		//PressButton();
-	}
-	
+
 	protected override void TriggererEntered(GameObject go)
 	{
 		base.TriggererEntered(go);

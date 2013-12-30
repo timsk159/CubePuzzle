@@ -236,10 +236,10 @@ public class LevelController : MonoSingleton<LevelController>
 
 	public GameObject[] OptimiseLevelMesh()
 	{
-		List<GameObject> combinedMeshes = new List<GameObject>();
+		List<GameObject> combinedMeshList = new List<GameObject>();
 		var mapObjects = GameObject.Find("MapRoot").GetComponentsInChildren<ColorCollisionObject>().ToList();
 
-		mapObjects = (List<ColorCollisionObject>)mapObjects.Where(e => e.meshCanBeOptimized).ToList();
+		mapObjects = mapObjects.Where(e => e.meshCanBeOptimized).ToList();
 		List<MeshFilter> meshFilters = new List<MeshFilter>();
 		mapObjects.ForEach(e => meshFilters.AddRange(e.GetComponentsInChildren<MeshFilter>()));
 
@@ -275,10 +275,10 @@ public class LevelController : MonoSingleton<LevelController>
 			{
 				newMeshRenderer.enabled = false;
 			}
-			combinedMeshes.Add(newMeshObject);
+			combinedMeshList.Add(newMeshObject);
 		}
 
-		return combinedMeshes.ToArray();
+		return combinedMeshList.ToArray();
 	}
 
 	void CreatePlayer()

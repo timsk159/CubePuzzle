@@ -55,18 +55,18 @@ public class FloorPiece : ColorCollisionObject
 		}
 	}
 
-	protected override void LevelInitialized(StateM.StateChangeData changeData)
+	protected override void LevelInitialized()
 	{
 		FindSharedMesh();
 
-		base.LevelInitialized(changeData);
+		base.LevelInitialized();
 	}
 
-	protected override void LevelStarted(StateM.StateChangeData changeData)
+	protected override void LevelStarted()
 	{
 		FindSharedMesh();
 
-		base.LevelStarted(changeData);
+		base.LevelStarted();
 	}
 
 	void MakePassable()
