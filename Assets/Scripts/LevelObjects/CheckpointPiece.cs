@@ -11,7 +11,7 @@ public class CheckpointPiece : TriggerObject
 	bool activeCheckpoint;
 
 	ParticleSystem particles;
-	GameObject flagInstance;
+	GameObject flagPrefab;
 	GameObject flagPole;
 	GameObject flag;
 
@@ -19,17 +19,24 @@ public class CheckpointPiece : TriggerObject
 	{
 		particles = GetComponentInChildren<ParticleSystem>();
 		particles.Stop();
-		flag = transform.Find("FlagPole/Flag").gameObject;
+
+		if (flagPrefab == null)
+			flagPrefab = (GameObject)Resources.Load("FlagCloth");
 
 		Messenger.AddListener(CheckpointMessage.CheckpointPressed.ToString(), CheckpointPressed);
 
 		flagPole = transform.Find("FlagPole").gameObject;
 
-		DisableFlag();
-
 		Messenger.AddListener(LevelStateMessage.LevelStarted.ToString(), EnableFlag);
 
 		base.Start();
+	}
+
+	protected override void OnDestroy()
+	{
+		Messenger.RemoveListener(CheckpointMessage.CheckpointPressed.ToString(), CheckpointPressed);
+		Messenger.RemoveListener(LevelStateMessage.LevelStarted.ToString(), EnableFlag);
+		base.OnDestroy();
 	}
 
 	public override void RotateColour ()
@@ -68,14 +75,12 @@ public class CheckpointPiece : TriggerObject
 	void EnableFlag()
 	{
 
-
-		flag.GetComponent<Cloth>().enabled = true;
-		flag.GetComponent<InteractiveCloth>().enabled = true;
 	}
 
 	void DisableFlag()
 	{
-		flag.GetComponent<Cloth>().enabled = false;
-		flag.GetComponent<InteractiveCloth>().enabled = false;
+
+		//flag.GetComponent<Cloth>().enabled = false;
+		//flag.GetComponent<InteractiveCloth>().enabled = false;
 	}
 }
