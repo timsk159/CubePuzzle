@@ -48,6 +48,7 @@ public class ButtonPiece : TriggerObject
 	
 	void PressButton()
 	{
+		ColorCollisionObject.hasSentColourChangeMessage = false;
 		if(!shouldChangePlayer)
 		{
 			Messenger.Invoke(ColourCollisionMessage.ButtonPressed.ToString());

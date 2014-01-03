@@ -15,6 +15,8 @@ public enum ColourCollisionMessage
 
 public class ColorCollisionObject : MonoBehaviour 
 {
+	public static bool hasSentColourChangeMessage;
+
 	protected static PhysicMaterial impassablePMat;
 	protected static PhysicMaterial passablePMat;
 
@@ -109,6 +111,11 @@ public class ColorCollisionObject : MonoBehaviour
 	
 	public virtual void ChangeColour(Colour colorToChangeTo)
 	{
+		if(!hasSentColourChangeMessage)
+		{
+			Messenger<Colour>.Invoke(ColourCollisionMessage.FloorPiecesChangedColour.ToString(), colorToChangeTo);
+			hasSentColourChangeMessage = true;
+		}
 		if(objColour != Colour.None)
 		{
 			objColour = colorToChangeTo;

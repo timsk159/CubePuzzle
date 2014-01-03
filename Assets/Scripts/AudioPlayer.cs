@@ -3,6 +3,8 @@ using System.Collections;
 
 public class AudioPlayer : MonoBehaviour 
 {
+	bool checkPlayerMovement;
+
 	PlayerCharacter playerChar;
 
 	public AudioClip playerMoveSound;
@@ -10,13 +12,12 @@ public class AudioPlayer : MonoBehaviour
 	public AudioClip floorChangedColourSound;
 	public AudioClip checkpointSound;
 
-	void Start()
+	//For performance, the players sound source isn't pooled
+	AudioSource playerMoveSource;
+
+	void Awake()
 	{
-		AddEventListeners();
-		if(playerChar == null)
-		{
-			playerChar = LevelController.Instance.playerChar;
-		}
+		Messenger.AddListener(LevelStateMessage.LevelStarted.ToString(), LevelStarted);
 	}
 
 	void OnDestroy()
@@ -24,9 +25,23 @@ public class AudioPlayer : MonoBehaviour
 		RemoveEventListeners();
 	}
 
+	void Init()
+	{
+		AddEventListeners();
+		var playerMoveSourceGO = new GameObject("PlayerMoveAudioSource");
+		playerMoveSourceGO.transform.parent = Camera.main.transform;
+		playerMoveSource = playerMoveSourceGO.AddComponent<AudioSource>();
+		playerMoveSource.clip = playerMoveSound;
+
+		if(playerChar == null)
+		{
+			playerChar = LevelController.Instance.playerChar;
+		}
+		checkPlayerMovement = true;
+	}
+
 	void AddEventListeners()
 	{
-		Messenger.AddListener(LevelStateMessage.LevelStarted.ToString(), LevelStarted);
 		Messenger<Colour>.AddListener(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerChangedColour);
 		Messenger<Colour>.AddListener(ColourCollisionMessage.FloorPiecesChangedColour.ToString(), FloorPieceChangedColour);
 		Messenger.AddListener(CheckpointMessage.CheckpointPressed.ToString(), CheckpointPressed);
@@ -42,38 +57,45 @@ public class AudioPlayer : MonoBehaviour
 
 	void LevelStarted()
 	{
+		Init();
 		//Play Music.
 
 	}
 
 	void PlayerChangedColour(Colour colourToChangeTo)
 	{
-		AudioController.Instance.PlaySound(playerChangedColourSound);
+		PooledAudioController.Instance.PlaySound(playerChangedColourSound);
 	}
 
 	void FloorPieceChangedColour(Colour colourToChangeTo)
 	{
-		AudioController.Instance.PlaySound(floorChangedColourSound);
+		PooledAudioController.Instance.PlaySound(floorChangedColourSound);
 	}
 
 	void CheckpointPressed()
 	{
-		AudioController.Instance.PlaySound(checkpointSound);
+		PooledAudioController.Instance.PlaySound(checkpointSound);
 	}
 
 	void Update()
 	{
-		if(playerChar != null)
+		if(checkPlayerMovement)
 		{
-			//Play player movement sound if player is moving
-			if(playerChar.playerMovement.isMoving)
+			if(playerChar != null)
 			{
-				AudioController.Instance.PlaySound(playerMoveSound);
+				//Play player movement sound if player is moving
+				if(playerChar.playerMovement.isMoving)
+				{
+					if(!playerMoveSource.isPlaying)
+						playerMoveSource.Play();
+				}
+				else if(playerMoveSource.isPlaying)
+				{
+					playerMoveSource.Pause();
+				}
 			}
 			else
-			{
-				AudioController.Instance.StopSound(playerMoveSound);
-			}
+				Debug.LogWarning("Player char is null!");
 		}
 	}
 }
