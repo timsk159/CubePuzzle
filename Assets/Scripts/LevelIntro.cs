@@ -92,7 +92,8 @@ public class LevelIntro : MonoBehaviour
 			yield return new WaitForEndOfFrame();
 		}
 
-		Messenger.Invoke(LevelIntroMessage.IntroFinished.ToString());
+		if(playingIntro)
+			Messenger.Invoke(LevelIntroMessage.IntroFinished.ToString());
 	}
 
 	void Update()
@@ -123,8 +124,9 @@ public class LevelIntro : MonoBehaviour
 			cutSceneController.StopCutScene();
 			playingCutsceneObj = null;
 		}
-
 		Messenger.Invoke(LevelIntroMessage.IntroInterrupted.ToString());
+		yield return new WaitForSeconds(0.5f);
+		Messenger.Invoke(LevelIntroMessage.IntroFinished.ToString());
 	}
 
 
