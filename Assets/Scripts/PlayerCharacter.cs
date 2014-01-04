@@ -4,9 +4,9 @@ using System.Collections;
 
 using StateMachineMessenger = Messenger<StateMachine<LevelState, LevelStateMessage>.StateChangeData>;
 
-public enum PlayerInteractionMessage
+public enum PlayerMessage
 {
-	PlayerInteracted
+	HitWall, HitWallHard
 };
 
 [RequireComponent(typeof(PlayerMovement))]
@@ -161,5 +161,23 @@ public class PlayerCharacter : MonoBehaviour
 	void TestingMapExit(StateMachine<LevelCreatorStates, LevelCreatorStateMessage>.StateChangeData changeData)
 	{
 		canReset = false;
+	}
+
+	void OnCollisionEnter(Collision collision) 
+	{
+		//We only care about box colliders
+		if(collision.collider is BoxCollider)
+		{
+			var theCollider = collision.collider as BoxCollider;
+			//Check the hit collider is definitely a wall
+			if(theCollider.size.y > 6)
+			{
+				Messenger.Invoke(PlayerMessage.HitWall.ToString());
+				if(collision.relativeVelocity.magnitude > 2)
+				{
+					Messenger.Invoke(PlayerMessage.HitWallHard.ToString());
+				}
+			}
+		}
 	}
 }

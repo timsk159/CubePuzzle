@@ -45,6 +45,9 @@ public class AudioPlayer : MonoBehaviour
 		Messenger<Colour>.AddListener(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerChangedColour);
 		Messenger<Colour>.AddListener(ColourCollisionMessage.FloorPiecesChangedColour.ToString(), FloorPieceChangedColour);
 		Messenger.AddListener(CheckpointMessage.CheckpointPressed.ToString(), CheckpointPressed);
+		Messenger.AddListener(PlayerMessage.HitWall.ToString(), PlayerHitWall);
+		Messenger.AddListener(PlayerMessage.HitWallHard.ToString(), PlayerHitWallHard);
+
 	}
 
 	void RemoveEventListeners()
@@ -53,6 +56,8 @@ public class AudioPlayer : MonoBehaviour
 		Messenger<Colour>.RemoveListener(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerChangedColour);
 		Messenger<Colour>.RemoveListener(ColourCollisionMessage.FloorPiecesChangedColour.ToString(), FloorPieceChangedColour);
 		Messenger.RemoveListener(CheckpointMessage.CheckpointPressed.ToString(), CheckpointPressed);
+		Messenger.RemoveListener(PlayerMessage.HitWall.ToString(), PlayerHitWall);
+		Messenger.RemoveListener(PlayerMessage.HitWallHard.ToString(), PlayerHitWallHard);
 	}
 
 	void LevelStarted()
@@ -75,6 +80,18 @@ public class AudioPlayer : MonoBehaviour
 	void CheckpointPressed()
 	{
 		PooledAudioController.Instance.PlaySound(checkpointSound);
+	}
+
+	void PlayerHitWall()
+	{
+		//Play sound quietly.
+		
+	}
+
+	void PlayerHitWallHard()
+	{
+		//Play sound loudly.
+
 	}
 
 	void Update()
