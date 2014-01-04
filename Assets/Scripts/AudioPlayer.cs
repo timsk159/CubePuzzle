@@ -12,6 +12,11 @@ public class AudioPlayer : MonoBehaviour
 	public AudioClip floorChangedColourSound;
 	public AudioClip checkpointSound;
 
+	public AudioClip hitWallSound;
+
+	public AudioClip menuMusic;
+	public AudioClip inGameMusic;
+
 	//For performance, the players sound source isn't pooled
 	AudioSource playerMoveSource;
 
@@ -23,6 +28,12 @@ public class AudioPlayer : MonoBehaviour
 	void OnDestroy()
 	{
 		RemoveEventListeners();
+	}
+
+	void Start()
+	{
+		if(Application.loadedLevelName == "FrontMenu")
+			PooledAudioController.Instance.PlayMusic(menuMusic);
 	}
 
 	void Init()
@@ -64,7 +75,7 @@ public class AudioPlayer : MonoBehaviour
 	{
 		Init();
 		//Play Music.
-
+		PooledAudioController.Instance.PlayMusic(inGameMusic);
 	}
 
 	void PlayerChangedColour(Colour colourToChangeTo)
@@ -85,13 +96,13 @@ public class AudioPlayer : MonoBehaviour
 	void PlayerHitWall()
 	{
 		//Play sound quietly.
-		
+		PooledAudioController.Instance.PlaySound(hitWallSound, 0.8f);
 	}
 
 	void PlayerHitWallHard()
 	{
 		//Play sound loudly.
-
+		PooledAudioController.Instance.PlaySound(hitWallSound);
 	}
 
 	void Update()

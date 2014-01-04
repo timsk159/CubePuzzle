@@ -7,12 +7,17 @@ public class OptionsMenu : MonoBehaviour
 	public UICheckbox fullScreenToggle;
 	public UIPopupList qualityLevelSelectionList;
 	public UIPopupList colorBlindSelectionList;
+	public UISlider musicSlider;
+	public UISlider effectsSlider;
+
 
 	public class Options
 	{
 		public bool fullscreen;
 		public string qualityLevel;
 		public ColorBlindMode colorBlindMode;
+		public float musicVolume;
+		public float effectsVolume;
 	}
 
 	public static Options currentOptions;
@@ -29,6 +34,8 @@ public class OptionsMenu : MonoBehaviour
 		fullScreenToggle.isChecked = currentOptions.fullscreen;
 		qualityLevelSelectionList.selection = currentOptions.qualityLevel;
 		colorBlindSelectionList.selection = currentOptions.colorBlindMode.ToString();
+		musicSlider.sliderValue = currentOptions.musicVolume;
+		effectsSlider.sliderValue = currentOptions.effectsVolume;
 	}
 
 	void Back()
@@ -44,6 +51,9 @@ public class OptionsMenu : MonoBehaviour
 
 		newOptions.qualityLevel = qualityLevelSelectionList.selection;
 		newOptions.colorBlindMode = (ColorBlindMode)Enum.Parse(typeof(ColorBlindMode), colorBlindSelectionList.selection, true);
+
+		newOptions.musicVolume = musicSlider.sliderValue;
+		newOptions.effectsVolume = effectsSlider.sliderValue;
 
 		ApplyChanges(newOptions);
 
@@ -68,6 +78,9 @@ public class OptionsMenu : MonoBehaviour
 		{
 			ColorManager.currentColorBlindMode = currentOptions.colorBlindMode;
 		}
+
+		PooledAudioController.Instance.SetMusicVolume(currentOptions.musicVolume);
+		PooledAudioController.Instance.SetEffectsVolume(currentOptions.effectsVolume);
 	}
 
 	public void LoadOptions()
@@ -77,6 +90,8 @@ public class OptionsMenu : MonoBehaviour
 		newOptions.qualityLevel = PlayerPrefs.GetString("QualityLevel", "Best");
 		newOptions.colorBlindMode = (ColorBlindMode)PlayerPrefs.GetInt("ColorBlindMode", 0);
 		newOptions.fullscreen = IntToBool(PlayerPrefs.GetInt("FullScreen", 1));
+		newOptions.musicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.7f);
+		newOptions.effectsVolume = PlayerPrefs.GetFloat("EffectsVolume", 1.0f);
 
 		ApplyChanges(newOptions);
 	}
@@ -86,6 +101,8 @@ public class OptionsMenu : MonoBehaviour
 		PlayerPrefs.SetString("QualityLevel", currentOptions.qualityLevel);
 		PlayerPrefs.SetInt("FullScreen", BoolToInt(currentOptions.fullscreen));
 		PlayerPrefs.SetInt("ColorBlindMode", (int)currentOptions.colorBlindMode);
+		PlayerPrefs.SetFloat("MusicVolume", currentOptions.musicVolume);
+		PlayerPrefs.SetFloat("EffectsVolume", currentOptions.effectsVolume);
 		PlayerPrefs.Save();
 	}
 

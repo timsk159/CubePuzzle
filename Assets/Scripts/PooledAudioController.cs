@@ -9,8 +9,11 @@ public class PoolableAudioSource
 	public AudioSource source;
 }
 
-public class PooledAudioController : MonoSingleton<PooledAudioController>
+public class PooledAudioController : MonoBehaviour
 {
+	static float musicVolume;
+	static float effectsVolume;
+
 	public AudioSource musicAudioSource;
 	public AudioClip currentMusic;
 
@@ -18,7 +21,45 @@ public class PooledAudioController : MonoSingleton<PooledAudioController>
 	int initialPoolSize = 2;
 	int maxPoolSize = 5;
 
-	void Start()
+	private static PooledAudioController _instance;
+
+	public static PooledAudioController Instance 
+	{
+		get
+		{
+			if(_instance == null)
+			{
+				_instance = (PooledAudioController)FindObjectOfType(typeof(PooledAudioController));
+
+				if(_instance == null)
+				{
+					_instance = new GameObject("(Singleton)" + typeof(PooledAudioController).Name).AddComponent<PooledAudioController>();
+				}
+			}
+			return _instance;
+		}
+	}
+
+	public void SetMusicVolume(float newMusicVolume)
+	{
+		musicVolume = (newMusicVolume / 2.0f);
+		if(musicAudioSource != null)
+			musicAudioSource.volume = musicVolume;
+	}
+
+	public void SetEffectsVolume(float newEffectsVolume)
+	{
+		effectsVolume = newEffectsVolume;
+		if(audioSourcePool != null)
+		{
+			foreach(var pooledSource in audioSourcePool)
+			{
+				pooledSource.source.volume = effectsVolume;
+			}
+		}
+	}
+
+	void Awake()
 	{
 #if DEBUG_AUDIO
 		Debug.Log("Pooled Audio Start");
@@ -38,6 +79,11 @@ public class PooledAudioController : MonoSingleton<PooledAudioController>
 		}
 	}
 
+	void OnLevelWasLoaded(int levelID)
+	{
+		Awake();
+	}
+
 	public void PlayMusic(AudioClip clip)
 	{
 #if DEBUG_AUDIO
@@ -50,6 +96,7 @@ public class PooledAudioController : MonoSingleton<PooledAudioController>
 		}
 		else
 		{
+			musicAudioSource.volume = musicVolume;
 			musicAudioSource.clip = clip;
 			musicAudioSource.Play();
 		}
@@ -65,14 +112,23 @@ public class PooledAudioController : MonoSingleton<PooledAudioController>
 			InitPool();
 		}
 
-		var availableSource = GetSourceWithClip(clip);
-		if(availableSource == null)
+		var availableSource = FindSource(clip);
+		PlaySound(clip, availableSource.source);
+	}
+
+	public void PlaySound(AudioClip clip, float volume)
+	{
+#if DEBUG_AUDIO
+		Debug.Log("Requested sound to be played: " + clip.name);
+#endif
+		if(audioSourcePool == null)
 		{
-			availableSource = CreateNewPoolSource();
+			InitPool();
 		}
 
-		PlaySound(clip, availableSource.source);
+		var availableSource = FindSource(clip);
 
+		PlaySound(clip, availableSource.source, volume);
 	}
 
 	public void PlaySound(AudioClip clip, AudioSource source)
@@ -80,7 +136,20 @@ public class PooledAudioController : MonoSingleton<PooledAudioController>
 #if DEBUG_AUDIO
 		Debug.Log("Playing sound: " + clip.name);
 #endif
+		source.volume = effectsVolume;
+		source.clip = clip;
+		source.Play();
 
+		CheckPoolSize();
+	}
+
+	public void PlaySound(AudioClip clip, AudioSource source, float volume)
+	{
+		#if DEBUG_AUDIO
+		Debug.Log("Playing sound: " + clip.name);
+		#endif
+
+		source.volume = volume;
 		source.clip = clip;
 		source.Play();
 
@@ -184,6 +253,26 @@ public class PooledAudioController : MonoSingleton<PooledAudioController>
 		var returnSource = audioSourcePool.Where(s => s.source.clip == clip).FirstOrDefault();
 
 		return returnSource;
+	}
+
+	PoolableAudioSource GetFreeSource()
+	{
+		var returnSource = audioSourcePool.Where(s => s.source.clip == null).FirstOrDefault();
+
+		return returnSource;
+	}
+
+	PoolableAudioSource FindSource(AudioClip clip)
+	{
+		var availableSource = GetSourceWithClip(clip);
+		if(availableSource == null)
+		{
+			availableSource = GetFreeSource();
+			if(availableSource == null)
+				availableSource = CreateNewPoolSource();
+		}
+
+		return availableSource;
 	}
 
 	void CheckPoolSize()
