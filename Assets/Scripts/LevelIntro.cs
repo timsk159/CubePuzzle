@@ -66,8 +66,12 @@ public class LevelIntro : MonoBehaviour
 		playingIntro = true;
 		var movePos = mapRoot.transform.up * 20;
 	
+		while(LevelSerializer.IsDeserializing)
+			yield return new WaitForEndOfFrame();
+
 		foreach(var cube in animatingCubes)
 		{
+			movePos = new Vector3(UnityEngine.Random.Range(0, (cube.theCube.transform.position.x * 1.5f)), movePos.y, UnityEngine.Random.Range(0, (cube.theCube.transform.position.z * 1.5f)));
 			cube.MoveFromSkyToEndPos(movePos);
 		}
 
