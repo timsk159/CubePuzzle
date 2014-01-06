@@ -39,9 +39,12 @@ public class FrontMenuPlayerAnimation : MonoBehaviour
 
 		if(Physics.Raycast(player.transform.position, force.normalized, out hit, 5))
 		{
-			var oldForce = force;
+			//var oldForce = force;
+			//force = hit.normal * oldForce.magnitude;
 
-			force = hit.normal * oldForce.magnitude;
+			previousForce = force;
+			force = hit.normal * previousForce.magnitude;
+
 		}
 		//Added: Lerp to new force over time (smooths the direction changes).
 		if(previousForce != Vector3.zero)
