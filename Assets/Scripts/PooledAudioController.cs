@@ -18,6 +18,7 @@ public class PooledAudioController : MonoBehaviour
 	public AudioClip currentMusic;
 
 	List<PoolableAudioSource> audioSourcePool;
+	Dictionary<AudioClip, PoolableAudioSource> activeClips;
 	int initialPoolSize = 2;
 	int maxPoolSize = 5;
 
@@ -142,6 +143,8 @@ public class PooledAudioController : MonoBehaviour
 #if DEBUG_AUDIO
 		Debug.Log("Playing sound: " + clip.name);
 #endif
+		AddClipToActiveClips(clip, source);
+
 		source.volume = effectsVolume;
 		source.clip = clip;
 		source.Play();
@@ -154,6 +157,8 @@ public class PooledAudioController : MonoBehaviour
 		#if DEBUG_AUDIO
 		Debug.Log("Playing sound: " + clip.name);
 		#endif
+
+		AddClipToActiveClips(clip, source);
 
 		source.volume = volume;
 		source.clip = clip;
@@ -258,7 +263,10 @@ public class PooledAudioController : MonoBehaviour
 
 	PoolableAudioSource GetSourceWithClip(AudioClip clip)
 	{
-		var returnSource = audioSourcePool.Where(s => s.source.clip == clip).FirstOrDefault();
+		PoolableAudioSource returnSource = null;
+
+		if(activeClips.ContainsKey(clip))
+			returnSource = activeClips[clip];
 
 		return returnSource;
 	}
@@ -283,6 +291,15 @@ public class PooledAudioController : MonoBehaviour
 		return availableSource;
 	}
 
+	void AddClipToActiveClips(AudioClip clip, AudioSource source)
+	{
+		var pooledSource = audioSourcePool.Where(s => s.source == source).FirstOrDefault();
+		if(activeClips.ContainsKey(clip))
+			activeClips[clip] = pooledSource;
+		else
+			activeClips.Add(clip, pooledSource);
+	}
+
 	void CheckPoolSize()
 	{
 		if(audioSourcePool.Count > maxPoolSize)
@@ -299,6 +316,7 @@ public class PooledAudioController : MonoBehaviour
 
 		CleanPool();
 		audioSourcePool = new List<PoolableAudioSource>(initialPoolSize);
+		activeClips = new Dictionary<AudioClip, PoolableAudioSource>();
 		for(int i = 1; i <= initialPoolSize; i++)
 		{
 			var newPoolSource = new PoolableAudioSource();
