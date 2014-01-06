@@ -173,7 +173,7 @@ public class PlayerCharacter : MonoBehaviour
 			if(theCollider.size.y > 6)
 			{
 				Messenger.Invoke(PlayerMessage.HitWall.ToString());
-				if(collision.relativeVelocity.magnitude > 2)
+				if(collision.relativeVelocity.magnitude >= 4)
 				{
 					Messenger.Invoke(PlayerMessage.HitWallHard.ToString());
 				}
