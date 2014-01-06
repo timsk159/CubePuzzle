@@ -3,6 +3,8 @@ using System.Collections;
 
 public class AudioPlayer : MonoBehaviour 
 {
+	bool hasListeners;
+
 	bool checkPlayerMovement;
 
 	PlayerCharacter playerChar;
@@ -36,14 +38,11 @@ public class AudioPlayer : MonoBehaviour
 			PooledAudioController.Instance.PlayMusic(menuMusic);
 	}
 
-	void OnDeserialized()
-	{
-		Debug.Log("+++++----- Deserialized called!");
-	}
-
 	void Init()
 	{
-		AddEventListeners();
+		if(!hasListeners)
+			AddEventListeners();
+
 		if(playerMoveSource == null)
 		{
 			var playerMoveSourceGO = new GameObject("PlayerMoveAudioSource");
@@ -62,6 +61,7 @@ public class AudioPlayer : MonoBehaviour
 
 	void AddEventListeners()
 	{
+		hasListeners = true;
 		Messenger<Colour>.AddListener(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerChangedColour);
 		Messenger<Colour>.AddListener(ColourCollisionMessage.FloorPiecesChangedColour.ToString(), FloorPieceChangedColour);
 		Messenger.AddListener(CheckpointMessage.CheckpointPressed.ToString(), CheckpointPressed);
@@ -71,6 +71,7 @@ public class AudioPlayer : MonoBehaviour
 
 	void RemoveEventListeners()
 	{
+		hasListeners = false;
 		Messenger.RemoveListener(LevelStateMessage.LevelStarted.ToString(), LevelStarted);
 		Messenger<Colour>.RemoveListener(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerChangedColour);
 		Messenger<Colour>.RemoveListener(ColourCollisionMessage.FloorPiecesChangedColour.ToString(), FloorPieceChangedColour);
@@ -88,6 +89,7 @@ public class AudioPlayer : MonoBehaviour
 
 	void PlayerChangedColour(Colour colourToChangeTo)
 	{
+		Debug.Log("+++++------ Player Changed Colour");
 		PooledAudioController.Instance.PlaySound(playerChangedColourSound);
 	}
 

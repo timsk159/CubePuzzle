@@ -210,6 +210,8 @@ public class LevelController : MonoSingleton<LevelController>
 
 		playerChar.playerMovement.canMove = true;
 		playerChar.EnablePhysics();
+		Messenger.RemoveListener(LevelIntroMessage.IntroFinished.ToString(), IntroFinished);
+		Messenger.RemoveListener(LevelIntroMessage.IntroInterrupted.ToString(), IntroInterrupted);
 	}
 
 	void IntroInterrupted()
