@@ -89,6 +89,12 @@ public class PooledAudioController : MonoBehaviour
 #if DEBUG_AUDIO
 		Debug.Log("Play Music clip " + clip.name);
 #endif
+		if(musicAudioSource.clip == clip)
+		{
+			musicAudioSource.Play();
+			return;
+		}
+
 		if(musicAudioSource.isPlaying)
 		{
 			TransitionAudio(clip, musicAudioSource);
@@ -225,6 +231,8 @@ public class PooledAudioController : MonoBehaviour
 		Debug.Log("Transitioning music from: " + source.clip.name + " To: " + newClip.name);
 #endif
 		//Check docs for AudioSource.PlaySchedueled();
+
+
 
 		throw new System.NotImplementedException();
 	}

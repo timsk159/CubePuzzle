@@ -36,13 +36,22 @@ public class AudioPlayer : MonoBehaviour
 			PooledAudioController.Instance.PlayMusic(menuMusic);
 	}
 
+	void OnDeserialized()
+	{
+		Debug.Log("+++++----- Deserialized called!");
+	}
+
 	void Init()
 	{
 		AddEventListeners();
-		var playerMoveSourceGO = new GameObject("PlayerMoveAudioSource");
-		playerMoveSourceGO.transform.parent = Camera.main.transform;
-		playerMoveSource = playerMoveSourceGO.AddComponent<AudioSource>();
-		playerMoveSource.clip = playerMoveSound;
+		if(playerMoveSource == null)
+		{
+			var playerMoveSourceGO = new GameObject("PlayerMoveAudioSource");
+			playerMoveSourceGO.transform.parent = Camera.main.transform;
+			playerMoveSourceGO.transform.localPosition = Vector3.zero;
+			playerMoveSource = playerMoveSourceGO.AddComponent<AudioSource>();
+			playerMoveSource.clip = playerMoveSound;
+		}
 
 		if(playerChar == null)
 		{
@@ -58,7 +67,6 @@ public class AudioPlayer : MonoBehaviour
 		Messenger.AddListener(CheckpointMessage.CheckpointPressed.ToString(), CheckpointPressed);
 		Messenger.AddListener(PlayerMessage.HitWall.ToString(), PlayerHitWall);
 		Messenger.AddListener(PlayerMessage.HitWallHard.ToString(), PlayerHitWallHard);
-
 	}
 
 	void RemoveEventListeners()
@@ -107,23 +115,24 @@ public class AudioPlayer : MonoBehaviour
 
 	void Update()
 	{
-		if(checkPlayerMovement)
+		if(!LevelSerializer.IsDeserializing)
 		{
-			if(playerChar != null)
+			if(checkPlayerMovement)
 			{
-				//Play player movement sound if player is moving
-				if(playerChar.playerMovement.isMoving)
+				if(playerChar != null)
 				{
-					if(!playerMoveSource.isPlaying)
-						playerMoveSource.Play();
-				}
-				else if(playerMoveSource.isPlaying)
-				{
-					playerMoveSource.Pause();
+					//Play player movement sound if player is moving
+					if(playerChar.playerMovement.isMoving)
+					{
+						if(!playerMoveSource.isPlaying)
+							playerMoveSource.Play();
+					}
+					else if(playerMoveSource.isPlaying)
+					{
+						playerMoveSource.Pause();
+					}
 				}
 			}
-			else
-				Debug.LogWarning("Player char is null!");
 		}
 	}
 }
