@@ -59,12 +59,9 @@ public class HoloBeam : MonoBehaviour
 	public void IntensifyRimAndBrightness()
 	{
 		iTween.Stop(gameObject);
-		var oldRim = initialRimPower;
-		var oldBrightness = initialBrightness;
 		iTween.ValueTo(gameObject, iTween.Hash("from", initialRimPower, "to", initialRimPower * 2, "time", 0.2f, "onupdate", "OnRimTweenUpdate"));
 		iTween.ValueTo(gameObject, iTween.Hash("from", initialBrightness, "to", initialBrightness * 5.0f, "time", 0.2f, "onupdate", "OnBrightnessTweenUpdate",
 		                                       "oncomplete", "IntensifyBrightnessComplete"));
-
 	}
 
 	void IntensifyBrightnessComplete()

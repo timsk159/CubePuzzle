@@ -20,7 +20,6 @@ public class LevelTestStateController : MonoSingleton<LevelTestStateController>
 
 	public void LoadCheckpoint()
 	{
-		var oldMapRoot = GameObject.Find("MapRoot");
 		var player = GameObject.FindGameObjectWithTag("Player");
 		LevelSerializer.LoadObjectTree(checkpoint, delegate
 		{

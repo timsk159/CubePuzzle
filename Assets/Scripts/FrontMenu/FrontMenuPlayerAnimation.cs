@@ -18,7 +18,8 @@ public class FrontMenuPlayerAnimation : MonoBehaviour
 	void Start()
 	{
 		player = GameObject.FindGameObjectWithTag("Player");
-
+		previousForce = Vector3.zero;
+		force = Vector3.zero;
 	}
 
 	void FixedUpdate()
@@ -43,7 +44,7 @@ public class FrontMenuPlayerAnimation : MonoBehaviour
 			force = hit.normal * oldForce.magnitude;
 		}
 		//Added: Lerp to new force over time (smooths the direction changes).
-		if(previousForce != null)
+		if(previousForce != Vector3.zero)
 		{
 			forceT += Time.deltaTime / (currentCountdown / 3);
 			var smoothedForce = Vector3.Lerp(previousForce, force, forceT);
