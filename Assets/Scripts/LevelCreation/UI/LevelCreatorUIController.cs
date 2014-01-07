@@ -242,7 +242,8 @@ public class LevelCreatorUIController : MonoBehaviour
 				for (int z = 0; z <= selectedMapHeight - 1; z++)
 				{
 					var obj = (GameObject)Instantiate(prefabToUse);
-
+					if(isFilledCheckbox.isChecked)
+						obj.AddComponent<DraggableMapObject>();
 					obj.transform.position = new Vector3 (x, 0, z);
 
 					obj.transform.parent = levelCreator.mapRoot.transform;
