@@ -16,6 +16,8 @@ public class LevelCreatorUIController : MonoBehaviour
 	public GameObject savingMapPanel;
 	public GameObject loadingMapPanel;
 
+	public UICheckbox isFilledCheckbox;
+
 	public GameObject loadingProgressPanel;
 
 	public UISlider loadingProgressBar;
@@ -229,13 +231,17 @@ public class LevelCreatorUIController : MonoBehaviour
 		var mapHeightInput = GameObject.Find("MapHeight-Input").GetComponent<UIInput>().label;
 		var mapWidthInput = GameObject.Find("MapWidth-Input").GetComponent<UIInput>().label;
 
+		var prefabToUse = levelCreator.assetManager.nullCubePrefab;
+		if(isFilledCheckbox.isChecked)
+			prefabToUse = levelCreator.assetManager.neutralCubePrefab;
+
 		if (int.TryParse (mapHeightInput.text, out selectedMapHeight) && int.TryParse(mapWidthInput.text, out selectedMapWidth))
 		{
 			for (int x = 0; x <= selectedMapWidth - 1; x++)
 			{
 				for (int z = 0; z <= selectedMapHeight - 1; z++)
 				{
-					var obj = (GameObject)Instantiate (levelCreator.assetManager.nullCubePrefab);
+					var obj = (GameObject)Instantiate(prefabToUse);
 
 					obj.transform.position = new Vector3 (x, 0, z);
 
