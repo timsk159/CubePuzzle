@@ -43,7 +43,7 @@ public class PooledAudioController : MonoBehaviour
 
 	public void SetMusicVolume(float newMusicVolume)
 	{
-		musicVolume = (newMusicVolume / 2.0f);
+		musicVolume = (newMusicVolume / 2.5f);
 		if(musicAudioSource != null)
 			musicAudioSource.volume = musicVolume;
 	}
