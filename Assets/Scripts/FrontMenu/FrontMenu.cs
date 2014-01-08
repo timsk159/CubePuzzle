@@ -28,6 +28,15 @@ public class FrontMenu : MonoBehaviour
 	public string selectedFileName;
 	private GameObject storyModeContinueButton;
 	OptionsMenu optionsMenu;
+
+	void OnGUI()
+	{
+		if(GUILayout.Button("Grab Screenshot"))
+		{
+			Application.CaptureScreenshot("Assets/Screenshots/Screenshot.png", 5);
+		}
+
+	}
 	
 	void Start ()
 	{

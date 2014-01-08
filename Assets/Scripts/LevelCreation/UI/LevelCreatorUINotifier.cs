@@ -5,7 +5,8 @@ public enum LevelCreatorUIMessage
 {
 	GenericInputSubmitted, CreateButtonClicked,
 	LoadMenuLoadClicked, LoadMenuCancelClicked,
-	SaveMenuSaveClicked, SaveMenuCancelClicked
+	SaveMenuSaveClicked, SaveMenuCancelClicked,
+	SideHoverEnter, SideHoverExit
 };
 
 public class LevelCreatorUINotifier : MonoBehaviour 
