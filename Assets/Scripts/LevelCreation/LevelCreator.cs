@@ -111,7 +111,7 @@ public class LevelCreator : MonoBehaviour
 		yield return new WaitForEndOfFrame();
 
 		playerObj.transform.parent = playerObjParent;
-		PutBackNullCubes();
+		PutBackWallCubes();
 	}
 
 	void SaveMapForPlayMode(string saveLocation)
@@ -165,14 +165,15 @@ public class LevelCreator : MonoBehaviour
 		}
 	}
 
-	void PutBackNullCubes()
+	void PutBackWallCubes()
 	{
-		var nullCubes = GameObject.FindGameObjectsWithTag("NullCube");
+		var nullCubes = GameObject.FindGameObjectsWithTag("WallCube");
 
 		var cubesToPutBack = nullCubes.Where(e => e.GetComponent<PrefabIdentifier>() == null).ToList();
 
 		foreach(var cube in cubesToPutBack)
 		{
+			//Replace the walls with nulls
 			var clone = (GameObject)Instantiate(assetManager.nullCubePrefab, cube.transform.position, cube.transform.rotation);
 
 			clone.transform.parent = mapRoot.transform;
@@ -223,9 +224,9 @@ public class LevelCreator : MonoBehaviour
 								break;
 						}
 
-						var newNullCube = (GameObject)Instantiate(assetManager.nullCubePrefab);
-						newNullCube.collider.enabled = false;
-						newNullCube.renderer.enabled = false;
+						var newNullCube = (GameObject)Instantiate(assetManager.wallCubePrefab);
+					//	newNullCube.collider.enabled = false;
+					//	newNullCube.renderer.enabled = false;
 						if(mapRoot == null)
 							mapRoot = GameObject.Find("MapRoot");
 						newNullCube.transform.parent = mapRoot.transform;

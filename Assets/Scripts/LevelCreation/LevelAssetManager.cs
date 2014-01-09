@@ -5,4 +5,5 @@ public class LevelAssetManager : MonoBehaviour
 {
 	public GameObject nullCubePrefab;
 	public GameObject neutralCubePrefab;
+	public GameObject wallCubePrefab;
 }

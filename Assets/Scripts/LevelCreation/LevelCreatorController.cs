@@ -248,12 +248,19 @@ public class LevelCreatorController : MonoBehaviour
 		levelCreator.CheckEdgeCubeNeighbours();
 
 		var nullCubes = GameObject.FindGameObjectsWithTag("NullCube");
+		var wallCubes = GameObject.FindGameObjectsWithTag("WallCube");
 
 		foreach(var nullCube in nullCubes)
 		{
 			nullCube.renderer.enabled = false;
 			nullCube.collider.enabled = true;
 			nullCube.GetComponent<BoxCollider>().size = new Vector3(1, 10, 1);
+		}
+		foreach(var wallCube in wallCubes)
+		{
+			wallCube.renderer.enabled = false;
+			wallCube.collider.enabled = true;
+			wallCube.GetComponent<BoxCollider>().size = new Vector3(1, 10, 1);
 		}
 
 		LevelController.Instance.InitLevel(false);

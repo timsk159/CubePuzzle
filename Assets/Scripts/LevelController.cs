@@ -259,7 +259,7 @@ public class LevelController : MonoSingleton<LevelController>
 		var uniqueMaterials = meshFilters.Select(e => e.renderer.sharedMaterial).Distinct();
 		foreach(var uniqueMat in uniqueMaterials)
 		{
-			var meshFiltersForMat = meshFilters.Where(e => e.renderer.sharedMaterial == uniqueMat).ToArray();
+			var meshFiltersForMat = meshFilters.Where(meshFilter => meshFilter.renderer.sharedMaterial == uniqueMat).ToArray();
 
 			var combine = new CombineInstance[meshFiltersForMat.Length];
 
@@ -269,13 +269,12 @@ public class LevelController : MonoSingleton<LevelController>
 			{
 				combine[i].mesh = meshFiltersForMat[i].sharedMesh;
 				combine[i].transform = meshFiltersForMat[i].transform.localToWorldMatrix;
-				if(layerForThisMesh != meshFilters[i].gameObject.layer)
-					layerForThisMesh = meshFilters[i].gameObject.layer;
 			}
+			layerForThisMesh = meshFiltersForMat[0].gameObject.layer;
 
 			var newMeshObject = new GameObject("CombinedMesh: " + uniqueMat.name.Replace("(Instance)", ""));
 			newMeshObject.transform.position = Vector3.zero;
-			newMeshObject.layer = layerForThisMesh;
+			newMeshObject.layer = layerForThisMesh; 
 			newMeshObject.tag = "CombinedMesh";
 
 			var newMeshFilter = newMeshObject.AddComponent<MeshFilter>();
