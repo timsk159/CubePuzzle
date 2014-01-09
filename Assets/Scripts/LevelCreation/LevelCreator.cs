@@ -92,8 +92,19 @@ public class LevelCreator : MonoBehaviour
 
 	IEnumerator SaveMapRoutine(string saveLocation, Transform playerObjParent, GameObject playerObj)
 	{
+		LevelSerializer.Progress -= LevelSerializeProgress;
+		LevelSerializer.Progress += LevelSerializeProgress;
 		//Save creator map:
 		LevelSerializer.SaveObjectTreeToFile (saveLocation, mapRoot);
+
+		var previousSave = LevelSerializer.SavedGames[LevelSerializer.PlayerName].Where(e => e.Name == "BeforePreviewSave").FirstOrDefault();
+
+		if(previousSave != null)
+		{
+			LevelSerializer.SavedGames[LevelSerializer.PlayerName].Remove(previousSave);
+		}
+
+		LevelSerializer.SaveGame("BeforePreviewSave");
 
 		RemoveUneededNullCubes ();
 		CheckEdgeCubeNeighbours();
@@ -109,9 +120,20 @@ public class LevelCreator : MonoBehaviour
 		while(LevelSerializer.IsDeserializing)
 			yield return new WaitForEndOfFrame();
 		yield return new WaitForEndOfFrame();
+		LevelSerializer.Progress -= LevelSerializeProgress;
+		LevelSerializer.Progress += LevelSerializeProgress;
+		var saves = LevelSerializer.SavedGames[LevelSerializer.PlayerName];
+		var restoreData = saves.Where(e => e.Name == "BeforePreviewSave").FirstOrDefault().Data;
+		LevelSerializer.LoadSavedLevel(restoreData, delegate {
+			StateM.ChangeState(LevelCreatorStates.LevelCreation);
+			var player = GameObject.FindWithTag("Player");
+			mapRoot = GameObject.Find("MapRoot");
+			if(player != null)
+				player.transform.parent = mapRoot.transform;
+	});
 
-		playerObj.transform.parent = playerObjParent;
-		PutBackWallCubes();
+	//	playerObj.transform.parent = playerObjParent;
+	//	PutBackWallCubes();
 	}
 
 	void SaveMapForPlayMode(string saveLocation)
@@ -167,13 +189,31 @@ public class LevelCreator : MonoBehaviour
 
 	void PutBackWallCubes()
 	{
-		var nullCubes = GameObject.FindGameObjectsWithTag("WallCube");
+		//Replace the walls with nulls
+		var wallCubes = GameObject.FindGameObjectsWithTag("WallCube");
+
+		foreach(var cube in wallCubes)
+		{
+			if(cube.GetComponent<ColorCollisionObject>().cubeNeighbours.GetMissingNeighbours().Length == 1)
+			{
+				Destroy(cube);
+
+				continue;
+			}
+			var clone = (GameObject)Instantiate(assetManager.nullCubePrefab, cube.transform.position, cube.transform.rotation);
+
+			clone.transform.parent = mapRoot.transform;
+
+			Destroy(cube);
+		}
+
+		//Set nulls to be saved again.
+		var nullCubes = GameObject.FindGameObjectsWithTag("NullCube");
 
 		var cubesToPutBack = nullCubes.Where(e => e.GetComponent<PrefabIdentifier>() == null).ToList();
 
 		foreach(var cube in cubesToPutBack)
 		{
-			//Replace the walls with nulls
 			var clone = (GameObject)Instantiate(assetManager.nullCubePrefab, cube.transform.position, cube.transform.rotation);
 
 			clone.transform.parent = mapRoot.transform;
@@ -224,13 +264,13 @@ public class LevelCreator : MonoBehaviour
 								break;
 						}
 
-						var newNullCube = (GameObject)Instantiate(assetManager.wallCubePrefab);
+						var newWallCube = (GameObject)Instantiate(assetManager.wallCubePrefab);
 					//	newNullCube.collider.enabled = false;
 					//	newNullCube.renderer.enabled = false;
 						if(mapRoot == null)
 							mapRoot = GameObject.Find("MapRoot");
-						newNullCube.transform.parent = mapRoot.transform;
-						newNullCube.transform.position = positionToSpawnCube;
+						newWallCube.transform.parent = mapRoot.transform;
+						newWallCube.transform.position = positionToSpawnCube;
 					}
 				}
 			}
