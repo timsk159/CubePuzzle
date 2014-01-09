@@ -5,6 +5,11 @@ public class LevelCreatorDashboard : MonoBehaviour
 {
 	TweenPosition tween;
 
+	void Start()
+	{
+		tween = GetComponent<TweenPosition>();
+	}
+
 	void OnHover(bool isOver)
 	{
 		if(gameObject.name == "LeftDashboard")
@@ -37,13 +42,13 @@ public class LevelCreatorDashboard : MonoBehaviour
 
 	void TweenIn()
 	{
-		tween.Play(true);
+		tween.Play(false);
 
 	}
 
 	void TweenOut()
 	{
-		tween.Play(false);
+		tween.Play(true);
 
 	}
 }

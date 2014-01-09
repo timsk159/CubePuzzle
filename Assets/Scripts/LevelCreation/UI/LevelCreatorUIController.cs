@@ -206,6 +206,10 @@ public class LevelCreatorUIController : MonoBehaviour
 		Messenger.AddListener(LevelCreatorUIMessage.SaveMenuSaveClicked.ToString(), SaveMenuSaveClicked);
 		Messenger<InputMessageData>.AddListener(LevelCreatorUIMessage.GenericInputSubmitted.ToString(), GenericInputSubmitted);
 
+		Messenger<bool>.AddListener(LevelCreatorUIMessage.SideHoverEnter.ToString(), SideHoverEnter);
+		Messenger<bool>.AddListener(LevelCreatorUIMessage.SideHoverExit.ToString(), SideHoverExit);
+
+
 		fileMenu.GetComponent<UIPopupList>().onSelectionChange = FileMenuSelectionChanged;
 	}
 
@@ -217,6 +221,10 @@ public class LevelCreatorUIController : MonoBehaviour
 		Messenger.RemoveListener(LevelCreatorUIMessage.SaveMenuCancelClicked.ToString(), SaveMenuCancelClicked);
 		Messenger.RemoveListener(LevelCreatorUIMessage.SaveMenuSaveClicked.ToString(), SaveMenuSaveClicked);
 		Messenger<InputMessageData>.RemoveListener(LevelCreatorUIMessage.GenericInputSubmitted.ToString(), GenericInputSubmitted);
+
+		Messenger<bool>.RemoveListener(LevelCreatorUIMessage.SideHoverEnter.ToString(), SideHoverEnter);
+		Messenger<bool>.RemoveListener(LevelCreatorUIMessage.SideHoverExit.ToString(), SideHoverExit);
+
 	}
 
 	void HandleProgress (string arg1, float arg2)
@@ -224,7 +232,17 @@ public class LevelCreatorUIController : MonoBehaviour
 		if(arg1 != "Initializing")
 			UpdateProgressBar(arg2);
 	}
-	
+
+	void SideHoverEnter(bool isLeft)
+	{
+
+	}
+
+	void SideHoverExit(bool isLeft)
+	{
+
+	}
+
 	void CreateButtonClicked()
 	{
 		//change to get the input class and get it's label from there.

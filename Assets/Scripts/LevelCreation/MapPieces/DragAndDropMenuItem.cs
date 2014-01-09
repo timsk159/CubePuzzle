@@ -4,6 +4,15 @@ using System.Collections;
 public class DragAndDropMenuItem : MonoBehaviour 
 {
 	public GameObject prefab;
+	GameObject dashBoard;
+
+	void Awake()
+	{
+		if(dashBoard == null)
+		{
+			dashBoard = transform.parent.parent.gameObject;
+		}
+	}
 	
 	protected virtual void OnPress (bool isPressed)
 	{
@@ -19,6 +28,18 @@ public class DragAndDropMenuItem : MonoBehaviour
 				{
 					Messenger<GameObject>.Invoke(DragAndDropMessage.MenuItemRightClicked.ToString(), prefab);
 				}
+			}
+		}
+	}
+
+	void OnHover(bool isOver)
+	{
+		//Pass hover message to dashboard.
+		if(isOver)
+		{
+			if(dashBoard != null)
+			{
+				dashBoard.SendMessage("OnHover", isOver);
 			}
 		}
 	}
