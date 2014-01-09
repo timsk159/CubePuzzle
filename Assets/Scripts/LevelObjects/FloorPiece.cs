@@ -6,6 +6,8 @@ using StateM = StateMachine<LevelState, LevelStateMessage>;
 public class FloorPiece : ColorCollisionObject 
 {
 	SharedMesh sharedMeshForThisPiece;
+	bool isMovingUp;
+	bool isMovingDown;
 
 	protected override void Start()
 	{
@@ -71,7 +73,12 @@ public class FloorPiece : ColorCollisionObject
 
 	void MakePassable()
 	{
-
+		if(Application.loadedLevelName == "LevelCreator")
+		{
+			var levelCreatorController = (LevelCreatorController)FindObjectOfType(typeof(LevelCreatorController));
+			if(!levelCreatorController.isTesting)
+				return;
+		}
 		if(collider != null)
 		{
 			var thisCollider = collider as BoxCollider;
@@ -90,7 +97,10 @@ public class FloorPiece : ColorCollisionObject
 				sharedMeshForThisPiece.MoveDown();
 			}
 		}
-
+		else
+		{
+			MoveDown();
+		}
 		/*
 		if(sharedMeshForThisPiece != null && iTween.Count(sharedMeshForThisPiece) < 1)
 		{
@@ -101,6 +111,12 @@ public class FloorPiece : ColorCollisionObject
 
 	void MakeImpassable()
 	{
+		if(Application.loadedLevelName == "LevelCreator")
+		{
+			var levelCreatorController = (LevelCreatorController)FindObjectOfType(typeof(LevelCreatorController));
+			if(!levelCreatorController.isTesting)
+				return;
+		}
 		if(collider != null)
 		{
 			var thisCollider = collider as BoxCollider;
@@ -119,6 +135,10 @@ public class FloorPiece : ColorCollisionObject
 				sharedMeshForThisPiece.MoveUp();
 			}
 		}
+		else
+		{
+			MoveUp();
+		}
 
 		/*
 		if (sharedMeshForThisPiece != null && iTween.Count(sharedMeshForThisPiece) < 1)
@@ -126,6 +146,50 @@ public class FloorPiece : ColorCollisionObject
 			iTween.MoveTo(sharedMeshForThisPiece, new Vector3(0, 0.3f, 0), 0.5f);
 		}
 		*/
+	}
+
+	void MoveUp()
+	{
+		if(!isMovingUp)
+		{
+			ClearActiveTweens();
+			print("Moving mesh: " + gameObject.name + " Up. PLayers colour is: " + LevelController.Instance.PlayerColour);
+			var movePos = transform.localPosition;
+			movePos.y = 0.3f;
+			iTween.MoveTo(gameObject, iTween.Hash("position", movePos, "time", 0.5f, "oncomplete", "UpComplete", "islocal", true));
+			isMovingUp = true;
+		}
+	}
+
+	void MoveDown()
+	{
+		if(!isMovingDown)
+		{
+			ClearActiveTweens();
+			print("Moving mesh: " + gameObject.name + " Down. PLayers colour is: " + LevelController.Instance.PlayerColour);
+			var movePos = transform.localPosition;
+			movePos.y = 0;
+			iTween.MoveTo(gameObject, iTween.Hash("position", movePos, "time", 0.5f, "oncomplete", "DownComplete", "islocal", true));
+			isMovingDown = true;
+		}
+	}
+
+	void ClearActiveTweens()
+	{
+		if(iTween.Count(gameObject) >= 1)
+		{
+			iTween.Stop(gameObject);
+		}
+	}
+
+	void UpComplete()
+	{
+		isMovingUp = false;
+	}
+
+	void DownComplete()
+	{
+		isMovingDown = false;
 	}
 
 	void FindSharedMesh()

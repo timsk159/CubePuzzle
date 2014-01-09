@@ -24,6 +24,7 @@ public class LevelCreatorController : MonoBehaviour
 	GameObject mainCam;
 	List<DraggableMapObject> mapObjects = new List<DraggableMapObject>();
 	LevelCreator levelCreator;
+	public bool isTesting;
 
 	void Awake()
 	{
@@ -137,12 +138,14 @@ public class LevelCreatorController : MonoBehaviour
 
 	void TestingMapEnter(StateM.StateChangeData changeData)
 	{
+		isTesting = true;
 		InitMapForPreview();
 		LevelTestStateController.Instance.SetCheckpoint();
 	}
 
 	void TestingMapExit(StateM.StateChangeData changeData)
 	{
+		isTesting = false;
 		var saves = LevelSerializer.SavedGames[LevelSerializer.PlayerName];
 		var restoreData = saves.Where(e => e.Name == "BeforePreviewSave").FirstOrDefault().Data;
 		LevelSerializer.LoadSavedLevel(restoreData);
