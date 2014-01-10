@@ -4,11 +4,13 @@ using System.Collections;
 public class HUD : MonoBehaviour 
 {
 	GameObject rootPanel;
-	GameObject colourCycleHighlight;
 
-	Vector3 redHighlightPos;
-	Vector3 greenHighlightPos;
-	Vector3 blueHighlightPos;
+	GameObject redSphere;
+	GameObject greenSphere;
+	GameObject blueSphere;
+
+	Vector3 sphereSelectScale;
+	Vector3 sphereNormalScale;
 
 
 	void Start()
@@ -16,11 +18,13 @@ public class HUD : MonoBehaviour
 		Messenger<Colour>.AddListener(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerChangedColour);
 
 		rootPanel = GameObject.Find("HudPanel");
-		colourCycleHighlight = rootPanel.transform.Find("ColourCycleRoot/ColourHighlight").gameObject;
 
-		redHighlightPos = new Vector3(-0.33333f, 0, 0);
-		greenHighlightPos = Vector3.zero;
-		blueHighlightPos = new Vector3(0.33333f, 0, 0);
+		redSphere = GameObject.Find("PlayerRed");
+		greenSphere = GameObject.Find("PlayerGreen");
+		blueSphere = GameObject.Find("PlayerBlue");
+
+		sphereSelectScale = new Vector3(23, 23, 23);
+		sphereNormalScale = new Vector3(15, 15, 15);
 	}
 
 	void OnDestroy()
@@ -33,13 +37,23 @@ public class HUD : MonoBehaviour
 		switch(colourToChangeTo)
 		{
 			case Colour.Blue:
-				colourCycleHighlight.transform.localPosition = blueHighlightPos;
+				redSphere.transform.localScale = sphereSelectScale;
+
+				greenSphere.transform.localScale = sphereNormalScale;
+				blueSphere.transform.localScale = sphereNormalScale;
+
 				break;
 			case Colour.Green:
-				colourCycleHighlight.transform.localPosition = greenHighlightPos;
+				blueSphere.transform.localScale = sphereSelectScale;
+
+				greenSphere.transform.localScale = sphereNormalScale;
+				redSphere.transform.localScale = sphereNormalScale;
 				break;
 			case Colour.Red:
-				colourCycleHighlight.transform.localPosition = redHighlightPos;
+				greenSphere.transform.localScale = sphereSelectScale;
+
+				redSphere.transform.localScale = sphereNormalScale;
+				blueSphere.transform.localScale = sphereNormalScale;
 				break;
 			default:
 				Debug.LogError("Unknown colour");
