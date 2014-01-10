@@ -172,7 +172,10 @@ public class PlayerCharacter : MonoBehaviour
 			//Check the hit collider is definitely a wall
 			if(theCollider.size.y > 6)
 			{
-				Messenger.Invoke(PlayerMessage.HitWall.ToString());
+				if(collision.impactForceSum.magnitude > 2.5f)
+				{
+					Messenger.Invoke(PlayerMessage.HitWall.ToString());
+				}
 				if(collision.relativeVelocity.magnitude >= 4)
 				{
 					Messenger.Invoke(PlayerMessage.HitWallHard.ToString());
