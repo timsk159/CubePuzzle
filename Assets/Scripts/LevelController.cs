@@ -161,6 +161,11 @@ public class LevelController : MonoSingleton<LevelController>
 		{
 			go.renderer.enabled = false;
 		}
+		var walls = GameObject.FindGameObjectsWithTag("WallCube");
+		foreach(var wall in walls)
+		{
+			wall.renderer.enabled = false;
+		}
 
 		Messenger.Invoke(LevelStateMessage.LevelInitialized.ToString());
 
