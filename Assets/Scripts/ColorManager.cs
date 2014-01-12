@@ -36,7 +36,7 @@ public class ColorManager
 		switch(currentColorBlindMode)
 		{
 			case ColorBlindMode.None:
-				return Color.red;
+				return new Color(0.6f, 0, 0);
 		}
 		return errorColor;
 	}
@@ -46,7 +46,7 @@ public class ColorManager
 		switch(currentColorBlindMode)
 		{
 			case ColorBlindMode.None:
-				return Color.green;
+				return new Color(0, 0.6f, 0);
 		}
 		return errorColor;
 	}
@@ -56,7 +56,8 @@ public class ColorManager
 		switch(currentColorBlindMode)
 		{
 			case ColorBlindMode.None:
-				return Color.blue;
+				return new Color(0, 0, 0.6f);
+
 		}
 		return errorColor;
 	}

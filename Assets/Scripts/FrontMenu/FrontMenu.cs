@@ -29,13 +29,20 @@ public class FrontMenu : MonoBehaviour
 	private GameObject storyModeContinueButton;
 	OptionsMenu optionsMenu;
 
+	public Texture2D[] titles;
+	int currentTitleIndex;
+	public UITexture titleTexture;
+
 	void OnGUI()
 	{
-		if(GUILayout.Button("Grab Screenshot"))
+		if (GUILayout.Button("Switch title"))
 		{
-			Application.CaptureScreenshot("Assets/Screenshots/Screenshot.png", 5);
+			currentTitleIndex++;
+			print(currentTitleIndex);
+			if (currentTitleIndex >= titles.Length)
+				currentTitleIndex = 0;
+			titleTexture.mainTexture = titles[currentTitleIndex];
 		}
-
 	}
 	
 	void Start ()

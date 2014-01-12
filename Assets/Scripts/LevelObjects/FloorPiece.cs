@@ -155,7 +155,7 @@ public class FloorPiece : ColorCollisionObject
 			ClearActiveTweens();
 			print("Moving mesh: " + gameObject.name + " Up. PLayers colour is: " + LevelController.Instance.PlayerColour);
 			var movePos = transform.localPosition;
-			movePos.y = 0.3f;
+			movePos.y = 0.5f;
 			iTween.MoveTo(gameObject, iTween.Hash("position", movePos, "time", 0.5f, "oncomplete", "UpComplete", "islocal", true));
 			isMovingUp = true;
 		}

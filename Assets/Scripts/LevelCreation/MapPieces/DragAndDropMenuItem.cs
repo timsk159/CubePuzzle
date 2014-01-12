@@ -31,16 +31,4 @@ public class DragAndDropMenuItem : MonoBehaviour
 			}
 		}
 	}
-
-	void OnHover(bool isOver)
-	{
-		//Pass hover message to dashboard.
-		if(isOver)
-		{
-			if(dashBoard != null)
-			{
-				dashBoard.SendMessage("OnHover", isOver);
-			}
-		}
-	}
 }

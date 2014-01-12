@@ -93,7 +93,6 @@ public class LevelController : MonoSingleton<LevelController>
 		Messenger<StateM.StateChangeData>.AddListener(LevelStateMessage.CutSceneExit.ToString(), CutSceneExit);
 
 		Messenger<Colour>.AddListener(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerChangedColour);
-
 		StateMachine<LevelState, LevelStateMessage>.SetInitialState(LevelState.InGame);
 	}
 
@@ -217,6 +216,7 @@ public class LevelController : MonoSingleton<LevelController>
 		playerChar.EnablePhysics();
 		Messenger.RemoveListener(LevelIntroMessage.IntroFinished.ToString(), IntroFinished);
 		Messenger.RemoveListener(LevelIntroMessage.IntroInterrupted.ToString(), IntroInterrupted);
+		StateM.ChangeState(LevelState.InGame);
 	}
 
 	void IntroInterrupted()

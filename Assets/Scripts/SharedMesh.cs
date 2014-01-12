@@ -19,7 +19,7 @@ public class SharedMesh : MonoBehaviour
 		{
 			ClearActiveTweens();
 			print("Moving mesh: " + gameObject.name + " Up. PLayers colour is: " + LevelController.Instance.PlayerColour);
-			iTween.MoveTo(gameObject, iTween.Hash("position", new Vector3(0, 0.3f, 0), "time", 0.5f, "oncomplete", "UpComplete"));
+			iTween.MoveTo(gameObject, iTween.Hash("position", new Vector3(0, 0.5f, 0), "time", 0.5f, "oncomplete", "UpComplete"));
 			isMovingUp = true;
 		}
 	}

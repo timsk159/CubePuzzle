@@ -20,6 +20,9 @@ public class CameraControls : MonoBehaviour
 
 	void LateUpdate()
 	{
+		if (LevelSerializer.IsDeserializing)
+			return;
+
 		if(Input.GetKey(KeyCode.Backspace))
 		{
 			ResetPosition();
@@ -28,10 +31,9 @@ public class CameraControls : MonoBehaviour
 		var tooClose = IsTooClose();
 
 		var xInput = Input.GetAxis("Horizontal");
-		var yInput = 0.0f; //Input.GetAxis("Vertical");
-		var scrollInput = Input.GetAxis("Vertical"); //Input.GetAxis("Mouse ScrollWheel");
+		var yInput = Input.GetAxis("Vertical");
+		var scrollInput = Input.GetAxis("Mouse ScrollWheel");
 		var boost = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-		scrollInput /= 5.0f;
 		//If we are too close to the map, only allow movement away from the map.
 		if(tooClose)
 		{
@@ -86,7 +88,7 @@ public class CameraControls : MonoBehaviour
 				xInput *= 2.0f;
 			}
 			Vector3 move = new Vector3((xInput * movementSensitivity) * Time.deltaTime, (yInput * movementSensitivity) * Time.deltaTime, 0);
-			transform.Translate(move, Space.Self);
+			transform.Translate(move, Space.World);
 		}
 		
 		// Right click rotation
