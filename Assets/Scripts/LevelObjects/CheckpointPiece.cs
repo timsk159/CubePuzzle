@@ -11,23 +11,14 @@ public class CheckpointPiece : TriggerObject
 	bool activeCheckpoint;
 
 	ParticleSystem particles;
-	GameObject flagPrefab;
-	GameObject flagPole;
-	GameObject flag;
 
 	protected override void Start()
 	{
 		particles = GetComponentInChildren<ParticleSystem>();
 		particles.Stop();
 
-		if (flagPrefab == null)
-			flagPrefab = (GameObject)Resources.Load("FlagCloth");
 
 		Messenger.AddListener(CheckpointMessage.CheckpointPressed.ToString(), CheckpointPressed);
-
-		flagPole = transform.Find("FlagPole").gameObject;
-
-		Messenger.AddListener(LevelStateMessage.LevelStarted.ToString(), EnableFlag);
 
 		base.Start();
 	}
@@ -35,7 +26,6 @@ public class CheckpointPiece : TriggerObject
 	protected override void OnDestroy()
 	{
 		Messenger.RemoveListener(CheckpointMessage.CheckpointPressed.ToString(), CheckpointPressed);
-		Messenger.RemoveListener(LevelStateMessage.LevelStarted.ToString(), EnableFlag);
 		base.OnDestroy();
 	}
 
@@ -70,17 +60,5 @@ public class CheckpointPiece : TriggerObject
 		activeCheckpoint = false;
 		//Make sure particle system is off
 		particles.Stop();
-	}
-
-	void EnableFlag()
-	{
-
-	}
-
-	void DisableFlag()
-	{
-
-		//flag.GetComponent<Cloth>().enabled = false;
-		//flag.GetComponent<InteractiveCloth>().enabled = false;
 	}
 }
