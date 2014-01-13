@@ -50,22 +50,27 @@ public class OptionsMenu : MonoBehaviour
 		newOptions.fullscreen = fullScreenToggle.isChecked;
 
 		newOptions.qualityLevel = qualityLevelSelectionList.selection;
+
 		newOptions.colorBlindMode = (ColorBlindMode)Enum.Parse(typeof(ColorBlindMode), colorBlindSelectionList.selection, true);
 
 		newOptions.musicVolume = musicSlider.sliderValue;
 		newOptions.effectsVolume = effectsSlider.sliderValue;
 
-		ApplyChanges(newOptions);
-
 		SaveOptions();
 
 		ApplyChangesToUI();
+
+		ApplyChanges(newOptions);
 	}
 
 	void ApplyChanges(Options newOptions)
 	{
 		currentOptions = newOptions;
-
+		
+		if(currentOptions.colorBlindMode != ColorManager.currentColorBlindMode)
+		{
+			ColorManager.currentColorBlindMode = currentOptions.colorBlindMode;
+		}
 		if(currentOptions.fullscreen != Screen.fullScreen)
 		{
 			Screen.fullScreen = currentOptions.fullscreen;
@@ -73,10 +78,6 @@ public class OptionsMenu : MonoBehaviour
 		if(currentOptions.qualityLevel != QualitySettings.names[QualitySettings.GetQualityLevel()])
 		{
 			QualitySettings.SetQualityLevel(QualitySettings.names.IndexOf(currentOptions.qualityLevel), true);
-		}
-		if(currentOptions.colorBlindMode != ColorManager.currentColorBlindMode)
-		{
-			ColorManager.currentColorBlindMode = currentOptions.colorBlindMode;
 		}
 
 		PooledAudioController.Instance.SetMusicVolume(currentOptions.musicVolume);
