@@ -1,4 +1,4 @@
-  Shader "Character/Ghost Shader" {
+  Shader "Character/Ghost Shader Bump" {
     Properties {
       _MainTex ("Texture", 2D) = "white" {}
       _BumpMap ("Bumpmap", 2D) = "bump" {}
