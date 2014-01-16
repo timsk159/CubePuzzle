@@ -30,22 +30,6 @@ public class FrontMenu : MonoBehaviour
 	public string selectedFileName;
 	private GameObject storyModeContinueButton;
 	OptionsMenu optionsMenu;
-
-	public Texture2D[] titles;
-	int currentTitleIndex;
-	public UITexture titleTexture;
-
-	void OnGUI()
-	{
-		if (GUILayout.Button("Switch title"))
-		{
-			currentTitleIndex++;
-			print(currentTitleIndex);
-			if (currentTitleIndex >= titles.Length)
-				currentTitleIndex = 0;
-			titleTexture.mainTexture = titles[currentTitleIndex];
-		}
-	}
 	
 	void Start ()
 	{
