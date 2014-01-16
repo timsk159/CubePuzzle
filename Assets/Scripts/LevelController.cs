@@ -394,12 +394,7 @@ public class LevelController : MonoSingleton<LevelController>
 	public void SetCheckpoint()
 	{
 		hasCheckpoint = true;
-		if(Application.loadedLevelName == "LevelCreator")
-		{
-			LevelTestStateController.Instance.SetCheckpoint();
-		}
-		else
-			LevelStateController.Instance.SetCheckPoint();
+		LevelStateController.Instance.SetCheckPoint();
 
 		if(isStoryMode)
 		{

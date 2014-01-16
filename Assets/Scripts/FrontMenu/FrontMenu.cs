@@ -316,7 +316,10 @@ public class FrontMenu : MonoBehaviour
 
 	void RegisterPrefabPaths()
 	{
-		LevelSerializer.useCompression = true;
+		LevelSerializer.useCompression = false;
+		LevelSerializer.DontCollect();
+		LevelSerializer.IgnoreType(typeof(MeshFilter));
+		LevelSerializer.IgnoreType(typeof(MeshRenderer));
 
 		string basePath = "LevelObjects/";
 		LevelSerializer.AddPrefabPath (basePath + "BlueCube");
@@ -329,9 +332,9 @@ public class FrontMenu : MonoBehaviour
 		LevelSerializer.AddPrefabPath (basePath + "NullCube");
 		LevelSerializer.AddPrefabPath (basePath + "PlayerButtonCube");
 		LevelSerializer.AddPrefabPath (basePath + "PlayerStartCube");
-		LevelSerializer.AddPrefabPath (basePath + "PurpleCube");
 		LevelSerializer.AddPrefabPath (basePath + "RedCube");
 		LevelSerializer.AddPrefabPath(basePath + "CheckpointCube");
+		LevelSerializer.AddPrefabPath(basePath + "WallCube");
 		LevelSerializer.AddPrefabPath("Player");
 	}
 }
