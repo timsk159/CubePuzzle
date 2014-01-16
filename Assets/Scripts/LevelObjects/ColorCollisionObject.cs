@@ -206,8 +206,7 @@ public class CubeNeighbours
 		{
 			Ray ray = new Ray(transform.position, directions[i]);
 
-			RaycastHit hit;
-			if(Physics.Raycast(ray, out hit, 0.6f, 1 << 10))
+			if(Physics.Raycast(ray, 0.6f, 1 << 10))
 			{
 				continue;
 			}
@@ -224,4 +223,4 @@ public class CubeNeighbours
 public enum Colour
 {
 	None, Red, Green, Blue
-};
+};	

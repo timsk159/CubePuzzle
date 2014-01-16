@@ -9,7 +9,8 @@ public enum FrontMenuUIMessage
 	StoryModeButtonPressed, UserLevelsButtonPressed, LevelCreatorButtonPressed, QuitButtonPressed,
 	PlayUserLevelButtonPressed, CancelUserLevelMenuPressed,
 	StoryModeContinueButtonPressed, StoryModeLevelButtonPressed, StoryModeCancelButtonPressed,
-	OptionsMenuPressed
+	OptionsMenuPressed,
+	CreditsButtonPressed, CreditsBackPressed
 };
 
 public class FrontMenu : MonoBehaviour 
@@ -20,7 +21,8 @@ public class FrontMenu : MonoBehaviour
 	public GameObject loadMapPanel;
 	public GameObject storyModePanel;
 	public GameObject optionsMenuPanel;
-	
+	public GameObject creditsPanel;
+
 	public GameObject fileMenuEntryPrefab;
 
 	public GameObject fileMenuGrid;
@@ -57,6 +59,9 @@ public class FrontMenu : MonoBehaviour
 		Messenger.AddListener(FrontMenuUIMessage.StoryModeCancelButtonPressed.ToString(), StoryModeCancelButtonPressed);
 		Messenger.AddListener(FrontMenuUIMessage.OptionsMenuPressed.ToString(), OptionsMenuPressed);
 		Messenger.AddListener(OptionsMenuMessage.Back.ToString(), OptionsMenuBack);
+		Messenger.AddListener(FrontMenuUIMessage.CreditsButtonPressed.ToString(), CreditsPressed);
+		Messenger.AddListener(FrontMenuUIMessage.CreditsBackPressed.ToString(), CreditsBack);
+
 
 		Messenger<string>.AddListener(FrontMenuUIMessage.StoryModeLevelButtonPressed.ToString(), StoryModeLevelButtonPressed);
 
@@ -82,8 +87,22 @@ public class FrontMenu : MonoBehaviour
 		Messenger.RemoveListener(FrontMenuUIMessage.StoryModeCancelButtonPressed.ToString(), StoryModeCancelButtonPressed);
 		Messenger.RemoveListener(FrontMenuUIMessage.OptionsMenuPressed.ToString(), OptionsMenuPressed);
 		Messenger.RemoveListener(OptionsMenuMessage.Back.ToString(), OptionsMenuBack);
+		Messenger.RemoveListener(FrontMenuUIMessage.CreditsButtonPressed.ToString(), CreditsPressed);
+		Messenger.RemoveListener(FrontMenuUIMessage.CreditsBackPressed.ToString(), CreditsBack);
 
 		Messenger<string>.RemoveListener(FrontMenuUIMessage.StoryModeLevelButtonPressed.ToString(), StoryModeLevelButtonPressed);
+	}
+
+	void CreditsPressed()
+	{
+		NGUITools.SetActive(frontMenuPanel, false);
+		NGUITools.SetActive(creditsPanel, true);
+	}
+
+	void CreditsBack()
+	{
+		NGUITools.SetActive(frontMenuPanel, true);
+		NGUITools.SetActive(creditsPanel, false);
 	}
 	
 	void StoryModeButtonPressed()

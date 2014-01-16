@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CameraControls : MonoBehaviour 
 {		
@@ -12,13 +13,14 @@ public class CameraControls : MonoBehaviour
 
 	private bool isRotating;	
 	private bool isZooming;
+	bool isMoving;
 
 	void Start()
 	{
 		mapRoot = GameObject.Find("MapRoot");
 	}
 
-	void LateUpdate()
+	void FixedUpdate()
 	{
 		if (LevelSerializer.IsDeserializing)
 			return;
@@ -28,39 +30,45 @@ public class CameraControls : MonoBehaviour
 			ResetPosition();
 			return;
 		}
-		var tooClose = IsTooClose();
 
 		var xInput = Input.GetAxis("Horizontal");
-		var yInput = Input.GetAxis("Vertical");
+		var zInput = Input.GetAxis("Vertical");
 		var scrollInput = Input.GetAxis("Mouse ScrollWheel");
 		var boost = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+
+		if(xInput != 0 || zInput != 0 || scrollInput != 0)
+			isMoving = true;
+		else
+			isMoving = false;
+
+		if(!isMoving)
+			return;
+
+		var closestCube = GetClosestCubeTransform();
+
+		var tooClose = IsTooClose(closestCube);
+		
 		//If we are too close to the map, only allow movement away from the map.
 		if(tooClose)
 		{
-			/*
-			if(Mathf.Sign(scrollInput) > 0)
-				scrollInput = 0;
-			*/
+			var toCube = closestCube.position - transform.position;
+			var toCubeDirection = toCube.normalized;
+			Debug.DrawRay(transform.position, toCube);
 
-			var toMap = mapRoot.transform.position - transform.position;
-			var toMapDirection = toMap.normalized;
-		//	print("To Map: " + toMap + " direction: " + toMapDirection);
-			var requestMoveVector = new Vector3(xInput, yInput, scrollInput);
-			var moveDirection = requestMoveVector.normalized;
-			//print("Move: " + requestMoveVector + " direction: " + requestMoveVector.normalized);
+			var moveVector = new Vector3(xInput, 0, zInput);
+			var moveDirection = moveVector.normalized;
 
-			//If signs of movements vector elements differ from direction to map, we are moving away from the map.
-			//if(moveDir.x.sign != toMap.x.sign)
-				//allow x movement.
-			if(Mathf.Sign(moveDirection.x) == Mathf.Sign(toMapDirection.x))
+			if(Mathf.Sign(xInput) == Mathf.Sign(toCubeDirection.x))
 			{
 				xInput = 0;
 			}
-			if(Mathf.Sign(moveDirection.y) == Mathf.Sign(toMapDirection.y))
+			if(Mathf.Sign(zInput) == Mathf.Sign(toCubeDirection.z))
 			{
-				yInput = 0;
+				zInput = 0;
 			}
-			if(Mathf.Sign(moveDirection.z) == Mathf.Sign(toMapDirection.z))
+
+
+			if(Mathf.Sign(toCubeDirection.y) == Mathf.Sign(scrollInput))
 			{
 				scrollInput = 0;
 			}
@@ -71,7 +79,7 @@ public class CameraControls : MonoBehaviour
 			dragOrigin = Input.mousePosition;
 			isRotating = true;
 		}
-		if(xInput != 0 || yInput != 0)
+		if(xInput != 0 || zInput != 0)
 		{
 			dragOrigin = Input.mousePosition;
 		}
@@ -80,14 +88,14 @@ public class CameraControls : MonoBehaviour
 			isRotating = false;
 		
 		//WASD movement
-		if(yInput != 0 || xInput != 0)
+		if(zInput != 0 || xInput != 0)
 		{
 			if(boost)
 			{
-				yInput *= 2.0f;
+				zInput *= 2.0f;
 				xInput *= 2.0f;
 			}
-			Vector3 move = new Vector3((xInput * movementSensitivity) * Time.deltaTime, (yInput * movementSensitivity) * Time.deltaTime, 0);
+			Vector3 move = new Vector3((xInput * movementSensitivity) * Time.deltaTime, 0, (zInput * movementSensitivity) * Time.deltaTime);
 			transform.Translate(move, Space.World);
 		}
 		
@@ -107,12 +115,12 @@ public class CameraControls : MonoBehaviour
 		}
 	}
 
-	bool IsTooClose()
+	bool IsTooClose(Transform cube)
 	{
 		if(mapRoot == null)
 			mapRoot = GameObject.Find("MapRoot");
 
-		var distance = Vector3.Distance(transform.position, mapRoot.transform.position);
+		var distance = Vector3.Distance(transform.position, cube.position);
 
 		if(distance > minDistance)
 			return false;
@@ -120,10 +128,29 @@ public class CameraControls : MonoBehaviour
 			return true;
 	}
 
-	float GetDotToMap()
+	Transform GetClosestCubeTransform()
 	{
-		var toMap = mapRoot.transform.position - transform.position;
-		return Vector3.Dot(transform.forward, toMap);
+		if(mapRoot == null)
+			mapRoot = GameObject.Find("MapRoot");
+
+		float closestDistance = 999;
+		Transform returnCube = null;
+		foreach(Transform cube in mapRoot.transform)
+		{
+			var dist = Vector3.Distance(transform.position, cube.position);
+			if(dist < closestDistance)
+			{
+				closestDistance = dist;
+				returnCube = cube;
+			}
+		}
+		return returnCube;
+	}
+
+	float GetDotToCube(Transform cubeTrans)
+	{
+		var toCube = cubeTrans.position - transform.position;
+		return Vector3.Angle(transform.forward, toCube.normalized);
 	}
 
 	public void ResetPosition()
