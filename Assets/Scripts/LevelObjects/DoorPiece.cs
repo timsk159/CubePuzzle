@@ -15,7 +15,16 @@ public class DoorPiece : FloorPiece
 
 		theDoor = GetComponentInChildren<Door>();
 
-		SetDoorColour(theDoor.objColour, true);
+		bool shouldCheckDoor = false;
+
+		if(Application.loadedLevelName == "LevelCreator" && !LevelCreatorController.isTesting)
+		{
+			SetDoorColour(theDoor.objColour, false);
+		}
+		else
+		{
+			SetDoorColour(theDoor.objColour, true);
+		}
 	}
 	
 	public override void ChangeColour(Colour colorToChangeTo)
@@ -81,13 +90,14 @@ public class DoorPiece : FloorPiece
 	{		
 		theDoor.objColour = colourToSet;
 		theDoor.renderer.material.color = ColorManager.GetObjectRealColor(theDoor.objColour);
-
+		Debug.Log("Door colour being set to: " + colourToSet + " Checking door?: " + checkDoor);
 		if(checkDoor)
 			CheckDoor();
 	}
 	
 	void CheckDoor()
 	{
+		Debug.Log("Checking door");
 		if(theDoor.objColour == objColour)
 		{			
 			theDoor.OpenDoor();

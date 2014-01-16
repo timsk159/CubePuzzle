@@ -24,7 +24,7 @@ public class LevelCreatorController : MonoBehaviour
 	GameObject mainCam;
 	List<DraggableMapObject> mapObjects = new List<DraggableMapObject>();
 	LevelCreator levelCreator;
-	public bool isTesting;
+	public static bool isTesting;
 
 	void Awake()
 	{

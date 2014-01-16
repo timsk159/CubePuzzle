@@ -32,7 +32,10 @@ public class LevelController : MonoSingleton<LevelController>
 			}
 			catch(NullReferenceException)
 			{
+				playerChar = GameObject.FindWithTag("Player").GetComponent<PlayerCharacter>();
+				_playerColour = playerChar.currentColor;
 				Debug.LogWarning("Tried to access player colour, but playerchar was null!");
+				return _playerColour;
 			}
 
 			return _playerColour;

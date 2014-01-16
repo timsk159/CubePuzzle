@@ -8,6 +8,9 @@ public class Door : ColorCollisionObject
 	protected override void Start()
 	{
 		base.Start ();
+		if(Application.loadedLevelName == "LevelCreator" && !LevelCreatorController.isTesting)
+			return;
+
 		if (transform.parent.GetComponent<ColorCollisionObject>().objColour == objColour)
 		{
 			doorIsDown = true;

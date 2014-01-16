@@ -75,8 +75,7 @@ public class FloorPiece : ColorCollisionObject
 	{
 		if(Application.loadedLevelName == "LevelCreator")
 		{
-			var levelCreatorController = (LevelCreatorController)FindObjectOfType(typeof(LevelCreatorController));
-			if(!levelCreatorController.isTesting)
+			if(!LevelCreatorController.isTesting)
 				return;
 		}
 		if(collider != null)
@@ -113,8 +112,7 @@ public class FloorPiece : ColorCollisionObject
 	{
 		if(Application.loadedLevelName == "LevelCreator")
 		{
-			var levelCreatorController = (LevelCreatorController)FindObjectOfType(typeof(LevelCreatorController));
-			if(!levelCreatorController.isTesting)
+			if(!LevelCreatorController.isTesting)
 				return;
 		}
 		if(collider != null)
