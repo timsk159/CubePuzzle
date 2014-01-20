@@ -58,9 +58,9 @@ public class OptionsMenu : MonoBehaviour
 
 		SaveOptions();
 
-		ApplyChangesToUI();
-
 		ApplyChanges(newOptions);
+
+		ApplyChangesToUI();
 	}
 
 	void ApplyChanges(Options newOptions)
