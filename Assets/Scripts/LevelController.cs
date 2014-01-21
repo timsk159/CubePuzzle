@@ -64,6 +64,8 @@ public class LevelController : MonoSingleton<LevelController>
 	GameObject mapRoot;
 	LevelIntro levelIntro;
 
+	PhysicMaterial floorPhysicMat;
+
 	Material[] skyboxes;
 	
 	void Awake()
@@ -74,6 +76,8 @@ public class LevelController : MonoSingleton<LevelController>
 		{
 			levelIntro = gameObject.AddComponent<LevelIntro>();
 		}
+		if(floorPhysicMat == null)
+			floorPhysicMat = (PhysicMaterial)Resources.Load("PassablePMat");
 	}
 	
 	void RegisterStates()
@@ -321,6 +325,7 @@ public class LevelController : MonoSingleton<LevelController>
 
 		floor.AddComponent<StoreInformation>();
 		floor.renderer.enabled = false;
+		floor.collider.material = floorPhysicMat;
 	}
 
 	void CreatePlayer()
