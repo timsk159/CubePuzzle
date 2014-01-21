@@ -46,7 +46,9 @@ public class CameraControls : MonoBehaviour
 
 		var closestCube = GetClosestCubeTransform();
 
-		var tooClose = IsTooClose(closestCube);
+		float deltaDistance = 0;
+
+		var tooClose = IsTooClose(closestCube, out deltaDistance);
 		
 		//If we are too close to the map, only allow movement away from the map.
 		if(tooClose)
@@ -58,36 +60,9 @@ public class CameraControls : MonoBehaviour
 			var moveVector = new Vector3(xInput, 0, zInput);
 			var moveDirection = moveVector.normalized;
 
-			/*
-			var newPos = Camera.main.transform.position;
+			var pushAwayVector = (toCubeDirection * deltaDistance);
 
-			newPos -= moveVector;
-
-			Camera.main.transform.position = newPos;
-			*/
-
-			var newPos = Camera.main.transform.position;
-
-			newPos -= toCubeDirection;
-
-			PushCameraBack(-toCubeDirection);
-
-			//Camera.main.transform.position = newPos;
-
-			/*
-			if(Mathf.Sign(xInput) == Mathf.Sign(toCubeDirection.x))
-			{
-				xInput = 0;
-			}
-			if(Mathf.Sign(zInput) == Mathf.Sign(toCubeDirection.z))
-			{
-				zInput = 0;
-			}
-			if(Mathf.Sign(toCubeDirection.y) == Mathf.Sign(scrollInput))
-			{
-				scrollInput = 0;
-			}
-			*/
+			PushCameraBack(pushAwayVector);
 		}
 		
 		if(Input.GetMouseButtonDown(2))
@@ -144,9 +119,25 @@ public class CameraControls : MonoBehaviour
 			return true;
 	}
 
+	bool IsTooClose(Transform cube, out float deltaDistance)
+	{
+		deltaDistance = 0;
+		if(IsTooClose(cube))
+		{
+			var distance = Vector3.Distance(transform.position, cube.position);
+		
+			deltaDistance = distance - minDistance;
+
+			return true;
+		}
+		else
+			return false;
+	}
+
 	void PushCameraBack(Vector3 directionToPush)
 	{
-		iTween.MoveAdd(Camera.main.gameObject, directionToPush, 0.8f);
+		print(directionToPush);
+		iTween.MoveAdd(Camera.main.gameObject, iTween.Hash("amount", directionToPush, "time", 0.25f, "easetype", iTween.EaseType.easeOutSine));
 	}
 
 	Transform GetClosestCubeTransform()
@@ -159,7 +150,7 @@ public class CameraControls : MonoBehaviour
 		foreach(Transform cube in mapRoot.transform)
 		{
 			var dist = Vector3.Distance(transform.position, cube.position);
-			if(dist < closestDistance)
+			if(dist < (closestDistance - 0.2f))
 			{
 				closestDistance = dist;
 				returnCube = cube;
