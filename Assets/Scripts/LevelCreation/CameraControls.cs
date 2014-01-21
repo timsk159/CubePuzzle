@@ -70,7 +70,9 @@ public class CameraControls : MonoBehaviour
 
 			newPos -= toCubeDirection;
 
-			Camera.main.transform.position = newPos;
+			PushCameraBack(-toCubeDirection);
+
+			//Camera.main.transform.position = newPos;
 
 			/*
 			if(Mathf.Sign(xInput) == Mathf.Sign(toCubeDirection.x))
@@ -140,6 +142,11 @@ public class CameraControls : MonoBehaviour
 			return false;
 		else
 			return true;
+	}
+
+	void PushCameraBack(Vector3 directionToPush)
+	{
+		iTween.MoveAdd(Camera.main.gameObject, directionToPush, 0.8f);
 	}
 
 	Transform GetClosestCubeTransform()
