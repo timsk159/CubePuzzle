@@ -78,6 +78,10 @@ public class FloorPiece : ColorCollisionObject
 			if(!LevelCreatorController.isTesting)
 				return;
 		}
+
+		impassableCollider.enabled = false;
+
+		/*
 		if(collider != null)
 		{
 			var thisCollider = collider as BoxCollider;
@@ -86,6 +90,7 @@ public class FloorPiece : ColorCollisionObject
 			thisCollider.size = newColliderSize;
 			thisCollider.sharedMaterial = passablePMat;
 		}
+		*/
 
 		if(useSharedMaterial)
 		{
@@ -115,6 +120,10 @@ public class FloorPiece : ColorCollisionObject
 			if(!LevelCreatorController.isTesting)
 				return;
 		}
+
+		impassableCollider.enabled = true;
+
+		/*
 		if(collider != null)
 		{
 			var thisCollider = collider as BoxCollider;
@@ -123,6 +132,7 @@ public class FloorPiece : ColorCollisionObject
 			thisCollider.size = newColliderSize;
 			thisCollider.sharedMaterial = impassablePMat;
 		}
+		*/
 
 		if(useSharedMaterial)
 		{

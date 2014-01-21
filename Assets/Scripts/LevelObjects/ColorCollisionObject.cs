@@ -23,17 +23,23 @@ public class ColorCollisionObject : MonoBehaviour
 	public Colour initialColour;
 	public Colour objColour;
 
+	public Collider impassableCollider;
+
 	[DoNotSerialize()]
 	public Vector3 initialColliderSize;
 	[DoNotSerialize()]
 	public CubeNeighbours cubeNeighbours;
-	public bool meshCanBeOptimized; 
+	public bool meshCanBeOptimized;
 
 	protected bool useSharedMaterial = true;
 	protected Array cachedEnumValues;
 
 	void Awake()
 	{
+#if DEBUG_CUBES
+		if(impassableCollider == null)
+			Debug.LogWarning("Cube: " + gameObject.name + " Has no impassable collider");
+#endif
 		if(impassablePMat == null)
 			impassablePMat = (PhysicMaterial)Resources.Load("ImpassablePMat");
 		if(passablePMat == null)

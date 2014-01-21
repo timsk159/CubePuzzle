@@ -270,8 +270,11 @@ public class LevelController : MonoSingleton<LevelController>
 		mapObjects.ForEach(e => meshFilters.AddRange(e.GetComponentsInChildren<MeshFilter>()));
 
 		var uniqueMaterials = meshFilters.Select(e => e.renderer.sharedMaterial).Distinct();
+		meshFilters.RemoveAll(m => m.name == "ImpassableCollider");
+
 		foreach(var uniqueMat in uniqueMaterials)
 		{
+
 			var meshFiltersForMat = meshFilters.Where(meshFilter => meshFilter.renderer.sharedMaterial == uniqueMat).ToArray();
 
 			var combine = new CombineInstance[meshFiltersForMat.Length];
