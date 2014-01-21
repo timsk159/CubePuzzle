@@ -58,6 +58,21 @@ public class CameraControls : MonoBehaviour
 			var moveVector = new Vector3(xInput, 0, zInput);
 			var moveDirection = moveVector.normalized;
 
+			/*
+			var newPos = Camera.main.transform.position;
+
+			newPos -= moveVector;
+
+			Camera.main.transform.position = newPos;
+			*/
+
+			var newPos = Camera.main.transform.position;
+
+			newPos -= toCubeDirection;
+
+			Camera.main.transform.position = newPos;
+
+			/*
 			if(Mathf.Sign(xInput) == Mathf.Sign(toCubeDirection.x))
 			{
 				xInput = 0;
@@ -66,12 +81,11 @@ public class CameraControls : MonoBehaviour
 			{
 				zInput = 0;
 			}
-
-
 			if(Mathf.Sign(toCubeDirection.y) == Mathf.Sign(scrollInput))
 			{
 				scrollInput = 0;
 			}
+			*/
 		}
 		
 		if(Input.GetMouseButtonDown(2))
