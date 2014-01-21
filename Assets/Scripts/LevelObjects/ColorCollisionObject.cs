@@ -26,8 +26,6 @@ public class ColorCollisionObject : MonoBehaviour
 	public Collider impassableCollider;
 
 	[DoNotSerialize()]
-	public Vector3 initialColliderSize;
-	[DoNotSerialize()]
 	public CubeNeighbours cubeNeighbours;
 	public bool meshCanBeOptimized;
 
@@ -54,8 +52,6 @@ public class ColorCollisionObject : MonoBehaviour
 
 	protected virtual void Start()
 	{
-		initialColliderSize = Vector3.one;
-
 		Messenger.AddListener(LevelStateMessage.LevelInitialized.ToString(), LevelInitialized);
 		Messenger.AddListener(LevelStateMessage.LevelStarted.ToString(), LevelStarted);
 	}
@@ -93,8 +89,10 @@ public class ColorCollisionObject : MonoBehaviour
 
 	public void EnsureCollidersAreEnabled()
 	{
-		collider.enabled = true;
-
+		if(collider)
+		{
+			collider.enabled = true;
+		}
 		if(transform.childCount > 0)
 		{
 			foreach(Transform child in transform)

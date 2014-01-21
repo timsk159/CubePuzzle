@@ -278,7 +278,6 @@ public class LevelController : MonoSingleton<LevelController>
 
 		foreach(var uniqueMat in uniqueMaterials)
 		{
-
 			var meshFiltersForMat = meshFilters.Where(meshFilter => meshFilter.renderer.sharedMaterial == uniqueMat).ToArray();
 
 			var combine = new CombineInstance[meshFiltersForMat.Length];
