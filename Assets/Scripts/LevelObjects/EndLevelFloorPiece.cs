@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class EndLevelFloorPiece : ColorCollisionObject
+public class EndLevelFloorPiece : TriggerObject
 {	
 	protected override void Start ()
 	{
@@ -9,9 +9,9 @@ public class EndLevelFloorPiece : ColorCollisionObject
 		base.Start ();
 	}
 
-	protected override void OnCollisionEnter(Collision col)
+	protected override void TriggererEntered(GameObject go)
 	{
-		if(col.collider.CompareTag("Player"))
+		if(go.CompareTag("Player"))
 		{
 			LevelController.Instance.FinishLevel();
 		}

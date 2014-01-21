@@ -153,7 +153,12 @@ public class LevelController : MonoSingleton<LevelController>
 		}
 		playerChar.DisablePhysics();
 
+		//Create floor and make sure player is on it
 		mapRoot = GameObject.Find("MapRoot");
+
+		CreateFloor();
+		playerObj.transform.position = new Vector3(playerObj.transform.position.x, (playerObj.transform.position.y + 0.6f), playerObj.transform.position.z);
+
 		SetupNullCubes();
 
 		Camera.main.GetComponent<CameraFollow>().target = playerObj.transform;
@@ -299,6 +304,20 @@ public class LevelController : MonoSingleton<LevelController>
 		}
 
 		return combinedMeshList.ToArray();
+	}
+
+	void CreateFloor()
+	{
+		GameObject floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		floor.transform.parent = mapRoot.transform;
+
+		floor.transform.localPosition = new Vector3(0, 0.55f, 0);
+
+		floor.transform.localScale = new Vector3(10000, 0.01f, 10000);
+		floor.transform.localEulerAngles = Vector3.zero;
+
+		floor.AddComponent<StoreInformation>();
+		floor.renderer.enabled = false;
 	}
 
 	void CreatePlayer()
