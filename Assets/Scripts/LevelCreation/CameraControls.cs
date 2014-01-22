@@ -136,8 +136,10 @@ public class CameraControls : MonoBehaviour
 
 	void PushCameraBack(Vector3 directionToPush)
 	{
-		print(directionToPush);
-		iTween.MoveAdd(Camera.main.gameObject, iTween.Hash("amount", directionToPush, "time", 0.25f, "easetype", iTween.EaseType.easeOutSine));
+		if(iTween.Count(Camera.main.gameObject) == 0)
+		{
+			iTween.MoveAdd(Camera.main.gameObject, iTween.Hash("amount", directionToPush, "time", 0.1f, "easetype", iTween.EaseType.easeInSine));
+		}
 	}
 
 	Transform GetClosestCubeTransform()
