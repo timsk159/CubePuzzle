@@ -107,4 +107,11 @@ public class DoorPiece : FloorPiece
 			theDoor.CloseDoor();
 		}
 	}
+
+	protected override void OnDeserialized()
+	{
+		base.OnDeserialized();
+		SetDoorColour(theDoor.initialColour, false);
+		ChangeColour(initialColour, false);
+	}
 }

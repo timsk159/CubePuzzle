@@ -313,6 +313,7 @@ public class DragAndDropController : MonoBehaviour
 		doorPiece.SetDoorColour(doorMenuPiece.theDoor.objColour, false);
 		doorPiece.theDoor.initialColour = doorMenuPiece.theDoor.objColour;
 		doorPiece.ChangeColour(doorMenuPiece.objColour, false);
+		doorPiece.initialColour = doorMenuPiece.objColour;
 		doorGo.AddComponent<DraggableRotatableMapObject>();
 	}
 
