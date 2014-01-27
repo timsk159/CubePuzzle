@@ -19,14 +19,14 @@ public class LevelStateController : MonoSingleton<LevelStateController>
 		if(LevelController.Instance.isStoryMode)
 		{
 			SceneLoader.Instance.LoadLevel(Application.loadedLevelName, delegate {
-				LevelController.Instance.InitLevel(true);
+				LevelController.Instance.InitLevel(false);
 			});
 		}
 		else
 		{
 			LevelSerializer.LoadObjectTreeFromFile(currentLevelName, delegate(LevelLoader obj)
 			{
-				LevelController.Instance.InitLevel(true);
+				LevelController.Instance.InitLevel(false);
 			});
 		}
 	}
