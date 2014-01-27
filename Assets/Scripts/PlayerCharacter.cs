@@ -17,6 +17,8 @@ public class PlayerCharacter : MonoBehaviour
 	ParticleSystem smokeParticles;
 	Light childLight;
 
+	Vector3 previousVelocity;
+
 	[SerializeThis()][SerializeField()]
 	bool canReset;
 	
@@ -66,6 +68,13 @@ public class PlayerCharacter : MonoBehaviour
 	{
 		if(smokeParticles != null)
 		{
+			var deltaV = rigidbody.velocity - previousVelocity;
+
+			var deltaSqrMag = deltaV.sqrMagnitude;
+
+			if(deltaSqrMag > 1.0f || deltaSqrMag < -1.0f)
+				Debug.Log("Delta V : " + deltaV + " Square mag: " + deltaV.sqrMagnitude);
+
 			if(smokeParticles.isPlaying)
 			{
 				var smokePos = transform.position;
@@ -77,13 +86,16 @@ public class PlayerCharacter : MonoBehaviour
 			}
 			if(!smokeParticles.isPlaying)
 			{
-				if(playerMovement.isMovingFast)
+				if(deltaSqrMag > 0.8f)
 					smokeParticles.Play();
 			}
-			else if(smokeParticles.isPlaying && !smokeParticles.isStopped && !playerMovement.isMovingFast)
+			/*
+			else if(smokeParticles.isPlaying && !smokeParticles.isStopped && deltaSqrMag < 0.8f)
 			{
 				smokeParticles.Stop();
 			}
+			*/
+			previousVelocity = rigidbody.velocity;
 		}
 		/*
 		if(Input.GetKeyDown(KeyCode.E))
