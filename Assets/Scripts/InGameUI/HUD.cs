@@ -5,12 +5,8 @@ public class HUD : MonoBehaviour
 {
 	GameObject rootPanel;
 
-	GameObject redSphere;
-	GameObject greenSphere;
-	GameObject blueSphere;
+	UISprite colourChangeSprite;
 
-	Vector3 sphereSelectScale;
-	Vector3 sphereNormalScale;
 
 
 	void Start()
@@ -19,12 +15,7 @@ public class HUD : MonoBehaviour
 
 		rootPanel = GameObject.Find("HudPanel");
 
-		redSphere = GameObject.Find("PlayerRed");
-		greenSphere = GameObject.Find("PlayerGreen");
-		blueSphere = GameObject.Find("PlayerBlue");
-
-		sphereSelectScale = new Vector3(23, 23, 23);
-		sphereNormalScale = new Vector3(15, 15, 15);
+		colourChangeSprite = rootPanel.transform.Find("HudBottomRightAnchor/ColourCycleRoot/Texture").GetComponent<UISprite>();
 	}
 
 	void OnDestroy()
@@ -37,23 +28,14 @@ public class HUD : MonoBehaviour
 		switch(colourToChangeTo)
 		{
 			case Colour.Blue:
-				redSphere.transform.localScale = sphereSelectScale;
-
-				greenSphere.transform.localScale = sphereNormalScale;
-				blueSphere.transform.localScale = sphereNormalScale;
+				colourChangeSprite.spriteName = "BallColour-Red";
 
 				break;
 			case Colour.Green:
-				blueSphere.transform.localScale = sphereSelectScale;
-
-				greenSphere.transform.localScale = sphereNormalScale;
-				redSphere.transform.localScale = sphereNormalScale;
+				colourChangeSprite.spriteName = "BallColour-Blue";
 				break;
 			case Colour.Red:
-				greenSphere.transform.localScale = sphereSelectScale;
-
-				redSphere.transform.localScale = sphereNormalScale;
-				blueSphere.transform.localScale = sphereNormalScale;
+				colourChangeSprite.spriteName = "BallColour-Green";
 				break;
 			default:
 				Debug.LogError("Unknown colour");
