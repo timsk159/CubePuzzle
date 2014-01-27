@@ -30,7 +30,6 @@ public class ColorCollisionObject : MonoBehaviour
 	public bool meshCanBeOptimized;
 
 	protected bool useSharedMaterial = true;
-	protected Array cachedEnumValues;
 
 	void Awake()
 	{
@@ -42,8 +41,6 @@ public class ColorCollisionObject : MonoBehaviour
 			impassablePMat = (PhysicMaterial)Resources.Load("ImpassablePMat");
 		if(passablePMat == null)
 			passablePMat = (PhysicMaterial)Resources.Load("PassablePMat");
-
-		cachedEnumValues = Enum.GetValues(typeof(Colour));
 
 		Messenger.AddListener(ColourCollisionMessage.ButtonPressed.ToString(), ButtonPressed);
 		cubeNeighbours = new CubeNeighbours(gameObject);
@@ -138,11 +135,10 @@ public class ColorCollisionObject : MonoBehaviour
 	public virtual void RotateColour()
 	{
 		int currentColourIndex = (int)objColour;
-		//var values = Enum.GetValues(typeof(Colour));
 
 		currentColourIndex++;
 		
-		if(currentColourIndex == cachedEnumValues.Length)
+		if(currentColourIndex == ColorManager.cachedColourValues.Length)
 		{
 			currentColourIndex = 1;
 		}

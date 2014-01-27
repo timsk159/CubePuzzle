@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public enum ColorBlindMode
 {
@@ -11,6 +12,8 @@ public enum ColorBlindMode
 public class ColorManager
 {
 	public static ColorBlindMode currentColorBlindMode;
+
+	public static int[] cachedColourValues = (int[])Enum.GetValues(typeof(Colour));
 
 	//Return a bright pink if something went wrong.
 	public static Color errorColor = new Color(1, 0.24f, 0.83f);

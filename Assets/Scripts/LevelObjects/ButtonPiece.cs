@@ -31,11 +31,10 @@ public class ButtonPiece : TriggerObject
 	public override void RotateColour ()
 	{
 		int currentColourIndex = (int)buttonSphereColour;
-		//var values = Enum.GetValues(typeof(Colour));
 
 		currentColourIndex++;
 
-		if(currentColourIndex == cachedEnumValues.Length)
+		if(currentColourIndex == ColorManager.cachedColourValues.Length)
 		{
 			currentColourIndex = 1;
 		}

@@ -66,14 +66,12 @@ public class PlayerCharacter : MonoBehaviour
 	
 	void Update()
 	{
+		//Play smoke trail after sudden changes in speed / direction
 		if(smokeParticles != null)
 		{
 			var deltaV = rigidbody.velocity - previousVelocity;
 
 			var deltaSqrMag = deltaV.sqrMagnitude;
-
-			if(deltaSqrMag > 1.0f || deltaSqrMag < -1.0f)
-				Debug.Log("Delta V : " + deltaV + " Square mag: " + deltaV.sqrMagnitude);
 
 			if(smokeParticles.isPlaying)
 			{
@@ -89,23 +87,8 @@ public class PlayerCharacter : MonoBehaviour
 				if(deltaSqrMag > 0.8f)
 					smokeParticles.Play();
 			}
-			/*
-			else if(smokeParticles.isPlaying && !smokeParticles.isStopped && deltaSqrMag < 0.8f)
-			{
-				smokeParticles.Stop();
-			}
-			*/
 			previousVelocity = rigidbody.velocity;
 		}
-		/*
-		if(Input.GetKeyDown(KeyCode.E))
-		{
-			if(currentInteractionObject != null)
-			{
-				currentInteractionObject.PlayerInteracted();
-			}
-		}
-		*/
 		if(canReset && !LevelSerializer.IsDeserializing)
 		{
 			if(Input.GetKeyDown(KeyCode.Space))
@@ -153,11 +136,9 @@ public class PlayerCharacter : MonoBehaviour
 	public void RotateColour()
 	{
 		int currentColourIndex = (int)currentColor;
-		var values = Enum.GetValues(typeof(Colour));
-
 		currentColourIndex++;
 		
-		if(currentColourIndex == values.Length)
+		if(currentColourIndex == ColorManager.cachedColourValues.Length)
 		{
 			currentColourIndex = 1;
 		}
@@ -184,11 +165,11 @@ public class PlayerCharacter : MonoBehaviour
 			//Check the hit collider is definitely a wall
 			if(theCollider.size.y > 6)
 			{
-				if(collision.impactForceSum.magnitude > 2.5f)
+				if(collision.impactForceSum.sqrMagnitude > 1.58f)
 				{
 					Messenger.Invoke(PlayerMessage.HitWall.ToString());
 				}
-				if(collision.relativeVelocity.magnitude >= 4)
+				if(collision.relativeVelocity.sqrMagnitude >= 2)
 				{
 					Messenger.Invoke(PlayerMessage.HitWallHard.ToString());
 				}

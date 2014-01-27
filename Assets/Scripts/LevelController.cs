@@ -271,6 +271,7 @@ public class LevelController : MonoSingleton<LevelController>
 
 		mapObjects = mapObjects.Where(e => e.meshCanBeOptimized).ToList();
 		List<MeshFilter> meshFilters = new List<MeshFilter>();
+
 		mapObjects.ForEach(e => meshFilters.AddRange(e.GetComponentsInChildren<MeshFilter>()));
 
 		var uniqueMaterials = meshFilters.Select(e => e.renderer.sharedMaterial).Distinct();
@@ -451,12 +452,11 @@ public class LevelController : MonoSingleton<LevelController>
 
 	void PlayerChangedColour(Colour colour)
 	{
-		var allColours = Enum.GetValues(typeof(Colour));
 		var colourIndex = (int)colour;
 
 		colourIndex++;
 
-		if (colourIndex > allColours.Length)
+		if (colourIndex > ColorManager.cachedColourValues.Length)
 			colourIndex = 1;
 
 		if (colourIndex == 0)

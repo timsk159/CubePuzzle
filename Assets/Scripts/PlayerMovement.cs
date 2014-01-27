@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
 	{
 		get
 		{
-			var vMag = rigidbody.velocity.magnitude;
+			var vMag = rigidbody.velocity.sqrMagnitude;
 
 			if(vMag > fastMovement)
 				return true;
@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
 	public float inputSensitivity;
 	public float maxSpeed;
 
-	public float fastMovement;
+	public float fastMovement = 2;
 	float movementCD = 0.5f;
 	float nextMoveTime;
 

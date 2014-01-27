@@ -60,11 +60,10 @@ public class DoorPiece : FloorPiece
 		useSharedMaterial = false;
 
 		int currentColourIndex = (int)objColour;
-		//var values = Enum.GetValues(typeof(Colour));
 
 		currentColourIndex++;
 
-		if(currentColourIndex == cachedEnumValues.Length)
+		if(currentColourIndex == ColorManager.cachedColourValues.Length)
 		{
 			currentColourIndex = 1;
 		}
@@ -75,11 +74,10 @@ public class DoorPiece : FloorPiece
 	public void RotateDoorColour(bool checkDoor)
 	{
 		int currentColourIndex = (int)theDoor.objColour;
-		//var values = Enum.GetValues(typeof(Colour));
 
 		currentColourIndex++;
 			
-		if(currentColourIndex == cachedEnumValues.Length)
+		if(currentColourIndex == ColorManager.cachedColourValues.Length)
 		{
 			currentColourIndex = 1;
 		}

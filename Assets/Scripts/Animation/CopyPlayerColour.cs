@@ -26,7 +26,7 @@ public class CopyPlayerColour : MonoBehaviour
 	{
 		var currentColourIndex = (int)playersNewColour;
 		currentColourIndex++;
-		if(currentColourIndex == Enum.GetValues(typeof(Colour)).Length)
+		if(currentColourIndex == ColorManager.cachedColourValues.Length)
 		{
 			currentColourIndex = 1;
 		}
