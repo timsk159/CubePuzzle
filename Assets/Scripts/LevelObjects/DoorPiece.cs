@@ -109,7 +109,10 @@ public class DoorPiece : FloorPiece
 	protected override void OnDeserialized()
 	{
 		base.OnDeserialized();
-		SetDoorColour(theDoor.initialColour, false);
-		ChangeColour(initialColour, false);
+		if (Application.loadedLevelName == "LevelCreator" && !LevelCreatorController.isTesting)
+		{
+			SetDoorColour(theDoor.objColour, false);
+			ChangeColour(initialColour, false);
+		}
 	}
 }

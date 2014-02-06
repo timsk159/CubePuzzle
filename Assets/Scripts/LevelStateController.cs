@@ -10,7 +10,14 @@ public class LevelStateController : MonoSingleton<LevelStateController>
 
 	public void SetCheckPoint()
 	{
-		LevelSerializer.Checkpoint();
+		//LevelSerializer.Checkpoint();
+		var saves = LevelSerializer.SavedGames[LevelSerializer.PlayerName];
+		var data = saves.Where(e => e.Name == "Checkpoint").FirstOrDefault();
+		if (data != null)
+		{
+			saves.RemoveAt(saves.IndexOf(data));
+		}
+		LevelSerializer.SaveGame("Checkpoint");
 	}
 
 
@@ -45,7 +52,11 @@ public class LevelStateController : MonoSingleton<LevelStateController>
 		if(smoke)
 			Destroy(smoke);
 
-		LevelSerializer.Resume(onComplete);
+		//LevelSerializer.Resume(onComplete);
+		var saves = LevelSerializer.SavedGames[LevelSerializer.PlayerName];
+		var data = saves.Where(e => e.Name == "Checkpoint").FirstOrDefault();
+		LevelSerializer.LoadSavedLevel(data.Data, onComplete);
+
 		StateMachine<LevelState, LevelStateMessage>.ChangeState(LevelState.InGame);
 	}
 }

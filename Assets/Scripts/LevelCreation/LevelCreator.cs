@@ -129,7 +129,7 @@ public class LevelCreator : MonoBehaviour
 			var player = GameObject.FindWithTag("Player");
 			mapRoot = GameObject.Find("MapRoot");
 			if(player != null)
-				player.transform.parent = mapRoot.transform;
+				player.transform.parent = mapRoot.transform.Find("PlayerStartCube");
 	});
 
 	//	playerObj.transform.parent = playerObjParent;

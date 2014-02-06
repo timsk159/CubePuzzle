@@ -156,6 +156,11 @@ public class PlayerCharacter : MonoBehaviour
 		canReset = false;
 	}
 
+	void OnDeserialized()
+	{
+		ChangeColour(currentColor);
+	}
+
 	void OnCollisionEnter(Collision collision) 
 	{
 		//We only care about box colliders
@@ -165,11 +170,11 @@ public class PlayerCharacter : MonoBehaviour
 			//Check the hit collider is definitely a wall
 			if(theCollider.size.y > 6)
 			{
-				if(collision.impactForceSum.sqrMagnitude > 1.58f)
+				if(collision.impactForceSum.sqrMagnitude > 3.5f)
 				{
 					Messenger.Invoke(PlayerMessage.HitWall.ToString());
 				}
-				if(collision.relativeVelocity.sqrMagnitude >= 2)
+				if(collision.relativeVelocity.sqrMagnitude >= 5)
 				{
 					Messenger.Invoke(PlayerMessage.HitWallHard.ToString());
 				}

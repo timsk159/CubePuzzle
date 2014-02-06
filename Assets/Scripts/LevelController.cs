@@ -223,7 +223,7 @@ public class LevelController : MonoSingleton<LevelController>
 		}
 
 		Messenger.Invoke(LevelStateMessage.LevelStarted.ToString());
-
+		canPause = true;
 		playerChar.playerMovement.canMove = true;
 		playerChar.EnablePhysics();
 		Messenger.RemoveListener(LevelIntroMessage.IntroFinished.ToString(), IntroFinished);
@@ -323,7 +323,9 @@ public class LevelController : MonoSingleton<LevelController>
 		floor.transform.localScale = new Vector3(10000, 0.01f, 10000);
 		floor.transform.localEulerAngles = Vector3.zero;
 
-		floor.AddComponent<StoreInformation>();
+		
+		//var info = floor.AddComponent<StoreInformation>();
+
 		floor.renderer.enabled = false;
 		floor.collider.material = floorPhysicMat;
 	}
@@ -508,7 +510,7 @@ public class LevelController : MonoSingleton<LevelController>
 	
 	void EndGameExit(StateM.StateChangeData changeData)
 	{
-		
+		canPause = true;
 	}
 
 	void CutSceneEnter(StateM.StateChangeData changeData)

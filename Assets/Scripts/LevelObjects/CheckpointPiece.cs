@@ -17,7 +17,6 @@ public class CheckpointPiece : TriggerObject
 		particles = GetComponentInChildren<ParticleSystem>();
 		particles.Stop();
 
-
 		Messenger.AddListener(CheckpointMessage.CheckpointPressed.ToString(), CheckpointPressed);
 
 		base.Start();

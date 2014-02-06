@@ -28,14 +28,13 @@ public class HUD : MonoBehaviour
 		switch(colourToChangeTo)
 		{
 			case Colour.Blue:
-				colourChangeSprite.spriteName = "BallColour-Red";
-
+				colourChangeSprite.spriteName = "CubeColour-Blue";
 				break;
 			case Colour.Green:
-				colourChangeSprite.spriteName = "BallColour-Blue";
+				colourChangeSprite.spriteName = "CubeColour-Green";
 				break;
 			case Colour.Red:
-				colourChangeSprite.spriteName = "BallColour-Green";
+				colourChangeSprite.spriteName = "CubeColour-Red";
 				break;
 			default:
 				Debug.LogError("Unknown colour");
