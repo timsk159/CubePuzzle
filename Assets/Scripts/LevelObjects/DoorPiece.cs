@@ -88,14 +88,12 @@ public class DoorPiece : FloorPiece
 	{		
 		theDoor.objColour = colourToSet;
 		theDoor.renderer.material.color = ColorManager.GetObjectRealColor(theDoor.objColour);
-		Debug.Log("Door colour being set to: " + colourToSet + " Checking door?: " + checkDoor);
 		if(checkDoor)
 			CheckDoor();
 	}
 	
 	void CheckDoor()
 	{
-		Debug.Log("Checking door");
 		if(theDoor.objColour == objColour)
 		{			
 			theDoor.OpenDoor();
