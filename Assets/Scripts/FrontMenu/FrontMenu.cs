@@ -124,14 +124,6 @@ public class FrontMenu : MonoBehaviour
 	
 	void PopulateFileMenu()
 	{
-		if(fileMenuGrid.transform.childCount > 0)
-		{
-			foreach(Transform child in fileMenuGrid.transform)
-			{
-				Destroy (child.gameObject);
-			}
-		}
-		
 		string[] fileNames = Directory.GetFiles(Application.persistentDataPath + LevelCreatorController.mapFilesFilePath);
 		
 		foreach(var file in fileNames)
@@ -151,6 +143,9 @@ public class FrontMenu : MonoBehaviour
 				//Remove the application.persistantdatapath as the level loader doesn't want it.
 				fileListCheckBox.fullFilePath = file.Substring(file.IndexOf(Application.persistentDataPath) + Application.persistentDataPath.Length);
 				fileListCheckBox.radioButtonRoot = fileListCheckBox.transform.parent;
+				var faultyPanel = fileListEntry.GetComponent<UIPanel>();
+				if(faultyPanel != null)
+					Destroy(faultyPanel);
 			}
 		}
 		fileMenuGrid.GetComponent<UIGrid>().Reposition();
@@ -188,6 +183,13 @@ public class FrontMenu : MonoBehaviour
 		NGUITools.SetActive(frontMenuPanel, true);
 		NGUITools.SetActive(loadMapPanel, false);
 		selectedFileName = "";
+		if(fileMenuGrid.transform.childCount > 0)
+		{
+			foreach(Transform child in fileMenuGrid.transform)
+			{
+				Destroy (child.gameObject);
+			}
+		}
 	}
 
 	void OptionsMenuPressed()
