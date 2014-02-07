@@ -17,11 +17,8 @@ public class ChangeButtonColour : EditorWindow
 	static void Init()
 	{
 		var window = GetWindow<ChangeButtonColour>("ImageButton Changer");
-
-
 	}
-
-
+	
 	void OnGUI()
 	{
 		spriteName = EditorGUILayout.TextField("Sprite Name: ", spriteName);
@@ -30,10 +27,9 @@ public class ChangeButtonColour : EditorWindow
 
 		if(GUILayout.Button("Execute"))
 		{
-			if(!string.IsNullOrEmpty(spriteName) && atlasMask != null)
+			if(!string.IsNullOrEmpty(spriteName))
 			{
 				var buttons = GetImageButtons();
-				Debug.Log("Found: " + buttons.Length + " Buttons");
 				foreach(var button in buttons)
 				{
 					if(button.target.atlas == atlasMask)
@@ -41,7 +37,6 @@ public class ChangeButtonColour : EditorWindow
 						switch(stateToChange)
 						{
 							case ButtonState.Normal:
-
 								button.normalSprite = spriteName;
 								break;
 							case ButtonState.Hover:
@@ -62,7 +57,6 @@ public class ChangeButtonColour : EditorWindow
 
 	UIImageButton[] GetImageButtons()
 	{
-		//var returnArray = FindObjectsOfType<UIImageButton>();
 		var returnArray = Resources.FindObjectsOfTypeAll<UIImageButton>();
 		return returnArray;
 	}
