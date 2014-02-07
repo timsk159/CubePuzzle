@@ -158,10 +158,9 @@ public class FloorPiece : ColorCollisionObject
 
 	void MoveUp()
 	{
-		if(!isMovingUp)
+	//	if(!isMovingUp)
 		{
-			ClearActiveTweens();
-			print("Moving mesh: " + gameObject.name + " Up. PLayers colour is: " + LevelController.Instance.PlayerColour);
+		//	ClearActiveTweens();
 			var movePos = transform.localPosition;
 			movePos.y = 0.5f;
 			iTween.MoveTo(gameObject, iTween.Hash("position", movePos, "time", 0.5f, "oncomplete", "UpComplete", "islocal", true));
@@ -171,10 +170,9 @@ public class FloorPiece : ColorCollisionObject
 
 	void MoveDown()
 	{
-		if(!isMovingDown)
+		//if(!isMovingDown)
 		{
-			ClearActiveTweens();
-			print("Moving mesh: " + gameObject.name + " Down. PLayers colour is: " + LevelController.Instance.PlayerColour);
+			//ClearActiveTweens();
 			var movePos = transform.localPosition;
 			movePos.y = 0;
 			iTween.MoveTo(gameObject, iTween.Hash("position", movePos, "time", 0.5f, "oncomplete", "DownComplete", "islocal", true));
