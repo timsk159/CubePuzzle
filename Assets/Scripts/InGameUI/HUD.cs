@@ -3,24 +3,24 @@ using System.Collections;
 
 public class HUD : MonoBehaviour 
 {
-	GameObject rootPanel;
+	public GameObject rootPanel;
 
-	UISprite colourChangeSprite;
+	public UISprite colourChangeSprite;
 
-
-
-	void Start()
+	void Awake()
 	{
 		Messenger<Colour>.AddListener(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerChangedColour);
-
-		rootPanel = GameObject.Find("HudPanel");
-
-		colourChangeSprite = rootPanel.transform.Find("HudBottomRightAnchor/ColourCycleRoot/Texture").GetComponent<UISprite>();
+		Messenger.AddListener(LevelStateMessage.LevelStarted.ToString(), LevelStarted);
 	}
 
 	void OnDestroy()
 	{
 		Messenger<Colour>.RemoveListener(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerChangedColour);
+	}
+
+	void LevelStarted()
+	{
+		EnableHud();
 	}
 
 	void PlayerChangedColour(Colour colourToChangeTo)
