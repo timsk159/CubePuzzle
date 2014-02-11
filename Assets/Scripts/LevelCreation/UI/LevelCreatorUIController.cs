@@ -499,6 +499,10 @@ public class LevelCreatorUIController : MonoBehaviour
 				//Remove the application.persistantdatapath as the level loader doesn't want it.
 				fileListCheckBox.fullFilePath = file.Substring(file.IndexOf(Application.persistentDataPath) + Application.persistentDataPath.Length);
 				fileListCheckBox.radioButtonRoot = fileListCheckBox.transform.parent;
+
+				var panel = fileListEntry.GetComponent<UIPanel>();
+				if(panel != null)
+					Destroy(panel);
 			}
 		}
 		fileMenuGrid.GetComponent<UIGrid>().Reposition();
