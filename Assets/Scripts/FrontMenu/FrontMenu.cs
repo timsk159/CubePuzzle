@@ -22,6 +22,7 @@ public class FrontMenu : MonoBehaviour
 	public GameObject storyModePanel;
 	public GameObject optionsMenuPanel;
 	public GameObject creditsPanel;
+	public GameObject[] demoLabels;
 
 	public GameObject fileMenuEntryPrefab;
 
@@ -57,6 +58,11 @@ public class FrontMenu : MonoBehaviour
 			RegisterPrefabPaths ();
 			firstLoad = false;
 		}
+
+#if DEMO_VERSION
+		SetupForDemo();
+#endif
+
 	}
 
 	void OnDestroy()
@@ -75,6 +81,15 @@ public class FrontMenu : MonoBehaviour
 		Messenger.RemoveListener(FrontMenuUIMessage.CreditsBackPressed.ToString(), CreditsBack);
 
 		Messenger<string>.RemoveListener(FrontMenuUIMessage.StoryModeLevelButtonPressed.ToString(), StoryModeLevelButtonPressed);
+	}
+
+	void SetupForDemo()
+	{
+		foreach(var label in demoLabels)
+		{
+			label.SetActive(true);
+			label.transform.parent.collider.enabled = false;
+		}
 	}
 
 	void CreditsPressed()
