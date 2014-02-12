@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a668ce9956f883b48a659ee61bf09843
+guid: 9cb6a7c3800766d49a53751c4379cd49
 TextureImporter:
   serializedVersion: 2
   mipmaps:
@@ -38,11 +38,7 @@ TextureImporter:
   spritePixelsToUnits: 100
   alphaIsTransparency: 0
   textureType: 1
-  buildTargetSettings:
-  - buildTarget: Web
-    maxTextureSize: 512
-    textureFormat: -1
-    compressionQuality: 50
+  buildTargetSettings: []
   spriteSheet:
     sprites: []
   spritePackingTag: 
