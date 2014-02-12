@@ -43,12 +43,50 @@ public class SceneLoader : MonoSingleton<SceneLoader>
 
 	public void LoadStreamedLevel(string levelToLoad)
 	{
-
+		StartCoroutine(LoadStreamedLevelRoutine(levelToLoad));
 	}
 
 	public void LoadStreamedLevel(string levelToLoad, Action onComplete)
 	{
+		StartCoroutine(LoadStreamedLevelRoutine(levelToLoad, onComplete));
+	}
 
+	private IEnumerator LoadStreamedLevelRoutine(string levelToLoad, Action onComplete = null)
+	{
+		Application.LoadLevel("LoadingScene");
+		yield return new WaitForEndOfFrame();
+		yield return new WaitForEndOfFrame();
+
+		FindLoadingScreenObjects();
+
+		while(Application.GetStreamProgressForLevel(levelToLoad) != 1)
+		{
+			progressBar.sliderValue = Application.GetStreamProgressForLevel(levelToLoad);
+			yield return new WaitForEndOfFrame();
+		}
+
+		if(Application.HasProLicense())
+		{
+			var asyncOp = Application.LoadLevelAsync(levelToLoad);
+			yield return asyncOp;
+		}
+		else
+		{
+			Application.LoadLevel(levelToLoad);
+			yield return new WaitForEndOfFrame();
+			yield return new WaitForEndOfFrame();
+		}
+		if(onComplete != null)
+			onComplete();
+		if(LevelController.Instance.isStoryMode)
+		{
+			ProgressComplete();
+		}
+		else
+		{
+			LevelSerializer.Progress += HandleProgress;
+			Destroy(this);
+		}
 	}
 
 	private IEnumerator LoadLevelRoutine(string levelToLoad)

@@ -95,7 +95,11 @@ public class SplashScreens : MonoBehaviour
 	{
 		if(Application.CanStreamedLevelBeLoaded("FrontMenu"))
 		{
-			Application.LoadLevel("FrontMenu");
+			SceneLoader.Instance.LoadLevel("FrontMenu");
+		}
+		else
+		{
+			SceneLoader.Instance.LoadStreamedLevel("FrontMenu");
 		}
 	}
 }
