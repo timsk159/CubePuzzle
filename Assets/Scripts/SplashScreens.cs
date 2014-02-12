@@ -5,13 +5,13 @@ using System.Linq;
 
 public class SplashScreens : MonoBehaviour 
 {
-	public List<SplashScreen> splashScreens;
-	public SplashScreen currentSplash;
+	public SplashScreen[] splashScreens;
 
 	public AudioSource audioS;
 	public UITexture uiTexture;
 
-	public bool canSkip;
+	SplashScreen currentSplash;
+	bool canSkip;
 
 	public void Start()
 	{
@@ -35,12 +35,12 @@ public class SplashScreens : MonoBehaviour
 
 	IEnumerator SplashScreenDisplayRoutine(int indexToStart = 0)
 	{
-		if(indexToStart > splashScreens.Count)
+		if(indexToStart > splashScreens.Length)
 		{
 			throw new System.ArgumentException("Start index exceeeded list count", "indexToStart");
 		}
 
-		for(int i = indexToStart; i < splashScreens.Count; i++)
+		for(int i = indexToStart; i < splashScreens.Length; i++)
 		{
 			canSkip = false;
 
@@ -70,7 +70,7 @@ public class SplashScreens : MonoBehaviour
 		var index = splashScreens.IndexOf(currentSplash);
 		index++;
 
-		if(index > splashScreens.Count)
+		if(index > splashScreens.Length)
 		{
 			SplashScreensFinished();
 		}
@@ -100,7 +100,7 @@ public class SplashScreens : MonoBehaviour
 	}
 }
 
-
+[System.Serializable]
 public class SplashScreen
 {
 	public Texture2D splashImage;

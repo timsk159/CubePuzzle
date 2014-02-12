@@ -41,6 +41,16 @@ public class SceneLoader : MonoSingleton<SceneLoader>
 		StartCoroutine(LoadLevelRoutine(levelToLoad, onComplete));
 	}
 
+	public void LoadStreamedLevel(string levelToLoad)
+	{
+
+	}
+
+	public void LoadStreamedLevel(string levelToLoad, Action onComplete)
+	{
+
+	}
+
 	private IEnumerator LoadLevelRoutine(string levelToLoad)
 	{		
 		Application.LoadLevel("LoadingScene");
