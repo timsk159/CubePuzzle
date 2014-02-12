@@ -10,6 +10,8 @@ public class SplashScreens : MonoBehaviour
 	public AudioSource audioS;
 	public UITexture uiTexture;
 
+	public GameObject securityUIRoot;
+
 	SplashScreen currentSplash;
 	bool canSkip;
 
@@ -30,7 +32,7 @@ public class SplashScreens : MonoBehaviour
 
 	void FailedSecurityUI()
 	{
-
+		securityUIRoot.SetActive(true);
 	}
 
 	IEnumerator SplashScreenDisplayRoutine(int indexToStart = 0)
