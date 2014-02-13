@@ -25,10 +25,11 @@ public class LevelStateController : MonoSingleton<LevelStateController>
 	{
 		if(LevelController.Instance.isStoryMode)
 		{
-			var smoke = GameObject.Find("SmokeTrail");
-			if(smoke)
-				Destroy(smoke);
-
+			//LoadCheckpoint(delegate
+			//{
+			//	LevelController.Instance.InitLevel(false);
+			//});
+		
 			SceneLoader.Instance.LoadLevel(Application.loadedLevelName, delegate {
 				LevelController.Instance.InitLevel(false);
 			});

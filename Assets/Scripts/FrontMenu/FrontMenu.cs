@@ -34,7 +34,7 @@ public class FrontMenu : MonoBehaviour
 	
 	void Start ()
 	{
-		//Messenger.AddListener(FrontMenuUIMessage.StoryModeButtonPressed.ToString(), StoryModeButtonPressed);
+		Messenger.AddListener(FrontMenuUIMessage.StoryModeButtonPressed.ToString(), StoryModeButtonPressed);
 		Messenger.AddListener(FrontMenuUIMessage.QuitButtonPressed.ToString(), QuitButtonPressed);
 		Messenger.AddListener(FrontMenuUIMessage.LevelCreatorButtonPressed.ToString(), LevelCreatorButtonPressed);
 		Messenger.AddListener(FrontMenuUIMessage.UserLevelsButtonPressed.ToString(), UserLevelsButtonPressed);
@@ -244,6 +244,7 @@ public class FrontMenu : MonoBehaviour
 			SceneLoader.Instance.LoadLevel(selectedLevel, delegate {
 				LevelController.Instance.InitLevel(true, StoryProgressController.Instance.AllLevels.Where(e => e.levelName == selectedLevel).FirstOrDefault().cutSceneObj);
 				LevelStateController.currentLevelName = selectedLevel;
+				Debug.Log("++++--- set current levelname to: " + selectedLevel);
 			});
 		}
 	}
@@ -337,6 +338,7 @@ public class FrontMenu : MonoBehaviour
 		LevelSerializer.DontCollect();
 		LevelSerializer.IgnoreType(typeof(MeshFilter));
 		LevelSerializer.IgnoreType(typeof(MeshRenderer));
+		LevelSerializer.IgnoreType(typeof(iTween));
 
 		string basePath = "LevelObjects/";
 		LevelSerializer.AddPrefabPath (basePath + "BlueCube");

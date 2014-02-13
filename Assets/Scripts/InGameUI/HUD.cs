@@ -16,6 +16,7 @@ public class HUD : MonoBehaviour
 	void OnDestroy()
 	{
 		Messenger<Colour>.RemoveListener(ColourCollisionMessage.PlayerChangedColour.ToString(), PlayerChangedColour);
+		Messenger.RemoveListener(LevelStateMessage.LevelStarted.ToString(), LevelStarted);
 	}
 
 	void LevelStarted()
