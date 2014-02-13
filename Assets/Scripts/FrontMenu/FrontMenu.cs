@@ -314,6 +314,10 @@ public class FrontMenu : MonoBehaviour
 		checkbox.onSelectionChanged = StoryModeLevelListSelectionChanged;
 		
 		checkbox.levelName = level.levelName;
+
+		var invalidPanel = clone.GetComponent<UIPanel>();
+		if(invalidPanel != null)
+			Destroy(invalidPanel);
 	}
 
 	void StoryModeLevelListSelectionChanged(bool state, string levelName)
