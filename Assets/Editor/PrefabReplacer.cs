@@ -6,9 +6,7 @@ using System.Linq;
 
 public class PrefabReplacer : EditorWindow 
 {
-	List<string> namesOfGameobjectsToReplace;
-	GameObject prefab;
-	bool matchScale;
+	List<ReplaceInfo> replaceInfos;
 
 	int indexToReplace;
 
@@ -16,67 +14,71 @@ public class PrefabReplacer : EditorWindow
 	static void Init()
 	{
 		var window = GetWindow<PrefabReplacer>("Prefab Replacer");
-		window.namesOfGameobjectsToReplace = new List<string>();
+		window.replaceInfos = new List<ReplaceInfo>();
 		window.indexToReplace = -1;
 	}
 
 	void OnGUI()
 	{
-		prefab = (GameObject)EditorGUILayout.ObjectField(prefab, typeof(GameObject), false);
-
-		matchScale = EditorGUILayout.Toggle("Match Scale?", matchScale);
-
-		EditorGUILayout.Space();
-
-		GUILayout.Label("Names: ");
-		if(GUILayout.Button("Add Name"))
+		if(GUILayout.Button("Add replace info"))
 		{
-			namesOfGameobjectsToReplace.Add("");
+			replaceInfos.Add(new ReplaceInfo());
 		}
-		for(int i = 0; i < namesOfGameobjectsToReplace.Count; i++)
+		foreach(var replace in replaceInfos)
 		{
+			replace.prefab = (GameObject)EditorGUILayout.ObjectField(replace.prefab, typeof(GameObject), false);
 			GUILayout.BeginHorizontal();
-			namesOfGameobjectsToReplace[i] = GUILayout.TextField(namesOfGameobjectsToReplace[i]);
 
-			if(GUILayout.Button("-"))
+			replace.matchScale = EditorGUILayout.Toggle("Match scale?", replace.matchScale);
+
+			EditorGUILayout.Space();
+
+			replace.nameToMatch = EditorGUILayout.TextField(replace.nameToMatch);
+
+			if(GUILayout.Button("Remove"))
 			{
-				indexToReplace = i;
+				indexToReplace = replaceInfos.IndexOf(replace);
 			}
+
 			GUILayout.EndHorizontal();
+			EditorGUILayout.Separator();
 		}
 
 		if(indexToReplace != -1)
 		{
-			namesOfGameobjectsToReplace.RemoveAt(indexToReplace);
+			replaceInfos.RemoveAt(indexToReplace);
 			indexToReplace = -1;
 		}
 
 		if(GUILayout.Button("Replace!"))
 		{
-			if(prefab != null && namesOfGameobjectsToReplace.Count != 0)
-				ReplaceGameobjects();
+			ReplaceGameobjects();
 		}
 	}
+
 
 	void ReplaceGameobjects()
 	{
-		var gameobjectsToReplace = new List<GameObject>();
-
-		var allGameobjects = GameObject.FindObjectsOfType<GameObject>();
-
-		gameobjectsToReplace = allGameobjects.ToList().Where(go => namesOfGameobjectsToReplace.Contains(go.name)).ToList();
-
-		foreach(var go in gameobjectsToReplace)
+		foreach(var replaceinfo in replaceInfos)
 		{
-			var newGO = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+			var gameobjectsToReplace = new List<GameObject>();
 
-			MatchTransform(go, newGO);
+			var allGameobjects = GameObject.FindObjectsOfType<GameObject>();
 
-			DestroyImmediate(go);
+			gameobjectsToReplace = allGameobjects.ToList().Where(go => go.name == replaceinfo.nameToMatch).ToList();
+
+			foreach(var go in gameobjectsToReplace)
+			{
+				var newGO = (GameObject)PrefabUtility.InstantiatePrefab(replaceinfo.prefab);
+
+				MatchTransform(go, newGO, replaceinfo.matchScale);
+
+				DestroyImmediate(go);
+			}
 		}
 	}
 
-	void MatchTransform(GameObject oldGO, GameObject newGO)
+	void MatchTransform(GameObject oldGO, GameObject newGO, bool matchScale)
 	{
 		newGO.transform.parent = oldGO.transform.parent;
 
@@ -89,4 +91,11 @@ public class PrefabReplacer : EditorWindow
 		if(matchScale)
 			newGO.transform.localScale = scal;
 	}
+}
+
+public class ReplaceInfo
+{
+	public GameObject prefab;
+	public string nameToMatch;
+	public bool matchScale;
 }
