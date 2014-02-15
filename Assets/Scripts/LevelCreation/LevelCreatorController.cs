@@ -6,12 +6,13 @@ using StateM = StateMachine<LevelCreatorStates, LevelCreatorStateMessage>;
 
 public enum LevelCreatorStates
 {
-	FrontMenu, LevelCreation, SavingMap, LoadingMap, TestingMap
+	FrontMenu, NewMap, LevelCreation, SavingMap, LoadingMap, TestingMap
 };
 
 public enum LevelCreatorStateMessage
 {
 	FrontMenuEnter, FrontMenuExit,
+	NewMapEnter, NewMapExit,
 	LevelCreationEnter, LevelCreationExit,
 	SavingMapEnter, SavingMapExit,
 	LoadingMapEnter, LoadingMapExit,
@@ -36,6 +37,7 @@ public class LevelCreatorController : MonoBehaviour
 
 	void Start()
 	{
+		StartCoroutine(RefreshUI());
 		if(!LevelCreatorUIController.cameFromPreview)
 			StateM.SetInitialState(LevelCreatorStates.FrontMenu);
 		else
@@ -43,6 +45,17 @@ public class LevelCreatorController : MonoBehaviour
 			StateM.SetInitialState(LevelCreatorStates.LevelCreation);
 			LevelCreatorUIController.cameFromPreview = false;
 		}
+	}
+
+	IEnumerator RefreshUI()
+	{
+		var uiRoot = GameObject.Find("MenuRoot");
+
+		uiRoot.SetActive(false);
+		yield return new WaitForEndOfFrame();
+		yield return new WaitForEndOfFrame();
+		uiRoot.SetActive(true);
+
 	}
 
 	void EnsureMapDirectoryExists()
@@ -54,6 +67,7 @@ public class LevelCreatorController : MonoBehaviour
 	void RegisterStates()
 	{
 		StateM.RegisterState(LevelCreatorStates.FrontMenu, LevelCreatorStateMessage.FrontMenuEnter, LevelCreatorStateMessage.FrontMenuExit);
+		StateM.RegisterState(LevelCreatorStates.NewMap, LevelCreatorStateMessage.NewMapEnter, LevelCreatorStateMessage.NewMapExit);
 		StateM.RegisterState(LevelCreatorStates.LevelCreation, LevelCreatorStateMessage.LevelCreationEnter, LevelCreatorStateMessage.LevelCreationExit);
 		StateM.RegisterState(LevelCreatorStates.SavingMap, LevelCreatorStateMessage.SavingMapEnter, LevelCreatorStateMessage.SavingMapExit);
 		StateM.RegisterState(LevelCreatorStates.LoadingMap, LevelCreatorStateMessage.LoadingMapEnter, LevelCreatorStateMessage.LoadingMapExit);

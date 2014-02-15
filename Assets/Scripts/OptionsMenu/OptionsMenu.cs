@@ -4,7 +4,7 @@ using System.Collections;
 
 public class OptionsMenu : MonoBehaviour 
 {
-	public UICheckbox fullScreenToggle;
+	public UIToggle fullScreenToggle;
 	public UIPopupList qualityLevelSelectionList;
 	public UIPopupList colorBlindSelectionList;
 	public UISlider musicSlider;
@@ -90,7 +90,7 @@ public class OptionsMenu : MonoBehaviour
 
 		newOptions.qualityLevel = PlayerPrefs.GetString("QualityLevel", "Best");
 		newOptions.colorBlindMode = (ColorBlindMode)PlayerPrefs.GetInt("ColorBlindMode", 0);
-		newOptions.fullscreen = IntToBool(PlayerPrefs.GetInt("FullScreen", 1));
+		newOptions.fullscreen = IntToBool(PlayerPrefs.GetInt("FullScreen", 0));
 		newOptions.musicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.7f);
 		newOptions.effectsVolume = PlayerPrefs.GetFloat("EffectsVolume", 1.0f);
 

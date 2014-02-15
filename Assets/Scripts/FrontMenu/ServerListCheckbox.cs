@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class ServerListCheckbox : UICheckbox
+public class ServerListCheckbox : UIToggle
 {
 	public delegate void OnSelectionChanged(bool state, string levelName);
 	
@@ -11,23 +11,25 @@ public class ServerListCheckbox : UICheckbox
 
 	string originalSprite;
 	public string hoverSprite;
+	UISprite castedSprite;
 
 	protected override void Start()
 	{
-		originalSprite = checkSprite.spriteName;
+		castedSprite = activeSprite as UISprite;
+		originalSprite = castedSprite.spriteName;
 		base.Start();
-		this.onStateChange = HandleStateChanged;
+		EventDelegate.Add(onChange, HandleStateChanged);
 	}
 	
-	void HandleStateChanged(bool state)
+	void HandleStateChanged()
 	{
-		if(state)
+		if(value)
 		{
-			checkSprite.spriteName = originalSprite;
+			castedSprite.spriteName = originalSprite;
 		}
 		if(onSelectionChanged != null && levelName != string.Empty)
 		{
-			onSelectionChanged(state, levelName);
+			onSelectionChanged(value, levelName);
 		}
 	}
 
@@ -35,34 +37,34 @@ public class ServerListCheckbox : UICheckbox
 	{
 		if(!string.IsNullOrEmpty(hoverSprite))
 		{
-			if(isOver && !isChecked)
+			if(isOver && !value)
 			{
-				checkSprite.spriteName = hoverSprite;
+				castedSprite.spriteName = hoverSprite;
 
 				if (instantTween)
 				{
-					checkSprite.alpha = 1f;
+					castedSprite.alpha = 1f;
 				}
 				else
 				{
-					TweenAlpha.Begin(checkSprite.gameObject, 0.15f, 1f);
+					TweenAlpha.Begin(castedSprite.gameObject, 0.15f, 1f);
 				}
 
 				//checkSprite.gameObject.SetActive(true);
 			}
-			else if(!isOver && !isChecked)
+			else if(!isOver && !value)
 			{
 				//checkSprite.gameObject.SetActive(false);
 
-				if (checkSprite != null)
+				if (castedSprite != null)
 				{
 					if (instantTween)
 					{
-						checkSprite.alpha = 0f;
+						castedSprite.alpha = 0f;
 					}
 					else
 					{
-						TweenAlpha.Begin(checkSprite.gameObject, 0.15f, 0f);
+						TweenAlpha.Begin(castedSprite.gameObject, 0.15f, 0f);
 					}
 				}
 			}

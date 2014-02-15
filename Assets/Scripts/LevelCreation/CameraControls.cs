@@ -46,6 +46,9 @@ public class CameraControls : MonoBehaviour
 
 		var closestCube = GetClosestCubeTransform();
 
+		if (closestCube == null)
+			return;
+
 		float deltaDistance = 0;
 
 		var tooClose = IsTooClose(closestCube, out deltaDistance);

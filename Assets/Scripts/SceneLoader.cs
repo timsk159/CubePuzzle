@@ -33,12 +33,36 @@ public class SceneLoader : MonoSingleton<SceneLoader>
 
 	public void LoadLevel(string levelToLoad)
 	{
-		StartCoroutine(LoadLevelRoutine(levelToLoad));
+		if (Application.isWebPlayer)
+		{
+			if (Application.CanStreamedLevelBeLoaded(levelToLoad))
+			{
+				StartCoroutine(LoadLevelRoutine(levelToLoad));
+			}
+			else
+			{
+				StartCoroutine(LoadStreamedLevelRoutine(levelToLoad));
+			}
+		}
+		else
+			StartCoroutine(LoadLevelRoutine(levelToLoad));
 	}
 
 	public void LoadLevel(string levelToLoad, Action onComplete)
 	{
-		StartCoroutine(LoadLevelRoutine(levelToLoad, onComplete));
+		if (Application.isWebPlayer)
+		{
+			if (Application.CanStreamedLevelBeLoaded(levelToLoad))
+			{
+				StartCoroutine(LoadLevelRoutine(levelToLoad, onComplete));
+			}
+			else
+			{
+				StartCoroutine(LoadStreamedLevelRoutine(levelToLoad, onComplete));
+			}
+		}
+		else
+			StartCoroutine(LoadLevelRoutine(levelToLoad, onComplete));
 	}
 
 	public void LoadStreamedLevel(string levelToLoad)
@@ -53,6 +77,13 @@ public class SceneLoader : MonoSingleton<SceneLoader>
 
 	private IEnumerator LoadStreamedLevelRoutine(string levelToLoad, Action onComplete = null)
 	{
+		if (!Application.CanStreamedLevelBeLoaded("LoadingScene"))
+		{
+			while (Application.GetStreamProgressForLevel("LoadingScene") != 1)
+			{
+				yield return new WaitForEndOfFrame();
+			}
+		}
 		Application.LoadLevel("LoadingScene");
 		yield return new WaitForEndOfFrame();
 		yield return new WaitForEndOfFrame();

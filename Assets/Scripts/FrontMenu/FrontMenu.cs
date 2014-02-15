@@ -10,7 +10,8 @@ public enum FrontMenuUIMessage
 	PlayUserLevelButtonPressed, CancelUserLevelMenuPressed,
 	StoryModeContinueButtonPressed, StoryModeLevelButtonPressed, StoryModeCancelButtonPressed,
 	OptionsMenuPressed,
-	CreditsButtonPressed, CreditsBackPressed
+	CreditsButtonPressed, CreditsBackPressed,
+	ControlsPressed, ControlsBackPressed
 };
 
 public class FrontMenu : MonoBehaviour 
@@ -22,6 +23,7 @@ public class FrontMenu : MonoBehaviour
 	public GameObject storyModePanel;
 	public GameObject optionsMenuPanel;
 	public GameObject creditsPanel;
+	public GameObject controlsPanel;
 	public GameObject[] demoLabels;
 
 	public GameObject fileMenuEntryPrefab;
@@ -34,6 +36,12 @@ public class FrontMenu : MonoBehaviour
 	
 	void Start ()
 	{
+		if(Application.isWebPlayer)
+			SetupForDemo();
+			
+		Time.timeScale = 1;
+		StartCoroutine(RefreshUI());
+
 		Messenger.AddListener(FrontMenuUIMessage.StoryModeButtonPressed.ToString(), StoryModeButtonPressed);
 		Messenger.AddListener(FrontMenuUIMessage.QuitButtonPressed.ToString(), QuitButtonPressed);
 		Messenger.AddListener(FrontMenuUIMessage.LevelCreatorButtonPressed.ToString(), LevelCreatorButtonPressed);
@@ -46,6 +54,8 @@ public class FrontMenu : MonoBehaviour
 		Messenger.AddListener(OptionsMenuMessage.Back.ToString(), OptionsMenuBack);
 		Messenger.AddListener(FrontMenuUIMessage.CreditsButtonPressed.ToString(), CreditsPressed);
 		Messenger.AddListener(FrontMenuUIMessage.CreditsBackPressed.ToString(), CreditsBack);
+		Messenger.AddListener(FrontMenuUIMessage.ControlsPressed.ToString(), ControlsPressed);
+		Messenger.AddListener(FrontMenuUIMessage.ControlsBackPressed.ToString(), ControlsBackPressed);
 
 
 		Messenger<string>.AddListener(FrontMenuUIMessage.StoryModeLevelButtonPressed.ToString(), StoryModeLevelButtonPressed);
@@ -59,9 +69,18 @@ public class FrontMenu : MonoBehaviour
 			firstLoad = false;
 		}
 
-#if DEMO_VERSION
-		SetupForDemo();
-#endif
+		if(Application.isWebPlayer)
+			SetupForDemo();
+	}
+
+	IEnumerator RefreshUI()
+	{
+		var uiRoot = GameObject.Find("MainMenuRoot");
+
+		uiRoot.SetActive(false);
+		yield return new WaitForEndOfFrame();
+		yield return new WaitForEndOfFrame();
+		uiRoot.SetActive(true);
 
 	}
 
@@ -79,6 +98,8 @@ public class FrontMenu : MonoBehaviour
 		Messenger.RemoveListener(OptionsMenuMessage.Back.ToString(), OptionsMenuBack);
 		Messenger.RemoveListener(FrontMenuUIMessage.CreditsButtonPressed.ToString(), CreditsPressed);
 		Messenger.RemoveListener(FrontMenuUIMessage.CreditsBackPressed.ToString(), CreditsBack);
+		Messenger.RemoveListener(FrontMenuUIMessage.ControlsPressed.ToString(), ControlsPressed);
+		Messenger.RemoveListener(FrontMenuUIMessage.ControlsBackPressed.ToString(), ControlsBackPressed);
 
 		Messenger<string>.RemoveListener(FrontMenuUIMessage.StoryModeLevelButtonPressed.ToString(), StoryModeLevelButtonPressed);
 	}
@@ -113,7 +134,7 @@ public class FrontMenu : MonoBehaviour
 		{
 			storyModeContinueButton = storyModePanel.transform.Find("StoryModeContinueButton").gameObject;
 		}
-		if(StoryProgressController.Instance.GetStoryProgressSave() == null && StoryProgressController.Instance.SavedLevel == null)
+		if(Application.isWebPlayer && StoryProgressController.Instance.GetStoryProgressSave() == null && StoryProgressController.Instance.SavedLevel == null)
 		{
 			storyModeContinueButton.SetActive(false);
 		}
@@ -157,7 +178,6 @@ public class FrontMenu : MonoBehaviour
 				fileListCheckBox.onSelectionChanged = FileListSelectionChanged;
 				//Remove the application.persistantdatapath as the level loader doesn't want it.
 				fileListCheckBox.fullFilePath = file.Substring(file.IndexOf(Application.persistentDataPath) + Application.persistentDataPath.Length);
-				fileListCheckBox.radioButtonRoot = fileListCheckBox.transform.parent;
 				var faultyPanel = fileListEntry.GetComponent<UIPanel>();
 				if(faultyPanel != null)
 					Destroy(faultyPanel);
@@ -298,18 +318,13 @@ public class FrontMenu : MonoBehaviour
 		var clone = NGUITools.AddChild(grid, prefab);
 
 		var label = clone.GetComponentInChildren<UILabel>();
-
-		label.transform.localScale = new Vector3(30, 30, 1);
-
+		
 		label.text = level.displayName;
-
-		NGUITools.AddWidgetCollider(label.gameObject);
 
 		grid.GetComponent<UIGrid>().Reposition();
 
 		var checkbox = clone.GetComponent<ServerListCheckbox>();
-		checkbox.gameObject.AddComponent<UIDragPanelContents>();
-		checkbox.radioButtonRoot = grid.transform;
+		checkbox.gameObject.AddComponent<UIDragObject>();
 
 		checkbox.onSelectionChanged = StoryModeLevelListSelectionChanged;
 		
@@ -328,6 +343,18 @@ public class FrontMenu : MonoBehaviour
 			GameObject.Find("SelectLevelButton").GetComponent<FrontMenuUINotifier>().payload = "";
 	}
 
+	void ControlsPressed()
+	{
+		NGUITools.SetActive(frontMenuPanel, false);
+		NGUITools.SetActive(controlsPanel, true);
+	}
+
+	void ControlsBackPressed()
+	{
+		NGUITools.SetActive(frontMenuPanel, true);
+		NGUITools.SetActive(controlsPanel, false);
+	}
+
 	void EnsureDirectoriesExist()
 	{
 		if(!Directory.Exists(Application.persistentDataPath + LevelCreatorController.mapFilesFilePath))
@@ -338,7 +365,11 @@ public class FrontMenu : MonoBehaviour
 
 	void RegisterPrefabPaths()
 	{
-		LevelSerializer.useCompression = false;
+		if (Application.isWebPlayer)
+			LevelSerializer.useCompression = true;
+		else
+			LevelSerializer.useCompression = false;
+
 		LevelSerializer.DontCollect();
 		LevelSerializer.IgnoreType(typeof(MeshFilter));
 		LevelSerializer.IgnoreType(typeof(MeshRenderer));

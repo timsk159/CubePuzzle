@@ -6,7 +6,10 @@ public enum LevelCreatorUIMessage
 	GenericInputSubmitted, CreateButtonClicked,
 	LoadMenuLoadClicked, LoadMenuCancelClicked,
 	SaveMenuSaveClicked, SaveMenuCancelClicked,
-	SideHoverEnter, SideHoverExit
+
+	NewMap, LoadMap, FrontMenuBack,
+	NewMapBack, 
+	Controls, Test, Save, Exit, ControlsBack
 };
 
 public class LevelCreatorUINotifier : MonoBehaviour 
@@ -36,7 +39,7 @@ public class LevelCreatorUINotifier : MonoBehaviour
 		if(inputObj == null)
 			inputObj = GetComponent<UIInput>();
 		
-		var notiData = new InputMessageData(gameObject, inputObj.text);
+		var notiData = new InputMessageData(gameObject, inputObj.value);
 
 		Messenger<InputMessageData>.Invoke(notiType.ToString(), notiData);
 	}

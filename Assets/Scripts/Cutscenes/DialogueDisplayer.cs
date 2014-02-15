@@ -12,8 +12,7 @@ public class DialogueDisplayer : MonoBehaviour
 	{
 		uiLabel = GetComponent<UILabel>();
 		uiLabel.supportEncoding = false;
-		uiLabel.symbolStyle = UIFont.SymbolStyle.None;
-		uiLabel.font.WrapText(uiLabel.text, uiLabel.lineWidth / uiLabel.cachedTransform.localScale.x, uiLabel.maxLineCount, false, UIFont.SymbolStyle.None);
+		uiLabel.symbolStyle = NGUIText.SymbolStyle.None;
 	}
 
 	/// <summary>

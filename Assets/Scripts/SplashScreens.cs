@@ -11,28 +11,32 @@ public class SplashScreens : MonoBehaviour
 	public UITexture uiTexture;
 
 	public GameObject securityUIRoot;
+	public UILabel absoluteLabel;
 
 	SplashScreen currentSplash;
 	bool canSkip;
 
 	public void Start()
 	{
-#if DEMO_VERSION
-		var webSecure = new WebSecure();
-
-		if(!webSecure.IsHostedCorrectly())
+		if (Application.isWebPlayer)
 		{
-			//Make sure to modify url for each site thats hosting below (seperate build for each site)
-			FailedSecurityUI();
-			return;
+			var webSecure = new WebSecure();
+
+			if (!webSecure.IsHostedCorrectly("http://www.smirkstudio.co.uk/Cubaze.unity3d"))
+			{
+				//Make sure to modify url for each site thats hosting below (seperate build for each site)
+				FailedSecurityUI();
+				return;
+			}
 		}
-#endif
 		StartCoroutine(SplashScreenDisplayRoutine());
 	}
 
 	void FailedSecurityUI()
 	{
 		securityUIRoot.SetActive(true);
+		//absoluteLabel.text = Application.absoluteURL;
+		//absoluteLabel.SetDirty();
 	}
 
 	IEnumerator SplashScreenDisplayRoutine(int indexToStart = 0)

@@ -9,7 +9,7 @@ public class DragAndDropPlayerStartMenuItem : DragAndDropMenuItem
 
 	void Start()
 	{
-		cycleColourButton = transform.Find("CycleColourButton").gameObject;
+		cycleColourButton = transform.parent.Find("CycleColourButton").gameObject;
 		UIEventListener.Get(cycleColourButton).onClick = HandleColourCycleButtonClick;
 
 		playerStartPiece = transform.Find("PlayerStartCubeMenuObj").GetComponent<PlayerStartPiece>();

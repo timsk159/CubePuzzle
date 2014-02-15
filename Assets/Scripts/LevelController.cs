@@ -404,6 +404,8 @@ public class LevelController : MonoSingleton<LevelController>
 
 	public void ResetLevel()
 	{
+		Debug.Log("RESETTING LEVEL!");
+
 		if(Application.loadedLevelName == "LevelCreator")
 		{
 			LevelTestStateController.Instance.LoadCheckpoint();
@@ -433,6 +435,7 @@ public class LevelController : MonoSingleton<LevelController>
 
 	public void LoadCheckpoint()
 	{
+		Debug.Log("LOADING CHECKPOINT!");
 		if(Application.loadedLevelName == "LevelCreator")
 		{
 			LevelTestStateController.Instance.LoadCheckpoint();

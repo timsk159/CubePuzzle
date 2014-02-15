@@ -10,14 +10,6 @@ public class WebSecure
 			return true;
 		}
 
-		if(Application.genuineCheckAvailable)
-		{
-			if(!Application.genuine)
-			{
-				return false;
-			}
-		}
-
 		if(Application.isWebPlayer)
 		{
 			if(Application.srcValue != "Cubaze.unity3d")

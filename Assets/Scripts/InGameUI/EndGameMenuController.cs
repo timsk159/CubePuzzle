@@ -6,6 +6,15 @@ using StateMachineMessenger = Messenger<StateMachine<LevelState, LevelStateMessa
 public class EndGameMenuController : MonoBehaviour 
 {
 	public GameObject endGameMenuPanel;
+	public GameObject gameCompletePanel;
+
+	public GameObject demoLabel;
+	public GameObject gameCompleteLabel;
+	public EndGameMenuUINotifier websiteButton;
+
+	GameObject nextLevelButton;
+	GameObject quitButton;
+	GameObject stopTestingButton;
 	
 	void Start()
 	{ 
@@ -13,6 +22,10 @@ public class EndGameMenuController : MonoBehaviour
 
 		Messenger.AddListener(EndGameMenuMessage.NextLevelPressed.ToString(), NextLevelPressed);
 		Messenger.AddListener(EndGameMenuMessage.QuitPressed.ToString(), QuitPressed);
+		Messenger.AddListener(EndGameMenuMessage.WebsiteButton.ToString(), WebsiteButton);
+		nextLevelButton = endGameMenuPanel.transform.Find("NextLevelButton").gameObject;
+		quitButton = endGameMenuPanel.transform.Find("QuitButton").gameObject;
+		stopTestingButton = endGameMenuPanel.transform.Find("StopTestingButton").gameObject;
 	}
 
 	void OnDestroy()
@@ -26,15 +39,34 @@ public class EndGameMenuController : MonoBehaviour
 	void EndGameEnter(StateMachine<LevelState, LevelStateMessage>.StateChangeData stateChangeData)
 	{
 		NGUITools.SetActive(endGameMenuPanel, true);
-		
-		if(!LevelController.Instance.isStoryMode)
+
+		if (Application.loadedLevelName == "LevelCreator")
+			SetForLevelTesting();
+		else
+			SetForNonLevelTesting();
+
+		if (!LevelController.Instance.isStoryMode)
 		{
-			var nextLevelButton = endGameMenuPanel.transform.Find("NextLevelButton").gameObject;
-			
 			NGUITools.SetActive(nextLevelButton, false);
 		}
+		else
+		{
+			if (Application.loadedLevelName != "LevelCreator")
+			{
+				if (IsGameComplete())
+				{
+					GameComplete();
+				}
+			}
+		}
 	}
-	
+
+	void WebsiteButton()
+	{
+		Application.OpenURL(websiteButton.url);
+		SceneLoader.Instance.LoadLevel("FrontMenu");
+	}
+
 	void NextLevelPressed()
 	{
 		var nextLevel = StoryProgressController.Instance.NextLevel.levelName;
@@ -47,11 +79,57 @@ public class EndGameMenuController : MonoBehaviour
 			LevelController.Instance.InitLevel(true,  StoryProgressController.Instance.SavedLevel.cutSceneObj);
 	});
 	}
-	
+
+	void SetForLevelTesting()
+	{
+		nextLevelButton.SetActive(false);
+		quitButton.SetActive(false);
+		stopTestingButton.SetActive(true);
+	}
+
+	void SetForNonLevelTesting()
+	{
+		nextLevelButton.SetActive(true);
+		quitButton.SetActive(true);
+		stopTestingButton.SetActive(false);
+	}
+
 	void QuitPressed()
 	{
 		SceneLoader.Instance.LoadLevel("FrontMenu");
 		if(Time.timeScale != 1)
 			Time.timeScale = 1;
+	}
+
+	bool IsGameComplete()
+	{
+		if (StoryProgressController.Instance.CurrentLevel.levelNumber == 10)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	void GameComplete()
+	{
+		gameCompletePanel.SetActive(true);
+		nextLevelButton.SetActive(false);
+		stopTestingButton.SetActive(false);
+
+		if (Application.isWebPlayer)
+		{
+			demoLabel.SetActive(true);
+			gameCompleteLabel.SetActive(false);
+			websiteButton.url = "http://www.smirkstudio.co.uk/cubaze.html";
+		}
+		else
+		{
+			demoLabel.SetActive(false);
+			gameCompleteLabel.SetActive(true);
+			websiteButton.url = "http://www.smirkstudio.co.uk/";
+		}
 	}
 }

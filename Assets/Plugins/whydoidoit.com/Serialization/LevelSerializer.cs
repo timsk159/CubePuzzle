@@ -559,8 +559,15 @@ public static class LevelSerializer
     private static void PerformSaveCheckPoint(string name, bool urgent)
     {
         var newGame = CreateSaveEntry(name, urgent);
-        PlayerPrefs.SetString(PlayerName + "__RESUME__", Convert.ToBase64String(UnitySerializer.Serialize(newGame)));
-		PlayerPrefs.Save();
+		try
+		{
+			PlayerPrefs.SetString(PlayerName + "__RESUME__", Convert.ToBase64String(UnitySerializer.Serialize(newGame)));
+			PlayerPrefs.Save();
+		}
+		catch
+		{
+			Debug.LogError("Failed to save game");
+		}
     }
 
     /// <summary>
@@ -576,9 +583,16 @@ public static class LevelSerializer
                 _cachedState = CreateSaveEntry("resume", true);
                 if (SaveResumeInformation)
                 {
-                    PlayerPrefs.SetString(PlayerName + "__RESUME__",
-                                          Convert.ToBase64String(UnitySerializer.Serialize(_cachedState)));
-					PlayerPrefs.Save();
+					try
+					{
+						PlayerPrefs.SetString(PlayerName + "__RESUME__",
+											  Convert.ToBase64String(UnitySerializer.Serialize(_cachedState)));
+						PlayerPrefs.Save();
+					}
+					catch
+					{
+						Debug.LogError("Failed to save game");
+					}
                 }
             }
         }
@@ -690,8 +704,15 @@ public static class LevelSerializer
 
         SaveDataToPlayerPrefs();
 
-        PlayerPrefs.SetString(PlayerName + "__RESUME__", Convert.ToBase64String(UnitySerializer.Serialize(newGame)));
-		PlayerPrefs.Save();
+		try
+		{
+			PlayerPrefs.SetString(PlayerName + "__RESUME__", Convert.ToBase64String(UnitySerializer.Serialize(newGame)));
+			PlayerPrefs.Save();
+		}
+		catch
+		{
+			Debug.LogError("Failed to save game");
+		}
         GameSaved();
     }
 
@@ -701,8 +722,15 @@ public static class LevelSerializer
     /// </summary>
     public static void SaveDataToPlayerPrefs()
     {
-        PlayerPrefs.SetString("_Save_Game_Data_", Convert.ToBase64String(UnitySerializer.Serialize(SavedGames)));
-		PlayerPrefs.Save();
+		try
+		{
+			PlayerPrefs.SetString("_Save_Game_Data_", Convert.ToBase64String(UnitySerializer.Serialize(SavedGames)));
+			PlayerPrefs.Save();
+		}
+		catch
+		{
+			Debug.LogError("Failed to save game");
+		}
     }
 
     /// <summary>

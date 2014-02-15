@@ -507,8 +507,15 @@ public static class JSONLevelSerializer
     private static void PerformSaveCheckPoint(string name, bool urgent)
     {
         var newGame = CreateSaveEntry(name, urgent);
-        PlayerPrefs.SetString(PlayerName + "JSON__RESUME__", UnitySerializer.JSONSerialize(newGame));
-		PlayerPrefs.Save();
+		try
+		{
+			PlayerPrefs.SetString(PlayerName + "JSON__RESUME__", UnitySerializer.JSONSerialize(newGame));
+			PlayerPrefs.Save();
+		}
+		catch
+		{
+			Debug.LogError("Failed to save game");
+		}
     }
 
     /// <summary>
@@ -524,9 +531,16 @@ public static class JSONLevelSerializer
                 _cachedState = CreateSaveEntry("resume", true);
                 if (SaveResumeInformation)
                 {
-                    PlayerPrefs.SetString(PlayerName + "JSON__RESUME__",
-                                          UnitySerializer.JSONSerialize(_cachedState));
-					PlayerPrefs.Save();
+					try
+					{
+						PlayerPrefs.SetString(PlayerName + "JSON__RESUME__",
+											  UnitySerializer.JSONSerialize(_cachedState));
+						PlayerPrefs.Save();
+					}
+					catch
+					{
+						Debug.LogError("Failed to save game");
+					}
                 }
             }
         }
@@ -644,8 +658,15 @@ public static class JSONLevelSerializer
 
         SaveDataToPlayerPrefs();
 
-        PlayerPrefs.SetString(PlayerName + "JSON__RESUME__", UnitySerializer.JSONSerialize(newGame));
-		PlayerPrefs.Save();
+		try
+		{
+			PlayerPrefs.SetString(PlayerName + "JSON__RESUME__", UnitySerializer.JSONSerialize(newGame));
+			PlayerPrefs.Save();
+		}
+		catch
+		{
+			Debug.LogError("Failed to save game");
+		}
         GameSaved();
     }
 
@@ -655,8 +676,15 @@ public static class JSONLevelSerializer
     /// </summary>
     public static void SaveDataToPlayerPrefs()
     {
-        PlayerPrefs.SetString("JSON_Save_Game_Data_", UnitySerializer.JSONSerialize(SavedGames));
-		PlayerPrefs.Save();
+		try
+		{
+			PlayerPrefs.SetString("JSON_Save_Game_Data_", UnitySerializer.JSONSerialize(SavedGames));
+			PlayerPrefs.Save();
+		}
+		catch
+		{
+			Debug.LogError("Failed to save game");
+		}
     }
 
     /// <summary>
