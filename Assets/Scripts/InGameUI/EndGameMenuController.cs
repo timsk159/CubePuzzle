@@ -63,7 +63,14 @@ public class EndGameMenuController : MonoBehaviour
 
 	void WebsiteButton()
 	{
-		Application.OpenURL(websiteButton.url);
+		if (Application.isWebPlayer)
+		{
+			Application.ExternalEval("window.open('/cubaze.html')");
+		}
+		else
+		{
+			Application.OpenURL("www.smirkstudio.co.uk/cubaze.html");
+		}
 		SceneLoader.Instance.LoadLevel("FrontMenu");
 	}
 

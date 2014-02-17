@@ -95,10 +95,12 @@ public class FloorPiece : ColorCollisionObject
 		if(useSharedMaterial)
 		{
 			FindSharedMesh();
-
-			if(sharedMeshForThisPiece.IsUp)
+			if (sharedMeshForThisPiece != null)
 			{
-				sharedMeshForThisPiece.MoveDown();
+				if (sharedMeshForThisPiece.IsUp)
+				{
+					sharedMeshForThisPiece.MoveDown();
+				}
 			}
 		}
 		else
@@ -138,9 +140,12 @@ public class FloorPiece : ColorCollisionObject
 		{
 			FindSharedMesh();
 
-			if(!sharedMeshForThisPiece.IsUp)
+			if (sharedMeshForThisPiece != null)
 			{
-				sharedMeshForThisPiece.MoveUp();
+				if (!sharedMeshForThisPiece.IsUp)
+				{
+					sharedMeshForThisPiece.MoveUp();
+				}
 			}
 		}
 		else

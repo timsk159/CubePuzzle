@@ -22,7 +22,7 @@ public class PlayerCharacter : MonoBehaviour
 	[SerializeThis()][SerializeField()]
 	bool canReset;
 	
-	void Awake () 
+	void Start () 
 	{
 		//No smoke in level creator.
 		if(Application.loadedLevelName != "LevelCreator")
@@ -121,7 +121,8 @@ public class PlayerCharacter : MonoBehaviour
 		currentColor = colourToChangeTo;
 		var realColor = ColorManager.GetObjectRealColor(currentColor);
 		gameObject.renderer.material.color = realColor;
-		childLight.color = realColor;
+		if(childLight != null)
+			childLight.color = realColor;
 		Messenger<Colour>.Invoke(ColourCollisionMessage.PlayerChangedColour.ToString(), currentColor);
 	}
 
@@ -130,7 +131,8 @@ public class PlayerCharacter : MonoBehaviour
 		currentColor = colourToChangeTo;
 		var realColor = ColorManager.GetObjectRealColor(currentColor);
 		gameObject.renderer.material.color = realColor;
-		childLight.color = realColor;
+		if(childLight != null)
+			childLight.color = realColor;
 	}
 	
 	public void RotateColour()
@@ -158,7 +160,14 @@ public class PlayerCharacter : MonoBehaviour
 
 	void OnDeserialized()
 	{
-		ChangeColour(currentColor);
+		StartCoroutine(ChangeAfterFrame());
+	}
+
+	IEnumerator ChangeAfterFrame()
+	{
+		yield return new WaitForEndOfFrame();
+		yield return new WaitForEndOfFrame();
+		ChangeColour(currentColor);		
 	}
 
 	void OnCollisionEnter(Collision collision) 
