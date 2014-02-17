@@ -10,11 +10,13 @@ public class PauseMenuController : MonoBehaviour
 
 	GameObject quitbutton;
 	GameObject stopTestingButton;
+	GameObject levelLabel;
 
 	void Start()
 	{
 		quitbutton = pauseMenuPanel.transform.Find("QuitAndSaveButton").gameObject;
 		stopTestingButton = pauseMenuPanel.transform.Find("StopTestingButton").gameObject;
+		levelLabel = pauseMenuPanel.transform.Find("LevelLabel").gameObject;
 
 		StateMachineMessenger.AddListener(LevelStateMessage.PauseEnter.ToString(), PauseEnter);
 		StateMachineMessenger.AddListener(LevelStateMessage.PauseExit.ToString(), PauseExit);
@@ -48,6 +50,10 @@ public class PauseMenuController : MonoBehaviour
 	void PauseEnter(StateMachine<LevelState, LevelStateMessage>.StateChangeData stateChangeData)
 	{
 		NGUITools.SetActive(pauseMenuPanel, true);
+		if(LevelController.Instance.isStoryMode)
+			levelLabel.GetComponent<UILabel>().text = StoryProgressController.Instance.CurrentLevel.displayName;
+		else
+			levelLabel.SetActive(false);
 	}
 	
 	void PauseExit(StateMachine<LevelState, LevelStateMessage>.StateChangeData stateChangeData)

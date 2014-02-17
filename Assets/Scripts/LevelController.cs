@@ -194,11 +194,12 @@ public class LevelController : MonoSingleton<LevelController>
 
 	void StartGameAfterIntro(CutSceneObj introCutsceneObj = null)
 	{
+		playerChar.playerMovement.canMove = false;
+		playerChar.rigidbody.useGravity = false;
+
 		Messenger.AddListener(LevelIntroMessage.IntroFinished.ToString(), IntroFinished);
 		Messenger.AddListener(LevelIntroMessage.IntroInterrupted.ToString(), IntroInterrupted);
 		Camera.main.GetComponent<CameraFollow>().PutCameraBehindPlayer();
-		playerChar.playerMovement.canMove = false;
-		playerChar.rigidbody.useGravity = false;
 		Camera.main.GetComponent<CameraFollow>().enabled = false;
 		
 		StartCoroutine(levelIntro.PlayIntroAnimation(playerChar.gameObject, introCutsceneObj)); 
@@ -224,11 +225,12 @@ public class LevelController : MonoSingleton<LevelController>
 
 		Messenger.Invoke(LevelStateMessage.LevelStarted.ToString());
 		canPause = true;
-		playerChar.playerMovement.canMove = true;
-		playerChar.EnablePhysics();
+
 		Messenger.RemoveListener(LevelIntroMessage.IntroFinished.ToString(), IntroFinished);
 		Messenger.RemoveListener(LevelIntroMessage.IntroInterrupted.ToString(), IntroInterrupted);
 		StateM.ChangeState(LevelState.InGame);
+		playerChar.playerMovement.canMove = true;
+		playerChar.EnablePhysics();
 	}
 
 	void IntroInterrupted()
