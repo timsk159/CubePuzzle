@@ -19,7 +19,7 @@ public class SceneLoader : MonoSingleton<SceneLoader>
 	{
 		if(arg1 == "Loading")
 		{
-			progressBar.sliderValue = arg2;
+			progressBar.value = arg2;
 			if(arg2 > 0.999f)
 				ProgressComplete();
 		}
@@ -95,11 +95,15 @@ public class SceneLoader : MonoSingleton<SceneLoader>
 			progressBar.sliderValue = Application.GetStreamProgressForLevel(levelToLoad);
 			yield return new WaitForEndOfFrame();
 		}
-
+		LevelSerializer.Progress += HandleProgress;
 		if(Application.HasProLicense())
 		{
 			var asyncOp = Application.LoadLevelAsync(levelToLoad);
-			yield return asyncOp;
+			while(!asyncOp.isDone)
+			{
+				progressBar.value = asyncOp.progress;
+				yield return new WaitForEndOfFrame();
+			}
 		}
 		else
 		{
@@ -115,7 +119,6 @@ public class SceneLoader : MonoSingleton<SceneLoader>
 		}
 		else
 		{
-			LevelSerializer.Progress += HandleProgress;
 			Destroy(this);
 		}
 	}
@@ -132,7 +135,11 @@ public class SceneLoader : MonoSingleton<SceneLoader>
 		if(Application.HasProLicense())
 		{
 			var asyncOp = Application.LoadLevelAsync(levelToLoad);
-			yield return asyncOp;
+			while(!asyncOp.isDone)
+			{
+				progressBar.value = asyncOp.progress;
+				yield return new WaitForEndOfFrame();
+			}
 		}
 		else
 		{
@@ -158,12 +165,16 @@ public class SceneLoader : MonoSingleton<SceneLoader>
 		yield return new WaitForEndOfFrame();
 
 		FindLoadingScreenObjects();
-
+		LevelSerializer.Progress += HandleProgress;
+		
 		if(Application.HasProLicense())
 		{
 			var asyncOp = Application.LoadLevelAsync (levelToLoad);
-
-			yield return asyncOp;
+			while(!asyncOp.isDone)
+			{
+				progressBar.value = asyncOp.progress;
+				yield return new WaitForEndOfFrame();
+			}
 			yield return new WaitForEndOfFrame();
 		}
 		else
@@ -180,7 +191,7 @@ public class SceneLoader : MonoSingleton<SceneLoader>
 		}
 		else
 		{
-			LevelSerializer.Progress += HandleProgress;
+			
 		}
 	}
 

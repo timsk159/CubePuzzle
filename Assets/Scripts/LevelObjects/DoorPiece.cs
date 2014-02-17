@@ -86,7 +86,6 @@ public class DoorPiece : FloorPiece
 	
 	public void SetDoorColour(Colour colourToSet, bool checkDoor)
 	{		
-		theDoor.objColour = colourToSet;
 		theDoor.renderer.material.color = ColorManager.GetObjectRealColor(theDoor.objColour);
 		if(checkDoor)
 			CheckDoor();
@@ -111,6 +110,10 @@ public class DoorPiece : FloorPiece
 		{
 			SetDoorColour(theDoor.objColour, false);
 			ChangeColour(initialColour, false);
+		}
+		else
+		{
+			SetDoorColour(theDoor.objColour, true);
 		}
 	}
 }
