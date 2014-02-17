@@ -11,7 +11,8 @@ public enum FrontMenuUIMessage
 	StoryModeContinueButtonPressed, StoryModeLevelButtonPressed, StoryModeCancelButtonPressed,
 	OptionsMenuPressed,
 	CreditsButtonPressed, CreditsBackPressed,
-	ControlsPressed, ControlsBackPressed
+	ControlsPressed, ControlsBackPressed,
+	LogoPressed
 };
 
 public class FrontMenu : MonoBehaviour 
@@ -56,6 +57,7 @@ public class FrontMenu : MonoBehaviour
 		Messenger.AddListener(FrontMenuUIMessage.CreditsBackPressed.ToString(), CreditsBack);
 		Messenger.AddListener(FrontMenuUIMessage.ControlsPressed.ToString(), ControlsPressed);
 		Messenger.AddListener(FrontMenuUIMessage.ControlsBackPressed.ToString(), ControlsBackPressed);
+		Messenger.AddListener(FrontMenuUIMessage.LogoPressed.ToString(), LogoPressed);
 
 
 		Messenger<string>.AddListener(FrontMenuUIMessage.StoryModeLevelButtonPressed.ToString(), StoryModeLevelButtonPressed);
@@ -64,7 +66,8 @@ public class FrontMenu : MonoBehaviour
 		{
 			optionsMenu = GetComponent<OptionsMenu>();
 			optionsMenu.LoadOptions();
-			EnsureDirectoriesExist();
+			if(!Application.isWebPlayer)
+				EnsureDirectoriesExist();
 			RegisterPrefabPaths ();
 			firstLoad = false;
 		}
@@ -100,6 +103,7 @@ public class FrontMenu : MonoBehaviour
 		Messenger.RemoveListener(FrontMenuUIMessage.CreditsBackPressed.ToString(), CreditsBack);
 		Messenger.RemoveListener(FrontMenuUIMessage.ControlsPressed.ToString(), ControlsPressed);
 		Messenger.RemoveListener(FrontMenuUIMessage.ControlsBackPressed.ToString(), ControlsBackPressed);
+		Messenger.RemoveListener(FrontMenuUIMessage.LogoPressed.ToString(), LogoPressed);
 
 		Messenger<string>.RemoveListener(FrontMenuUIMessage.StoryModeLevelButtonPressed.ToString(), StoryModeLevelButtonPressed);
 	}
@@ -134,7 +138,7 @@ public class FrontMenu : MonoBehaviour
 		{
 			storyModeContinueButton = storyModePanel.transform.Find("StoryModeContinueButton").gameObject;
 		}
-		if(Application.isWebPlayer && StoryProgressController.Instance.GetStoryProgressSave() == null && StoryProgressController.Instance.SavedLevel == null)
+		if(StoryProgressController.Instance.GetStoryProgressSave() == null && StoryProgressController.Instance.SavedLevel == null)
 		{
 			storyModeContinueButton.SetActive(false);
 		}
@@ -143,6 +147,10 @@ public class FrontMenu : MonoBehaviour
 			storyModeContinueButton.SetActive(true);
 		}
 		PopulateStoryModePanel();
+		if (Application.isWebPlayer)
+		{
+			storyModeContinueButton.SetActive(false);
+		}
 	}
 	
 	void LevelCreatorButtonPressed()
@@ -224,6 +232,18 @@ public class FrontMenu : MonoBehaviour
 			{
 				Destroy (child.gameObject);
 			}
+		}
+	}
+
+	void LogoPressed()
+	{
+		if (Application.isWebPlayer)
+		{
+			Application.ExternalEval("window.open('/index.html')");
+		}
+		else
+		{
+			Application.OpenURL("www.smirkstudio.co.uk");
 		}
 	}
 
