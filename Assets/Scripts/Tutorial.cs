@@ -4,11 +4,14 @@ using System.Collections;
 public class Tutorial : MonoBehaviour 
 {
 	HUD hud;
-	public GameObject tutorialElementsRoot;
+	public TutorialExtraElements extraElements;
 	public UILabel tutorialLabel;
+	public GameObject tutorialPanel;
 
 	float textFadeTime = 0.5f;
 	float hudZoomTime = 0.5f;
+	bool isShowingTutorial;
+	bool hudIsZoomed;
 
 	GameObject additionalObject;
 
@@ -19,13 +22,18 @@ public class Tutorial : MonoBehaviour
 		Messenger.AddListener(LevelStateMessage.LevelStarted.ToString(), LevelStarted);
 	}
 
+	void OnDestroy()
+	{
+		Messenger.RemoveListener(LevelStateMessage.LevelStarted.ToString(), LevelStarted);
+	}
+
 	void LevelStarted()
 	{
 		if(!LevelController.Instance.isStoryMode)
 			return;
 
 		var currentLevelNumber = StoryProgressController.Instance.CurrentLevel.levelNumber;
-
+		Debug.Log("+++--- loading tutorial for level: " + currentLevelNumber);
 		//All levels after the 10th have no tutorial.
 		if(currentLevelNumber > 10)
 			return;
@@ -34,19 +42,50 @@ public class Tutorial : MonoBehaviour
 		switch(currentLevelNumber)
 		{
 			case 1:
-
+				tutorialPanel.SetActive(true);
+				DisablePlayer();
+				DisplayText("Use the WASD or arrows keys to move. Try and find the entrance (You can't miss it!)\n\nTap any key to close this window.", false);
+				isShowingTutorial = true;
 				break;
 			case 2:
-
+				tutorialPanel.SetActive(true);
+				DisablePlayer();
+				DisplayText("You can't move over a cube that is the same colour as your ball.\n\nThe image here will highlight which colour cubes are currently blocked\n" +
+					"Rolling over the button with the floating cube above it will rotate each cubes colour by one" +
+					"\n\nTap any key to close this", false);
+				ZoomHUDUp();
+				DisplayAdditonalElement(false, extraElements.GetElement("ButtonCube"));
+				isShowingTutorial = true;
 				break;
 		}
 	}
 
-	void DisplayTutorial(string text, bool fadeAfterZoom, GameObject additionalObject)
+	void Update()
 	{
-		DisplayText(text, fadeAfterZoom);
-		if(additionalObject != null)
-			DisplayAdditionalImage(fadeAfterZoom, additionalObject);
+		if(!isShowingTutorial)
+			return;
+
+		if(LevelController.Instance.playerChar.playerMovement.canMove)
+			DisablePlayer();
+
+		if(Input.anyKeyDown)
+		{
+			DismissTutorial();
+		}
+	}
+
+	void DisablePlayer()
+	{
+		LevelController.Instance.playerChar.playerMovement.canMove = false;
+		LevelController.Instance.playerChar.canReset = false;
+		LevelController.Instance.canPause = false;
+	}
+
+	void EnablePlayer()
+	{
+		LevelController.Instance.playerChar.playerMovement.canMove = true;
+		LevelController.Instance.playerChar.canReset = true;
+		LevelController.Instance.canPause = true;
 	}
 
 	void DisplayText(string text, bool fadeAfterZoom)
@@ -54,12 +93,12 @@ public class Tutorial : MonoBehaviour
 		//Set the text and fade the label up, with an optional timer
 		tutorialLabel.text = text;
 		if(fadeAfterZoom)
-			Invoke("FadeTextUp", hudZoomTime);
+			Invoke("FadeTutorialPanelUp", hudZoomTime);
 		else
-			FadeTextUp();
+			FadeTutorialPanelUp();
 	}
 
-	void DisplayAdditionalImage(bool afterZoom, GameObject gameObjectToUse)
+	void DisplayAdditonalElement(bool afterZoom, GameObject gameObjectToUse)
 	{
 		//Need to keep track of the object we turned on, to turn it off later.
 		additionalObject = gameObjectToUse;
@@ -73,9 +112,12 @@ public class Tutorial : MonoBehaviour
 
 	public void DismissTutorial()
 	{
+		isShowingTutorial = false;
 		DisableGO();
-		FadeTextDown();
+		FadeTutorialPanelDown();
 		ZoomHUDDown();
+		Invoke("EnablePlayer", hudZoomTime);
+		Invoke("DisablePanel", hudZoomTime);
 	}
 
 	//Has to be a coroutine, to support the delay (Invoke can't have parameters)
@@ -86,27 +128,61 @@ public class Tutorial : MonoBehaviour
 
 	void DisableGO()
 	{
-		additionalObject.SetActive(false);
-		additionalObject = null;
+		if(additionalObject != null)
+		{
+			additionalObject.SetActive(false);
+			additionalObject = null;
+		}
+	}
+
+	void EnablePanel()
+	{
+		tutorialPanel.SetActive(true);
+	}
+
+	void DisablePanel()
+	{
+		tutorialPanel.SetActive(false);
 	}
 
 	void ZoomHUDUp()
 	{
-		hud.colourChangeSprite.animation.Play("ZoomHuDUp");
+		PlayHuDUpAnimation();
+		hudIsZoomed = true;
 	}
 
 	void ZoomHUDDown()
 	{
-		hud.colourChangeSprite.animation.Play("ZoomHuDDown");
+		if(hudIsZoomed)
+		{
+			PlayHuDDownAnimation();
+		}
 	}
 
-	void FadeTextUp()
+	void PlayHuDUpAnimation()
 	{
-		TweenAlpha.Begin(tutorialElementsRoot, textFadeTime, 1);
+		if(!hudIsZoomed)
+		{
+			hud.colourChangeSprite.animation.Play("ZoomHuDUp");
+		}
 	}
 
-	void FadeTextDown()
+	void PlayHuDDownAnimation()
 	{
-		TweenAlpha.Begin(tutorialElementsRoot, textFadeTime, 0);
+		if(hudIsZoomed)
+		{
+			hud.colourChangeSprite.animation.Play("ZoomHuDDown");
+		}
+	}
+	void FadeTutorialPanelUp()
+	{
+		tutorialPanel.GetComponent<UIPanel>().alpha = 0;
+		TweenAlpha.Begin(tutorialPanel, textFadeTime, 1);
+	}
+
+	void FadeTutorialPanelDown()
+	{
+		tutorialPanel.GetComponent<UIPanel>().alpha = 1;
+		TweenAlpha.Begin(tutorialPanel, textFadeTime, 0);
 	}
 }

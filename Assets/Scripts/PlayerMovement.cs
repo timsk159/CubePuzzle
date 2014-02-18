@@ -13,7 +13,19 @@ public class PlayerMovement : MonoBehaviour
 
 	MovementType moveType;
 
-	public bool canMove = true;
+	private bool _canMove = true;
+
+	public bool canMove
+	{
+		get
+		{
+			return _canMove;
+		}
+		set
+		{
+			_canMove = value;
+		}
+	}
 	public bool isMoving;
 
 	private bool  _isMovingFast;

@@ -18,7 +18,26 @@ public enum LevelStateMessage
 
 public class LevelController : MonoSingleton<LevelController> 
 {
-	public PlayerCharacter playerChar;
+	private PlayerCharacter _playerChar;
+
+	public PlayerCharacter playerChar
+	{
+		get
+		{
+			if(_playerChar == null)
+			{
+				var go = GameObject.FindWithTag("Player");
+				if(go == null)
+					return null;
+				_playerChar = go.GetComponent<PlayerCharacter>();
+			}
+			return _playerChar;
+		}
+		private set
+		{
+			_playerChar = value;
+		}
+	}
 	
 	private Colour _playerColour;
 
@@ -59,7 +78,7 @@ public class LevelController : MonoSingleton<LevelController>
 
 	public bool hasCheckpoint;
 	
-	bool canPause = true;
+	public bool canPause = true;
 	bool isPaused;
 	GameObject mapRoot;
 	LevelIntro levelIntro;

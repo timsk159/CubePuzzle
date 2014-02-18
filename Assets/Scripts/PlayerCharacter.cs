@@ -20,7 +20,7 @@ public class PlayerCharacter : MonoBehaviour
 	Vector3 previousVelocity;
 
 	[SerializeThis()][SerializeField()]
-	bool canReset;
+	public bool canReset;
 	
 	void Start () 
 	{
