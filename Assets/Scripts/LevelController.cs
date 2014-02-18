@@ -173,8 +173,8 @@ public class LevelController : MonoSingleton<LevelController>
 		if(playerObj != null)
 		{
 			playerChar = playerObj.GetComponent<PlayerCharacter>();
+			playerChar.DisablePhysics();
 		}
-		playerChar.DisablePhysics();
 
 		//Create floor and make sure player is on it
 		mapRoot = GameObject.Find("MapRoot");
