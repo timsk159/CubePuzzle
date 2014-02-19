@@ -95,7 +95,6 @@ public class LevelIntro : MonoBehaviour
 
 			yield return new WaitForEndOfFrame();
 		}
-
 		if(playingIntro)
 			Messenger.Invoke(LevelIntroMessage.IntroFinished.ToString());
 	}
@@ -129,7 +128,7 @@ public class LevelIntro : MonoBehaviour
 			playingCutsceneObj = null;
 		}
 		Messenger.Invoke(LevelIntroMessage.IntroInterrupted.ToString());
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSeconds(0.55f);
 		Messenger.Invoke(LevelIntroMessage.IntroFinished.ToString());
 	}
 
@@ -148,7 +147,7 @@ public class LevelIntro : MonoBehaviour
 		public void MoveFromSkyToEndPos(Vector3 movePos)
 		{
 			endPos = theCube.transform.position;
-			iTween.MoveFrom(theCube, iTween.Hash("position", movePos, "time", 0.7f, "delay", UnityEngine.Random.Range(0.5f, 4.0f), "easetype", iTween.EaseType.easeOutExpo));
+			iTween.MoveFrom(theCube, iTween.Hash("position", movePos, "time", 0.65f, "delay", UnityEngine.Random.Range(0.5f, 3.4f), "easetype", iTween.EaseType.easeOutExpo));
 		}
 
 		public void InterruptAnimation()

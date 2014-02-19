@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
 
 	MovementType moveType;
 
-	private bool _canMove = true;
+	private bool _canMove = false;
 
 	public bool canMove
 	{

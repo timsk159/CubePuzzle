@@ -6,7 +6,7 @@
       _Brightness ("Brightness",Range(0.0,3.0)) = 1.0
     }
     SubShader {
-      Tags { "RenderType" = "Transparent" "Queue"="Transparent" "IgnoreProjector"="True"}
+      Tags { "RenderType" = "Transparent" "Queue"="Transparent+250" "IgnoreProjector"="True"}
       
     // extra pass that renders to depth buffer only
      Pass {
