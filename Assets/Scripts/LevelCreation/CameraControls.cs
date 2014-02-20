@@ -67,19 +67,11 @@ public class CameraControls : MonoBehaviour
 
 			PushCameraBack(pushAwayVector);
 		}
-		
-		if(Input.GetMouseButtonDown(2))
-		{
-			dragOrigin = Input.mousePosition;
-			isRotating = true;
-		}
+
 		if(xInput != 0 || zInput != 0)
 		{
 			dragOrigin = Input.mousePosition;
 		}
-		
-		if(Input.GetMouseButtonUp(2)) 
-			isRotating = false;
 		
 		//WASD movement
 		if(zInput != 0 || xInput != 0)
@@ -92,15 +84,7 @@ public class CameraControls : MonoBehaviour
 			Vector3 move = new Vector3((xInput * movementSensitivity) * Time.deltaTime, 0, (zInput * movementSensitivity) * Time.deltaTime);
 			transform.Translate(move, Space.World);
 		}
-		
-		// Right click rotation
-		if(isRotating)
-		{
-			Vector3 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition - dragOrigin);
-		 
-			transform.RotateAround(transform.position, transform.right, -pos.y * rotationSensitivity);
-			transform.RotateAround(transform.position, Vector3.up, pos.x * rotationSensitivity);
-		}
+
 		// Scroll wheel zooming
 		if(scrollInput != 0)
 		{
