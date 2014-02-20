@@ -51,7 +51,7 @@ public class HUD : MonoBehaviour
 		{
 			introPanel.SetActive(true);
 			introLabel.gameObject.SetActive(true);
-			introLabel.text = StoryProgressController.Instance.CurrentLevel.displayName;
+			introLabel.text = StoryProgressController.Instance.CurrentLevel.levelNumber.ToString();
 			introLabel.SetDirty();
 			introLabel.color = new Color(introLabel.color.r, introLabel.color.g, introLabel.color.b, 0);
 			var tween = TweenColor.Begin(introLabel.gameObject, 1.9f, new Color(introLabel.color.r, introLabel.color.g, introLabel.color.b, 1));
