@@ -15,6 +15,8 @@ public class CameraControls : MonoBehaviour
 	private bool isZooming;
 	bool isMoving;
 
+	public bool canMove = true;
+
 	void Start()
 	{
 		mapRoot = GameObject.Find("MapRoot");
@@ -22,6 +24,8 @@ public class CameraControls : MonoBehaviour
 
 	void FixedUpdate()
 	{
+		if(!canMove)
+			return;
 		if (LevelSerializer.IsDeserializing)
 			return;
 
@@ -68,11 +72,6 @@ public class CameraControls : MonoBehaviour
 			PushCameraBack(pushAwayVector);
 		}
 
-		if(xInput != 0 || zInput != 0)
-		{
-			dragOrigin = Input.mousePosition;
-		}
-		
 		//WASD movement
 		if(zInput != 0 || xInput != 0)
 		{
