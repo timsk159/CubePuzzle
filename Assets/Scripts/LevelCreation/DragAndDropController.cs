@@ -236,7 +236,8 @@ public class DragAndDropController : MonoBehaviour
 
 				draggingObj.transform.parent = levelCreator.mapRoot.transform;
 				Messenger<GameObject>.Invoke(DragAndDropMessage.ObjectPlaced.ToString(), draggingObj);
-				print("Drag finished, replacing object: " + objToReplace.name + " With object: " + draggingObj.name);
+				var camControls = Camera.main.GetComponent<CameraControls>();
+				camControls.canMove = true;
 				draggingObj = null;
 				Destroy(objToReplace);
 			}
@@ -305,6 +306,9 @@ public class DragAndDropController : MonoBehaviour
 
 	void SetupDoorPiece(GameObject doorGo)
 	{
+		var camControls = Camera.main.GetComponent<CameraControls>();
+		camControls.canMove = false;
+
 		var doorMenuPieceGo = GameObject.Find("DoorCubeMenuObj");
 
 		var doorMenuPiece = doorMenuPieceGo.GetComponent<DoorPiece>();
