@@ -179,16 +179,32 @@ public class PlayerCharacter : MonoBehaviour
 			//Check the hit collider is definitely a wall
 			if(theCollider.size.y > 6)
 			{
-				var relativeVel = collision.relativeVelocity.sqrMagnitude;
-				if(relativeVel > 12 && relativeVel < 16)
+				//Make sure we aren't scraping against a wall
+				if(WasHeadonCollision(collision.contacts[0]))
 				{
-					Messenger.Invoke(PlayerMessage.HitWall.ToString());
-				}
-				else if(relativeVel > 16)
-				{
-					Messenger.Invoke(PlayerMessage.HitWallHard.ToString());
+					var relativeVel = collision.relativeVelocity.sqrMagnitude;
+					if(relativeVel > 8 && relativeVel < 12)
+					{
+						Messenger.Invoke(PlayerMessage.HitWall.ToString());
+					}
+					else if(relativeVel > 12)
+					{
+						Messenger.Invoke(PlayerMessage.HitWallHard.ToString());
+					}
 				}
 			}
 		}
+	}
+	
+	bool WasHeadonCollision(ContactPoint contact)
+	{
+		float dot = Vector3.Dot(rigidbody.velocity.normalized, contact.normal);
+		
+		var absDot = Mathf.Abs(dot);
+		
+		if(absDot > 0.5f)
+			return true;
+		else
+			return false;
 	}
 }

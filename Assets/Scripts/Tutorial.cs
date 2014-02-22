@@ -11,6 +11,7 @@ public class Tutorial : MonoBehaviour
 	float textFadeTime = 0.5f;
 	float hudZoomTime = 0.5f;
 	bool isShowingTutorial;
+	bool canDismiss;
 	bool hudIsZoomed;
 
 	bool hasShownTutorial
@@ -94,29 +95,36 @@ public class Tutorial : MonoBehaviour
 			ZoomHUDUp();
 		if(!string.IsNullOrEmpty(additionalElement))
 			DisplayAdditonalElement(extraElements.GetElement(additionalElement));
-		StartCoroutine(SetIsShowing(hudZoomTime * 2.0f));
+		isShowingTutorial = true;
+		StartCoroutine(SetCanDismiss(hudZoomTime * 2.0f));
 
 	}
 
 	void Update()
 	{
+		if(canDismiss)
+		{
+			if(Input.anyKeyDown)
+			{
+				DismissTutorial();
+			}
+		}
 		if(!isShowingTutorial)
 			return;
-
-		if(LevelController.Instance.playerChar.playerMovement.canMove)
-			DisablePlayer();
-
-		if(Input.anyKeyDown)
+		else
 		{
-			DismissTutorial();
+			if(LevelController.Instance.playerChar.playerMovement.canMove)
+				DisablePlayer();
 		}
+		
+
 	}
 
 	//Simple delay for setting our isShowing flag (which allows dismissal)
-	IEnumerator SetIsShowing(float delay)
+	IEnumerator SetCanDismiss(float delay)
 	{
 		yield return new WaitForSeconds(delay);
-		isShowingTutorial = true;
+		canDismiss = true;
 	}
 
 	void DisablePlayer()
@@ -152,6 +160,7 @@ public class Tutorial : MonoBehaviour
 
 	public void DismissTutorial()
 	{
+		canDismiss = false;
 		isShowingTutorial = false;
 		DisableGO();
 		FadeTutorialPanelDown();

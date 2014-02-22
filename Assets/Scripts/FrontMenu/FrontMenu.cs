@@ -41,8 +41,11 @@ public class FrontMenu : MonoBehaviour
 			SetupForDemo();
 			
 		Time.timeScale = 1;
+		
 		StartCoroutine(RefreshUI());
-
+		
+		PlayerPrefs.SetString("shownTut", bool.FalseString);
+		
 		Messenger.AddListener(FrontMenuUIMessage.StoryModeButtonPressed.ToString(), StoryModeButtonPressed);
 		Messenger.AddListener(FrontMenuUIMessage.QuitButtonPressed.ToString(), QuitButtonPressed);
 		Messenger.AddListener(FrontMenuUIMessage.LevelCreatorButtonPressed.ToString(), LevelCreatorButtonPressed);
