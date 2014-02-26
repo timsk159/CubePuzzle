@@ -432,18 +432,13 @@ public class LevelCreatorUIController : MonoBehaviour
 		StartCoroutine (ErrorLabelForwardFinishedRoutine ());
 	}
 
-	void ErrorLabelBackwardFinished()
-	{
-		EventDelegate.Remove(UITweener.current.onFinished, ErrorLabelBackwardFinished);
-		NGUITools.SetActive(saveErrorLabel.gameObject, false);
-	}
 
 	IEnumerator ErrorLabelForwardFinishedRoutine()
 	{
 		var tweener = UITweener.current;
+	
 		yield return new WaitForSeconds (1.5f);
 		EventDelegate.Remove(tweener.onFinished, ErrorLabelForwardFinished);
-		EventDelegate.Add(tweener.onFinished, ErrorLabelBackwardFinished);
 		tweener.Play (false);
 	}
 	

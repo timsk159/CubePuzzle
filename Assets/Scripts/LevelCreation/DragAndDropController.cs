@@ -334,7 +334,8 @@ public class DragAndDropController : MonoBehaviour
 		playerSphere.transform.localPosition = new Vector3(0, 1.3f, 0);
 		playerCharObj.rigidbody.useGravity = false;
 		playerCharObj.playerMovement.canMove = false;
-
+		
+		playerCharObj.Start();
 		startGo.GetComponent<PlayerStartPiece>().ChangeColour(menuPlayerObj.objColour);
 		playerSphere.collider.enabled = false;
 		playerCharObj.SilentlyChangeColour(menuPlayerObj.objColour);

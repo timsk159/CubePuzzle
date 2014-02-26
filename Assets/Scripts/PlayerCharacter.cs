@@ -22,7 +22,7 @@ public class PlayerCharacter : MonoBehaviour
 	[SerializeThis()][SerializeField()]
 	public bool canReset;
 	
-	void Start () 
+	public void Start () 
 	{
 		//No smoke in level creator.
 		if(Application.loadedLevelName != "LevelCreator")

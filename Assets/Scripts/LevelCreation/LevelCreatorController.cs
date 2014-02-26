@@ -80,6 +80,8 @@ public class LevelCreatorController : MonoBehaviour
 		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateMessage.LoadingMapEnter.ToString(), LoadingMapEnter);
 		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateMessage.TestingMapEnter.ToString(), TestingMapEnter);
 		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateMessage.TestingMapExit.ToString(), TestingMapExit);
+		Messenger<StateM.StateChangeData>.AddListener(LevelCreatorStateMessage.NewMapEnter.ToString(), NewMapEnter);
+		
 
 		Messenger<GameObject>.AddListener(DragAndDropMessage.ObjectPlaced.ToString(), ObjectPlaced);
 		Messenger<DraggableMapObject>.AddListener(DragAndDropMessage.MapObjectRemoved.ToString(), MapObjectRemoved);
@@ -95,6 +97,9 @@ public class LevelCreatorController : MonoBehaviour
 		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateMessage.LoadingMapEnter.ToString(), LoadingMapEnter);
 		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateMessage.TestingMapEnter.ToString(), TestingMapEnter);
 		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateMessage.TestingMapExit.ToString(), TestingMapExit);
+		Messenger<StateM.StateChangeData>.RemoveListener(LevelCreatorStateMessage.NewMapEnter.ToString(), NewMapEnter);
+		
+		
 
 		Messenger<GameObject>.RemoveListener(DragAndDropMessage.ObjectPlaced.ToString(), ObjectPlaced);
 		Messenger<DraggableMapObject>.RemoveListener(DragAndDropMessage.MapObjectRemoved.ToString(), MapObjectRemoved);
@@ -164,6 +169,11 @@ public class LevelCreatorController : MonoBehaviour
 		var restoreData = saves.Where(e => e.Name == "BeforePreviewSave").FirstOrDefault().Data;
 		LevelSerializer.LoadSavedLevel(restoreData);
 		Time.timeScale = 1;
+	}
+	
+	void NewMapEnter(StateM.StateChangeData changeData)
+	{
+		Camera.main.GetComponent<CameraControls>().ResetPosition();
 	}
 
 #endregion

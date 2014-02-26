@@ -81,11 +81,13 @@ public class DoorPiece : FloorPiece
 		{
 			currentColourIndex = 1;
 		}
+		Debug.Log("Changing door colour to: " + currentColourIndex);
 		SetDoorColour((Colour)currentColourIndex, checkDoor);
 	}
 	
 	public void SetDoorColour(Colour colourToSet, bool checkDoor)
 	{		
+		theDoor.objColour = colourToSet;
 		theDoor.renderer.material.color = ColorManager.GetObjectRealColor(theDoor.objColour);
 		if(checkDoor)
 			CheckDoor();

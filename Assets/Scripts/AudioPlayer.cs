@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using StateMachineMessenger = Messenger<StateMachine<LevelState, LevelStateMessage>.StateChangeData>;
 
 public class AudioPlayer : MonoBehaviour 
 {
@@ -67,6 +68,8 @@ public class AudioPlayer : MonoBehaviour
 		Messenger.AddListener(CheckpointMessage.CheckpointPressed.ToString(), CheckpointPressed);
 		Messenger.AddListener(PlayerMessage.HitWall.ToString(), PlayerHitWall);
 		Messenger.AddListener(PlayerMessage.HitWallHard.ToString(), PlayerHitWallHard);
+		StateMachineMessenger.AddListener(LevelStateMessage.InGameExit.ToString(), InGameExit);
+		StateMachineMessenger.AddListener(LevelStateMessage.InGameEnter.ToString(), InGameEnter);
 	}
 
 	void RemoveEventListeners()
@@ -78,8 +81,20 @@ public class AudioPlayer : MonoBehaviour
 		Messenger.RemoveListener(CheckpointMessage.CheckpointPressed.ToString(), CheckpointPressed);
 		Messenger.RemoveListener(PlayerMessage.HitWall.ToString(), PlayerHitWall);
 		Messenger.RemoveListener(PlayerMessage.HitWallHard.ToString(), PlayerHitWallHard);
+		StateMachineMessenger.RemoveListener(LevelStateMessage.InGameExit.ToString(), InGameExit);
+		StateMachineMessenger.RemoveListener(LevelStateMessage.InGameEnter.ToString(), InGameEnter);
+	}
+	
+	void InGameEnter(StateMachine<LevelState, LevelStateMessage>.StateChangeData changeData)
+	{
+		checkPlayerMovement = true;
 	}
 
+	void InGameExit(StateMachine<LevelState, LevelStateMessage>.StateChangeData changeData)
+	{
+		checkPlayerMovement = false;
+	}
+	
 	void LevelStarted()
 	{
 		Init();
@@ -89,7 +104,6 @@ public class AudioPlayer : MonoBehaviour
 
 	void PlayerChangedColour(Colour colourToChangeTo)
 	{
-		Debug.Log("+++++------ Player Changed Colour");
 		PooledAudioController.Instance.PlaySound(playerChangedColourSound);
 	}
 
@@ -119,9 +133,9 @@ public class AudioPlayer : MonoBehaviour
 	{
 		if(!LevelSerializer.IsDeserializing)
 		{
-			if(checkPlayerMovement)
+			if(playerChar != null)
 			{
-				if(playerChar != null)
+				if(checkPlayerMovement)
 				{
 					//Play player movement sound if player is moving
 					if(playerChar.playerMovement.isMoving)
@@ -130,6 +144,13 @@ public class AudioPlayer : MonoBehaviour
 							playerMoveSource.Play();
 					}
 					else if(playerMoveSource.isPlaying)
+					{
+						playerMoveSource.Pause();
+					}
+				}
+				else
+				{
+					if(playerMoveSource.isPlaying)
 					{
 						playerMoveSource.Pause();
 					}
