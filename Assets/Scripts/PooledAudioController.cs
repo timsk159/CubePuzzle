@@ -92,6 +92,7 @@ public class PooledAudioController : MonoBehaviour
 #endif
 		if(musicAudioSource.clip == clip)
 		{
+			musicAudioSource.loop = true;
 			musicAudioSource.Play();
 			return;
 		}
@@ -103,6 +104,7 @@ public class PooledAudioController : MonoBehaviour
 		}
 		else
 		{
+			musicAudioSource.loop = true;
 			musicAudioSource.volume = musicVolume;
 			musicAudioSource.clip = clip;
 			musicAudioSource.Play();

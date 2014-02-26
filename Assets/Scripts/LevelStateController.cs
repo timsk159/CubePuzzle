@@ -40,6 +40,7 @@ public class LevelStateController : MonoSingleton<LevelStateController>
 		
 			SceneLoader.Instance.LoadLevel(Application.loadedLevelName, delegate {
 				LevelController.Instance.InitLevel(false);
+				LevelController.Instance.playerChar.canReset = true;
 			});
 		}
 		else
@@ -51,6 +52,8 @@ public class LevelStateController : MonoSingleton<LevelStateController>
 			LevelSerializer.LoadObjectTreeFromFile(currentLevelName, delegate(LevelLoader obj)
 			{
 				LevelController.Instance.InitLevel(false);
+				LevelController.Instance.playerChar.canReset = true;
+				
 			});
 		}
 	}

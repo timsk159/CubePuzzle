@@ -19,8 +19,12 @@ public class PlayerCharacter : MonoBehaviour
 
 	Vector3 previousVelocity;
 
-	[SerializeThis()][SerializeField()]
 	public bool canReset;
+	
+	public void Awake()
+	{
+				childLight = transform.Find("PointLight").GetComponent<Light>();
+	}
 	
 	public void Start () 
 	{
@@ -30,6 +34,7 @@ public class PlayerCharacter : MonoBehaviour
 			smokeParticles = transform.Find("SmokeTrail").GetComponent<ParticleSystem>();
 			smokeParticles.transform.parent = null;
 		}
+		
 		childLight = transform.Find("PointLight").GetComponent<Light>();
 
 		playerMovement = GetComponent<PlayerMovement>();
@@ -167,6 +172,7 @@ public class PlayerCharacter : MonoBehaviour
 	{
 		yield return new WaitForEndOfFrame();
 		yield return new WaitForEndOfFrame();
+		childLight = transform.Find("PointLight").GetComponent<Light>();
 		ChangeColour(currentColor);		
 	}
 
