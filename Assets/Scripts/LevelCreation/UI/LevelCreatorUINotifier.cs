@@ -30,8 +30,11 @@ public class LevelCreatorUINotifier : MonoBehaviour
 	
 	void OnClick()
 	{
-		if(notiType != LevelCreatorUIMessage.GenericInputSubmitted)
-			Messenger.Invoke(notiType.ToString());
+		if(!LevelSerializer.IsDeserializing)
+		{
+			if(notiType != LevelCreatorUIMessage.GenericInputSubmitted)
+				Messenger.Invoke(notiType.ToString());
+		}
 	}
 	
 	void OnSubmit()

@@ -138,6 +138,7 @@ public class LevelCreatorController : MonoBehaviour
 		mainCam.GetComponent<CameraControls>().enabled = true;
 		TurnOnDraggingMapObjects();
 		TurnOffMapObjectColliders();
+		LevelController.Instance.canPause = false;
 	}
 
 	void LevelCreationExit(StateM.StateChangeData changeData)
@@ -167,7 +168,9 @@ public class LevelCreatorController : MonoBehaviour
 		isTesting = false;
 		var saves = LevelSerializer.SavedGames[LevelSerializer.PlayerName];
 		var restoreData = saves.Where(e => e.Name == "BeforePreviewSave").FirstOrDefault().Data;
-		LevelSerializer.LoadSavedLevel(restoreData);
+		LevelSerializer.LoadSavedLevel(restoreData, delegate {
+			LevelController.Instance.canPause = false;
+		});
 		Time.timeScale = 1;
 	}
 	
