@@ -167,19 +167,29 @@ public class FrontMenu : MonoBehaviour
 		NGUITools.SetActive(loadMapPanel, true);
 		
 		PopulateFileMenu();
+		StartCoroutine(SetSelectionToFirstInGrid(fileMenuGrid));
+	}
+
+	IEnumerator SetSelectionToFirstInGrid(GameObject grid)
+	{
+		yield return new WaitForEndOfFrame();
+		yield return new WaitForEndOfFrame();
+		if(grid.transform.childCount > 0)
+		{
+			grid.transform.GetChild(0).GetComponent<UIToggle>().value = true;
+		}
 	}
 	
 	void PopulateFileMenu()
 	{
 		string[] fileNames = Directory.GetFiles(Application.persistentDataPath + LevelCreatorController.mapFilesFilePath);
-		
 		foreach(var file in fileNames)
 		{
 			if(file.EndsWith(".mp"))
 			{
 				var fileListEntry = NGUITools.AddChild(fileMenuGrid, fileMenuEntryPrefab);
 				var fileListCheckBox = fileListEntry.GetComponent<FileListCheckbox>();
-			
+
 				//Remove file extension
 				var fileNameSplit = file.Split(new string[] { ".mp" }, StringSplitOptions.RemoveEmptyEntries);
 				var fileName = fileNameSplit[0]; 
@@ -322,7 +332,7 @@ public class FrontMenu : MonoBehaviour
 
 		if(StoryProgressController.Instance.SavedLevel == null)
 		{
-			AddLevelLabel(levelsGrid, StoryProgressController.Instance.AllLevels[0]);
+			AddLevelLabel(levelsGrid, StoryProgressController.Instance.AllLevels[0], true);
 		}
 		else
 		{
@@ -330,12 +340,16 @@ public class FrontMenu : MonoBehaviour
 
 			for(int i = 1; i <= currentLevelNumber; i++)
 			{
-				AddLevelLabel(levelsGrid, StoryProgressController.Instance.AllLevels[i - 1]);
+				if(i == 1)
+					AddLevelLabel(levelsGrid, StoryProgressController.Instance.AllLevels[i - 1], true);
+				else
+					AddLevelLabel(levelsGrid, StoryProgressController.Instance.AllLevels[i - 1]);
 			}
 		}
+		StartCoroutine(SetSelectionToFirstInGrid(levelsGrid));
 	}
 
-	void AddLevelLabel(GameObject grid, StoryLevel level)
+	void AddLevelLabel(GameObject grid, StoryLevel level, bool check = false)
 	{
 		var prefab = (GameObject)Resources.Load("StoryModeListEntry");
 		var clone = NGUITools.AddChild(grid, prefab);
@@ -356,6 +370,15 @@ public class FrontMenu : MonoBehaviour
 		var invalidPanel = clone.GetComponent<UIPanel>();
 		if(invalidPanel != null)
 			Destroy(invalidPanel);
+
+		if(check)
+		{
+			checkbox.value = true;
+			checkbox.startsChecked = true;
+			checkbox.startsActive = true;
+			//StoryModeLevelListSelectionChanged(true, level.levelName);
+			GameObject.Find("SelectLevelButton").GetComponent<FrontMenuUINotifier>().payload = level.levelName;
+		}
 	}
 
 	void StoryModeLevelListSelectionChanged(bool state, string levelName)
